@@ -1,0 +1,3 @@
+[submodule "notifiers"]
+	path = notifiers
+	url = https://gitlab.dannystewart.com/danny/notifiers.git
