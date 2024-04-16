@@ -2,24 +2,34 @@
 This module contains utility functions for system operations.
 """
 
+import logging
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from functools import wraps
 from threading import Thread
+from typing import Callable
+
+from dsutil.shell import print_colored
 
 
-def retry_on_exc(exception_to_check, tries=4, delay=3, backoff=2, logger=None):
+def retry_on_exc(
+    exception_to_check: Exception,
+    tries: int = 4,
+    delay: int = 3,
+    backoff: int = 2,
+    logger: logging.Logger | None = None,
+) -> Callable:
     """
     A decorator to retry a function if a specified exception occurs.
 
     Args:
-        exception_to_check (Exception): The exception to check for retries.
-        tries (int): Maximum number of retries.
-        delay (int): Initial delay between retries in seconds.
-        backoff (int): Multiplier applied to delay each retry.
-        logger (logging.Logger): Logger for logging retries, None if no logging is needed.
+        exception_to_check: The exception to check for retries.
+        tries: Maximum number of retries.
+        delay: Initial delay between retries in seconds.
+        backoff: Multiplier applied to delay each retry.
+        logger: Logger for logging retries. If None, print to stdout instead.
     """
 
     def decorator(func):
@@ -32,6 +42,8 @@ def retry_on_exc(exception_to_check, tries=4, delay=3, backoff=2, logger=None):
                 except exception_to_check as e:
                     if logger:
                         logger.warning(f"{e}. Retrying in {delay} seconds...")
+                    else:
+                        print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
                     tries -= 1
                     delay *= backoff
