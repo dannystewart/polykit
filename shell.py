@@ -56,7 +56,7 @@ def handle_keyboard_interrupt(
     return decorator
 
 
-def handle_errors(additional_errors: dict | None = None) -> Callable:
+def catch_errors(additional_errors: dict | None = None) -> Callable:
     """
     A decorator for handling errors. Includes handling for common errors and allows
     specification of additional, more specific errors.
