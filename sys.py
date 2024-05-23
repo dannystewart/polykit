@@ -11,7 +11,7 @@ from functools import wraps
 from threading import Thread
 from typing import Callable
 
-from dsutil.shell import print_colored
+from dsutil.text import print_colored
 
 
 def retry_on_exc(

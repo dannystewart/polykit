@@ -12,7 +12,7 @@ from dsutil.ffmpeg_functions import (
     _prioritize_lossless_audio_formats,
     _run_ffmpeg_command,
 )
-from dsutil.shell import print_colored
+from dsutil.text import print_colored
 
 
 def find_bit_depth(input_file):

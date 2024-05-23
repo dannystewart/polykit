@@ -8,9 +8,34 @@ import os
 import subprocess
 import sys
 from functools import wraps
+from typing import Callable, Literal
+
+from text import color
+
+ColorName = Literal[
+    "black",
+    "grey",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "light_grey",
+    "dark_grey",
+    "light_red",
+    "light_green",
+    "light_yellow",
+    "light_blue",
+    "light_magenta",
+    "light_cyan",
+    "white",
+]
 
 
-def handle_keyboard_interrupt(message="Interrupted by user. Exiting...", exit_code=1, callback=None):
+def handle_keyboard_interrupt(
+    message: str = "Interrupted by user. Exiting...", exit_code: int = 1, callback: Callable | None = None
+) -> Callable:
     """A decorator for handling KeyboardInterrupt exceptions."""
 
     def decorator(func):
@@ -31,7 +56,7 @@ def handle_keyboard_interrupt(message="Interrupted by user. Exiting...", exit_co
     return decorator
 
 
-def handle_errors(additional_errors=None):
+def handle_errors(additional_errors: dict | None = None) -> Callable:
     """
     A decorator for handling errors. Includes handling for common errors and allows
     specification of additional, more specific errors.
@@ -65,122 +90,48 @@ def handle_errors(additional_errors=None):
     return decorator
 
 
-def color(text, color_name):
-    """
-    Uses termcolor to return a string in the specified color if termcolor is available.
-    Otherwise, gracefully falls back to returning the text as is.
-
-    Args:
-        text (str): The text to colorize.
-        color_name (str): The name of the color.
-
-    Returns:
-        str: The colorized text.
-    """
-    try:
-        from termcolor import colored
-    except ImportError:
-        return text
-
-    return colored(text, color_name)
-
-
-def print_colored(text, color_name, end="\n"):
-    """
-    Uses termcolor to print text in the specified color if termcolor is available.
-    Otherwise, gracefully falls back to printing the text as is.
-
-    Args:
-        text (str): The text to print in color.
-        color_name (str): The name of the color.
-        end (str, optional): The string to append after the last value. Defaults to "\n".
-
-    Returns:
-        None (prints the colored text directly)
-    """
-    try:
-        from termcolor import colored
-    except ImportError:
-        print(text, end=end)
-        return
-
-    print(colored(text, color_name), end=end)
-
-
-def colorize(text, color_name, out=True, end="\n"):
-    """
-    Uses termcolor to color a string, if termcolor is available. By default, it prints the
-    output, but if out=False, it simply returns the colored string. This is an all-in-one
-    function that does what color() and print_colored() do, with the option for either.
-
-    Args:
-        text (str): The text to colorize.
-        color_name (str): The name of the color to use.
-        out (bool): Whether to print the output (default: True).
-        end (str): The string to append after the output (default: "\n").
-
-    Returns:
-        str | None: None if out=True, otherwise the colored string.
-    """
-    try:
-        from termcolor import colored
-    except ImportError:
-        if out:
-            print(text, end=end)
-        return text
-
-    colored_text = colored(text, color_name)
-    if out:
-        print(colored_text, end=end)
-    else:
-        return colored_text
-    return None
-
-
-def read_file_content(filepath):
+def read_file_content(filepath: str) -> str:
     """
     Read the contents of a file.
 
     Args:
-        filepath (str): The path to the file.
+        filepath: The path to the file.
 
     Returns:
-        str: The contents of the file.
+        The contents of the file.
     """
     with open(filepath, "r", encoding="utf-8") as file:
         return file.read()
 
 
-def write_to_file(filepath, content):
+def write_to_file(filepath: str, content: str) -> None:
     """
     Write content to a file.
 
     Args:
-        filepath (str): The path to the file.
-        content (str): The content to write.
+        filepath: The path to the file.
+        content: The content to write.
     """
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(content)
 
 
-def is_root_user():
+def is_root_user() -> bool:
     """
     Confirm that the script is running as root.
 
     Returns:
-        bool: Whether the script is running as root.
+        Whether the script is running as root.
     """
-    if sys.platform.startswith("win"):
-        return False
-    return os.geteuid() == 0  # pylint: disable=no-member
+    return False if sys.platform.startswith("win") else os.geteuid() == 0
 
 
-def acquire_sudo():
+def acquire_sudo() -> bool:
     """
     Acquire sudo access.
 
     Returns:
-        bool: Whether sudo access was successfully acquired.
+        Whether sudo access was successfully acquired.
     """
     try:
         subprocess.check_call(["sudo", "-v"])
@@ -189,19 +140,18 @@ def acquire_sudo():
         return False
 
 
-def get_single_char_input(prompt):
+def get_single_char_input(prompt: str) -> str:
     """
     Reads a single character without requiring the Enter key. Mainly for confirmation prompts.
 
     Args:
-        prompt (str): The prompt to display to the user.
+        prompt: The prompt to display to the user.
 
     Returns:
-        str: The character that was entered.
+        The character that was entered.
     """
     print(prompt, end="", flush=True)
 
-    # pylint: disable=import-error
     if sys.platform.startswith("win"):  # Windows-specific implementation
         import msvcrt
 
@@ -217,22 +167,21 @@ def get_single_char_input(prompt):
             char = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    # pylint: enable=import-error
     return char
 
 
-def confirm_action(prompt, default_to_yes=False, prompt_color="white"):
+def confirm_action(prompt, default_to_yes: bool = False, prompt_color: ColorName = "white") -> bool:
     """
     Asks the user to confirm an action. Usage:
         if confirm_action("Do you want to proceed?"):
 
     Args:
-        prompt (str): The prompt to display to the user.
-        default_to_yes (bool): Whether to default to "yes" instead of "no".
-        prompt_color (str): The color of the prompt. Defaults to "white".
+        prompt: The prompt to display to the user.
+        default_to_yes: Whether to default to "yes" instead of "no".
+        prompt_color: The color of the prompt. Defaults to "white".
 
     Returns:
-        bool: Whether the user confirmed the action.
+        Whether the user confirmed the action.
     """
     options = "[Y/n]" if default_to_yes else "[y/N]"
     full_prompt = color(f"{prompt} {options} ", prompt_color)

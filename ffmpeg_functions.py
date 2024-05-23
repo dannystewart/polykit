@@ -3,7 +3,7 @@ import subprocess
 from collections import defaultdict
 
 from dsutil.progress import halo_progress_context
-from dsutil.shell import color, print_colored
+from dsutil.text import color, print_colored
 
 
 def _run_ffmpeg_command(command, input_file, show_output):
@@ -59,7 +59,7 @@ def _generate_output_filename(input_file, output_file, output_format, input_file
         str: The output file name.
     """
     if not output_file:
-        return os.path.splitext(input_file)[0] + "." + output_format
+        return f"{os.path.splitext(input_file)[0]}.{output_format}"
     return (
         output_file
         if len(input_files) == 1
@@ -142,18 +142,11 @@ def _apply_codec_settings_for_video(command, video_codec, video_bitrate, audio_c
         video_bitrate (str): The desired video bitrate. Defaults to None.
         audio_codec (str): The desired audio codec. Defaults to None.
     """
-    if video_codec:
-        command += ["-c:v", video_codec]
-    else:
-        command += ["-c:v", "copy"]
-
+    command += ["-c:v", video_codec] if video_codec else ["-c:v", "copy"]
     if video_bitrate:
         command += ["-b:v", video_bitrate]
 
-    if audio_codec:
-        command += ["-c:a", audio_codec]
-    else:
-        command += ["-c:a", "copy"]
+    command += ["-c:a", audio_codec] if audio_codec else ["-c:a", "copy"]
 
 
 def _prioritize_lossless_audio_formats(input_files):
