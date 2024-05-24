@@ -5,12 +5,14 @@ import os
 import shutil
 from datetime import datetime
 from pathlib import Path
+from typing import Callable
 
 from natsort import natsorted
 from send2trash import send2trash
 from termcolor import colored
 
 from dsutil.shell import confirm_action
+from dsutil.text import ColorName
 
 # ==================================================================================================
 # List files
@@ -18,51 +20,52 @@ from dsutil.shell import confirm_action
 
 
 def list_files(
-    directory,
-    extensions=None,
-    recursive=False,
-    min_size=None,
-    max_size=None,
-    exclude_patterns=None,
-    include_hidden=False,
-    modified_after=None,
-    modified_before=None,
-    sort_key=None,
-    reverse_sort=False,
-):
+    directory: str,
+    extensions: str | list[str] | None = None,
+    recursive: bool = False,
+    min_size: int | None = None,
+    max_size: int | None = None,
+    exclude_patterns: str | list[str] | None = None,
+    include_hidden: bool = False,
+    modified_after: datetime | None = None,
+    modified_before: datetime | None = None,
+    sort_key: Callable | None = None,
+    reverse_sort: bool = False,
+) -> list[str]:
     """
     List all files in a directory that match the given criteria.
 
     Args:
-        directory (str): The directory to search.
-        extensions (str or list of str): The file extensions to include. If None, all files will be included.
-        recursive (bool): Whether to search recursively.
-        min_size (int): The minimum file size in bytes.
-        max_size (int): The maximum file size in bytes.
-        exclude_patterns (str or list of str): Glob patterns to exclude.
-        include_hidden (bool): Whether to include hidden files.
-        modified_after (datetime.datetime): Only include files modified after this date.
-        modified_before (datetime.datetime): Only include files modified before this date.
-        sort_key (function): A function to use for sorting the files.
-        reverse_sort (bool): Whether to reverse the sort order.
+        directory: The directory to search.
+        extensions: The file extensions to include. If None, all files will be included.
+        recursive: Whether to search recursively.
+        min_size: The minimum file size in bytes.
+        max_size: The maximum file size in bytes.
+        exclude_patterns: Glob patterns to exclude.
+        include_hidden: Whether to include hidden files.
+        modified_after: Only include files modified after this date.
+        modified_before: Only include files modified before this date.
+        sort_key: A function to use for sorting the files.
+        reverse_sort: Whether to reverse the sort order.
 
     Returns:
-        list of str: A list of file paths.
+        A list of file paths.
 
     Example usage with custom sort (alphabetical sorting by file name):
         `file_list = list_files(directory, sort_key=os.path.basename)`
 
-    Note:
-    - The `extensions` parameter should not include the dot prefix (e.g., 'txt' not '.txt').
-    - The `modified_after` and `modified_before` expect datetime.datetime objects.
-    - Sorting is performed by modification time in ascending order by default. Customize sorting with the 'sort_key' and 'reverse' parameters.
+    Notes:
+        - The `extensions` parameter should not include the dot prefix (e.g., 'txt' not '.txt').
+        - The `modified_after` and `modified_before` expect datetime.datetime objects.
+        - Sorting is performed by modification time in ascending order by default. Customize sorting
+            with the 'sort_key' and 'reverse' parameters.
     """
     directory_path = Path(directory)
     if extensions:
         extensions = [f"*.{ext}" for ext in (extensions if isinstance(extensions, list) else [extensions])]
     else:
         extensions = ["*"]
-    files_filtered = []
+    files_filtered: list = []
     for extension in extensions:
         if recursive:
             files = directory_path.rglob(extension)
@@ -87,8 +90,14 @@ def list_files(
 
 
 def file_matches_criteria(
-    file_path, min_size, max_size, exclude_patterns, include_hidden, modified_after, modified_before
-):
+    file_path: Path,
+    min_size: int | None = None,
+    max_size: int | None = None,
+    exclude_patterns: str | list[str] | None = None,
+    include_hidden: bool = False,
+    modified_after: datetime | None = None,
+    modified_before: datetime | None = None,
+) -> bool:
     """Check if a file matches the given criteria."""
     result = True
     try:
@@ -117,20 +126,26 @@ def file_matches_criteria(
 # ==================================================================================================
 
 
-def delete_files(file_paths, show_output=True, show_individual=True, show_total=True, dry_run=False):
+def delete_files(
+    file_paths: str | list[str],
+    show_output: bool = True,
+    show_individual: bool = True,
+    show_total: bool = True,
+    dry_run: bool = False,
+) -> tuple[int, int]:
     """
     Safely move a list of files to the trash. If that fails, asks for confirmation and
     deletes them directly.
 
     Args:
-        file_paths (str or list of str): The file paths to delete.
-        show_output (bool): Whether to print output. (This overrides show_individual and show_total.)
-        show_individual (bool): Whether to print output for each individual file.
-        show_total (bool): Whether to print the total number of files deleted at the end.
-        dry_run (bool): Whether to do a dry run (don't actually delete).
+        file_paths: The file paths to delete.
+        show_output: Whether to print output. (This overrides show_individual and show_total.)
+        show_individual: Whether to print output for each individual file.
+        show_total: Whether to print the total number of files deleted at the end.
+        dry_run: Whether to do a dry run (don't actually delete).
 
     Returns:
-        tuple of int: The number of successful deletions and failed deletions.
+        The number of successful deletions and failed deletions.
     """
     if dry_run and show_output:
         print(colored("NOTE: Dry run, not actually deleting!", "yellow"))
@@ -155,7 +170,7 @@ def delete_files(file_paths, show_output=True, show_individual=True, show_total=
 
     if show_total and show_output and not dry_run:
         message = f"{successful_deletions} file{'s' if successful_deletions != 1 else ''} trashed."
-        color = "green" if successful_deletions > 0 else "red"
+        color: ColorName = "green" if successful_deletions > 0 else "red"
         if failed_deletions > 0:
             message += f" Failed to delete {failed_deletions} file{'s' if failed_deletions != 1 else ''}."
         print(colored(message, color))
@@ -163,14 +178,14 @@ def delete_files(file_paths, show_output=True, show_individual=True, show_total=
     return successful_deletions, failed_deletions
 
 
-def _handle_file_deletion(file_path, dry_run=False, show_output=True):
+def _handle_file_deletion(file_path: Path, dry_run: bool = False, show_output: bool = True) -> bool:
     """
     Attempts to delete a single file, sending it to trash or permanently deleting it.
 
     Args:
         file_path (Path): The path of the file to delete.
-        dry_run (bool): Whether to perform a dry run.
-        show_output (bool): Whether to print output messages.
+        dry_run: Whether to perform a dry run.
+        show_output: Whether to print output messages.
 
     Returns:
         bool: True if the deletion was successful, False otherwise.
@@ -210,10 +225,10 @@ def copy_file(source, destination, overwrite=True, show_output=True):
     Copy a file from source to destination.
 
     Args:
-        source (str): The source file path.
-        destination (str): The destination file path.
-        overwrite (bool): Whether to overwrite the destination file if it already exists.
-        show_output (bool): Whether to print output.
+        source: The source file path.
+        destination: The destination file path.
+        overwrite: Whether to overwrite the destination file if it already exists.
+        show_output: Whether to print output.
     """
     try:
         if not overwrite and os.path.exists(destination):
@@ -234,15 +249,15 @@ def copy_file(source, destination, overwrite=True, show_output=True):
         return False
 
 
-def move_file(source, destination, overwrite=False, show_output=True):
+def move_file(source: Path, destination: Path, overwrite: bool = False, show_output: bool = True) -> bool:
     """
     Move a file from source to destination.
 
     Args:
-        source (str): The source file path.
-        destination (str): The destination file path.
-        overwrite (bool): Whether to overwrite the destination file if it already exists.
-        show_output (bool): Whether to print output.
+        source: The source file path.
+        destination: The destination file path.
+        overwrite: Whether to overwrite the destination file if it already exists.
+        show_output: Whether to print output.
     """
     try:
         if not overwrite and os.path.exists(destination):
@@ -268,13 +283,13 @@ def move_file(source, destination, overwrite=False, show_output=True):
 # ==================================================================================================
 
 
-def sha256_checksum(filename, block_size=65536):
+def sha256_checksum(filename: Path, block_size: int = 65536) -> str:
     """
     Generate SHA-256 hash of a file.
 
     Args:
-        filename (str): The file path.
-        block_size (int, optional): The block size to use when reading the file. Defaults to 65536.
+        filename: The file path.
+        block_size: The block size to use when reading the file. Defaults to 65536.
 
     Returns:
         str: The SHA-256 hash of the file.
@@ -286,28 +301,28 @@ def sha256_checksum(filename, block_size=65536):
     return sha256.hexdigest()
 
 
-def compare_files_by_mtime(file1, file2):
+def compare_files_by_mtime(file1: Path, file2: Path) -> float:
     """
     Compare two files based on modification time.
 
     Args:
-        file1 (str): The first file path.
-        file2 (str): The second file path.
+        file1: The first file path.
+        file2: The second file path.
 
     Returns:
-        int: The difference in modification time between the two files.
+        The difference in modification time between the two files.
     """
     stat1 = os.stat(file1)
     stat2 = os.stat(file2)
     return stat1.st_mtime - stat2.st_mtime
 
 
-def find_duplicate_files_by_hash(files):
+def find_duplicate_files_by_hash(files: list[Path]) -> None:
     """
     Find and print duplicate files by comparing their SHA-256 hashes.
 
     Args:
-        files (list): A list of file paths.
+        files: A list of file paths.
     """
     hash_map = {}
     duplicates_found = False
