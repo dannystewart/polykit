@@ -5,7 +5,6 @@ console color codes for use in the formatter to colorize messages by log level.
 """
 
 import logging
-import logging.config
 import os
 from datetime import datetime
 from typing import Literal
@@ -27,12 +26,16 @@ class LocalLogger:
     """
 
     LEVEL_COLORS = {
-        "DEBUG": "GRAY",
-        "INFO": "GREEN",
-        "WARNING": "YELLOW",
-        "ERROR": "RED",
-        "CRITICAL": "MAGENTA",
+        "DEBUG": "\033[90m",  # Gray
+        "INFO": "\033[32m",  # Green
+        "WARNING": "\033[33m",  # Yellow
+        "ERROR": "\033[31m",  # Red
+        "CRITICAL": "\033[95m",  # Magenta
     }
+
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    GRAY = "\033[90m"
 
     @staticmethod
     def setup_logger(
@@ -42,9 +45,7 @@ class LocalLogger:
         logger = logging.getLogger(logger_name)
         logger.setLevel(level)
 
-        log_formatter = (
-            LocalLogger.AdvancedFormatter() if formatter == "advanced" else LocalLogger.BasicFormatter()
-        )
+        log_formatter = LocalLogger.CustomFormatter(formatter)
 
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(log_formatter)
@@ -54,8 +55,12 @@ class LocalLogger:
         logger.propagate = False
         return logger
 
-    class FormatterBase(logging.Formatter):
-        """Base formatter class that provides a method for formatting time in log records."""
+    class CustomFormatter(logging.Formatter):
+        """Custom log formatter supporting both basic and advanced formats."""
+
+        def __init__(self, style: FormatterLevel) -> None:
+            super().__init__()
+            self.style = style
 
         def formatTime(self, record: logging.LogRecord, datefmt: str | None = None) -> str:
             """Format the time in a log record."""
@@ -63,57 +68,19 @@ class LocalLogger:
             ct = datetime.fromtimestamp(record.created, tz=tz)
             return ct.strftime(datefmt) if datefmt else ct.isoformat()
 
-    class BasicFormatter(FormatterBase):
-        """Basic log formatter including log message only, in the color for that log level."""
-
         def format(self, record: logging.LogRecord) -> str:
-            RESET = ConsoleColors.COLORS["RESET"]
-            BOLD = ConsoleColors.COLORS["BOLD"]
+            level_color = LocalLogger.LEVEL_COLORS.get(record.levelname, LocalLogger.RESET)
+            reset = LocalLogger.RESET
+            bold = LocalLogger.BOLD
+            gray = LocalLogger.GRAY
 
             record.asctime = self.formatTime(record, "%I:%M:%S %p")
-            level_color = LocalLogger.LEVEL_COLORS.get(record.levelname, "RESET")
-            msg_color = ConsoleColors.COLORS.get(level_color, ConsoleColors.COLORS["RESET"])
-            return f"{RESET}{BOLD}{msg_color}{record.getMessage()}{RESET}"
 
-    class AdvancedFormatter(FormatterBase):
-        """Advanced log formatter including timestamp, log level, and log message."""
+            if self.style == "basic":
+                return f"{reset}{bold}{level_color}{record.getMessage()}{reset}"
 
-        def format(self, record: logging.LogRecord) -> str:
-            RESET = ConsoleColors.COLORS["RESET"]
-            GRAY = ConsoleColors.COLORS["GRAY"]
-            BOLD = ConsoleColors.COLORS["BOLD"]
-
-            record.asctime = self.formatTime(record, "%I:%M:%S %p")
-            level_color = ConsoleColors.COLORS.get(
-                LocalLogger.LEVEL_COLORS.get(record.levelname, "RESET"), ConsoleColors.COLORS["RESET"]
-            )
-            timestamp = f"{RESET}{GRAY}{record.asctime}{RESET}"
+            timestamp = f"{reset}{gray}{record.asctime}{reset}"
             msg_color = (
-                f"{RESET}{BOLD}{level_color}" if record.levelname not in ["DEBUG", "INFO"] else f"{RESET}"
+                f"{reset}{bold}{level_color}" if record.levelname not in ["DEBUG", "INFO"] else f"{reset}"
             )
-            return f"{timestamp} {level_color}{record.levelname}: {msg_color}{record.getMessage()}{RESET}"
-
-
-class ConsoleColors:
-    """This class defines console color codes for use in logging."""
-
-    COLORS = {
-        "RESET": "\033[0m",
-        "BLACK": "\033[30m",
-        "RED": "\033[31m",
-        "GREEN": "\033[32m",
-        "YELLOW": "\033[33m",
-        "BLUE": "\033[34m",
-        "PURPLE": "\033[35m",
-        "MAGENTA": "\033[95m",
-        "CYAN": "\033[36m",
-        "WHITE": "\033[37m",
-        "GRAY": "\033[90m",
-        "BRIGHT_RED": "\033[91m",
-        "BRIGHT_GREEN": "\033[92m",
-        "BRIGHT_YELLOW": "\033[93m",
-        "BRIGHT_BLUE": "\033[94m",
-        "BRIGHT_CYAN": "\033[96m",
-        "BRIGHT_WHITE": "\033[97m",
-        "BOLD": "\033[1m",
-    }
+            return f"{timestamp} {level_color}{record.levelname}: {msg_color}{record.getMessage()}{reset}"
