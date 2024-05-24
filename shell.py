@@ -10,7 +10,7 @@ import sys
 from functools import wraps
 from typing import Callable, Literal
 
-from text import color
+from dsutil.text import color
 
 ColorName = Literal[
     "black",

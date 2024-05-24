@@ -10,7 +10,7 @@ from natsort import natsorted
 from send2trash import send2trash
 from termcolor import colored
 
-from .shell import confirm_action
+from dsutil.shell import confirm_action
 
 # ==================================================================================================
 # List files

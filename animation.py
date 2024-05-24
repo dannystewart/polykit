@@ -3,7 +3,7 @@ import time
 
 from termcolor import colored
 
-from .shell import handle_keyboard_interrupt
+from dsutil.shell import handle_keyboard_interrupt
 
 ANIMATION_RUNNING = False
 

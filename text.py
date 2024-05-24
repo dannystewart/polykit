@@ -61,7 +61,7 @@ def print_colored(text: str, color_name: ColorName, end: str = "\n") -> None:
     print(colored(text, color_name), end=end)
 
 
-def colorize(text: str, color_name: str, out: bool = True, end: str = "\n") -> str | None:
+def colorize(text: str, color_name: ColorName, out: bool = True, end: str = "\n") -> str | None:
     """
     Uses termcolor to color a string, if termcolor is available. By default, it prints the
     output, but if out=False, it simply returns the colored string. This is an all-in-one
