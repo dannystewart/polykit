@@ -20,6 +20,7 @@ ColorName = Literal[
     "light_cyan",
     "white",
 ]
+ColorAttrs = list[Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]]
 
 
 def color(text: str, color_name: ColorName) -> str:
@@ -42,7 +43,7 @@ def color(text: str, color_name: ColorName) -> str:
     return colored(text, color_name)
 
 
-def print_colored(text: str, color_name: ColorName, end: str = "\n") -> None:
+def print_colored(text: str, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None) -> None:
     """
     Uses termcolor to print text in the specified color if termcolor is available.
     Otherwise, gracefully falls back to printing the text as is.
@@ -51,6 +52,7 @@ def print_colored(text: str, color_name: ColorName, end: str = "\n") -> None:
         text: The text to print in color.
         color_name: The name of the color.
         end: The string to append after the last value. Defaults to "\n".
+        attrs: A list of attributes to apply to the text (e.g., ['bold', 'underline']).
     """
     try:
         from termcolor import colored
@@ -58,7 +60,7 @@ def print_colored(text: str, color_name: ColorName, end: str = "\n") -> None:
         print(text, end=end)
         return
 
-    print(colored(text, color_name), end=end)
+    print(colored(text, color_name, attrs=attrs), end=end)
 
 
 def colorize(text: str, color_name: ColorName, out: bool = True, end: str = "\n") -> str | None:
