@@ -14,7 +14,12 @@ from dsutil.text import ColorName, color
 
 
 def handle_keyboard_interrupt(
-    message: str = "Interrupted by user. Exiting...", exit_code: int = 1, callback: Callable | None = None
+    message: str = "Interrupted by user. Exiting...",
+    exit_code: int = 1,
+    callback: Callable | None = None,
+    use_newline: bool = False,
+    use_logging: bool = False,
+    logger: logging.Logger | None = None,
 ) -> Callable:
     """A decorator for handling KeyboardInterrupt exceptions."""
 
@@ -24,11 +29,19 @@ def handle_keyboard_interrupt(
             try:
                 return func(*args, **kwargs)
             except KeyboardInterrupt:
-                sys.stdout.write("\r")
+                if use_newline:  # Move to next line without clearing current line
+                    sys.stdout.write("\n")
+                else:  # Clear the current line
+                    sys.stdout.write("\r\033[K")
                 sys.stdout.flush()
                 if callback:
                     callback()
-                logging.info(message)
+                if logger:  # Use root logger
+                    logger.info(message)
+                elif use_logging:  # Use supplied logger
+                    logging.info(message)
+                else:  # Just print the message
+                    print(message)
                 sys.exit(exit_code)
 
         return wrapper
@@ -123,6 +136,7 @@ def acquire_sudo() -> bool:
 def get_single_char_input(prompt: str) -> str:
     """
     Reads a single character without requiring the Enter key. Mainly for confirmation prompts.
+    Supports Windows using msvcrt and Unix-like systems using termios.
 
     Args:
         prompt: The prompt to display to the user.
@@ -135,8 +149,8 @@ def get_single_char_input(prompt: str) -> str:
     if sys.platform.startswith("win"):  # Windows-specific implementation
         import msvcrt
 
-        char = msvcrt.getch().decode()
-    else:  # Unix-like OS implementation
+        char = msvcrt.getch().decode()  # type: ignore
+    else:  # macOS and Linux (adult operating systems)
         import termios
         import tty
 
