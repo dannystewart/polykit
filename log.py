@@ -37,6 +37,7 @@ class LocalLogger:
     RESET = "\033[0m"
     BOLD = "\033[1m"
     GRAY = "\033[90m"
+    BLUE = "\033[34m"
 
     @staticmethod
     def setup_logger(
@@ -94,6 +95,7 @@ class LocalLogger:
             reset = LocalLogger.RESET
             bold = LocalLogger.BOLD
             gray = LocalLogger.GRAY
+            blue = LocalLogger.BLUE
 
             # Add the timestamp to the record
             record.asctime = self.formatTime(record, "%I:%M:%S %p")
@@ -116,7 +118,7 @@ class LocalLogger:
             log_level = f"{bold}{level_color}{level_text}{reset}"
 
             # Format the function color and name
-            class_name = f" {reset}{record.name}:" if self.show_class_name else " "
+            class_name = f" {blue}{record.name}:{reset} " if self.show_class_name else " "
             function = f"{reset}{record.funcName}: " if self.show_function_name else " "
 
             # Format the message color and return the formatted message
