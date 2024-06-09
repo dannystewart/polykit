@@ -1,6 +1,6 @@
 """
-This module contains utility functions for working with the shell, such as handling keyboard
-interrupts, errors, and colors, as well as reading and writing files.
+Utility functions for working with the shell, such as handling keyboard interrupts, errors, and
+colors, as well as reading and writing files.
 """
 
 import logging
@@ -21,7 +21,7 @@ def handle_keyboard_interrupt(
     use_logging: bool = False,
     logger: logging.Logger | None = None,
 ) -> Callable:
-    """A decorator for handling KeyboardInterrupt exceptions."""
+    """Handle KeyboardInterrupt exceptions."""
 
     def decorator(func):
         @wraps(func)
@@ -51,13 +51,11 @@ def handle_keyboard_interrupt(
 
 def catch_errors(additional_errors: dict | None = None) -> Callable:
     """
-    A decorator for handling errors. Includes handling for common errors and allows
-    specification of additional, more specific errors.
+    Handle errors. Includes handling for common errors and allows specification of additional,
+    more specific errors.
 
     Args:
-        additional_errors (dict, optional):
-            - Mapping of Exception types to messages for more specific errors.
-            - Defaults to None.
+        additional_errors: Mapping of additional Exception types to messages. Defaults to None.
     """
     error_map = {
         FileNotFoundError: "Error: File {file} was not found.",
@@ -93,7 +91,7 @@ def read_file_content(filepath: str) -> str:
     Returns:
         The contents of the file.
     """
-    with open(filepath, "r", encoding="utf-8") as file:
+    with open(filepath, encoding="utf-8") as file:
         return file.read()
 
 
@@ -135,7 +133,7 @@ def acquire_sudo() -> bool:
 
 def get_single_char_input(prompt: str) -> str:
     """
-    Reads a single character without requiring the Enter key. Mainly for confirmation prompts.
+    Read a single character without requiring the Enter key. Mainly for confirmation prompts.
     Supports Windows using msvcrt and Unix-like systems using termios.
 
     Args:
@@ -166,7 +164,9 @@ def get_single_char_input(prompt: str) -> str:
 
 def confirm_action(prompt, default_to_yes: bool = False, prompt_color: ColorName = "white") -> bool:
     """
-    Asks the user to confirm an action. Usage:
+    Ask the user to confirm an action before proceeding.
+
+    Usage:
         if confirm_action("Do you want to proceed?"):
 
     Args:

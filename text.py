@@ -25,7 +25,7 @@ ColorAttrs = list[Literal["bold", "dark", "underline", "blink", "reverse", "conc
 
 def color(text: str, color_name: ColorName) -> str:
     """
-    Uses termcolor to return a string in the specified color if termcolor is available.
+    Use termcolor to return a string in the specified color if termcolor is available.
     Otherwise, gracefully falls back to returning the text as is.
 
     Args:
@@ -44,8 +44,8 @@ def color(text: str, color_name: ColorName) -> str:
 
 
 def print_colored(text: str, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None) -> None:
-    """
-    Uses termcolor to print text in the specified color if termcolor is available.
+    r"""
+    Use termcolor to print text in the specified color if termcolor is available.
     Otherwise, gracefully falls back to printing the text as is.
 
     Args:
@@ -64,8 +64,8 @@ def print_colored(text: str, color_name: ColorName, end: str = "\n", attrs: Colo
 
 
 def colorize(text: str, color_name: ColorName, out: bool = True, end: str = "\n") -> str | None:
-    """
-    Uses termcolor to color a string, if termcolor is available. By default, it prints the
+    r"""
+    Use termcolor to color a string, if termcolor is available. By default, it prints the
     output, but if out=False, it simply returns the colored string. This is an all-in-one
     function that does what color() and print_colored() do, with the option for either.
 
