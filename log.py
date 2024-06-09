@@ -44,6 +44,7 @@ class LocalLogger:
         level: int = logging.INFO,
         message_only: bool = False,
         use_color_messages: bool = True,
+        show_class_name: bool = False,
         show_function_name: bool = False,
     ) -> logging.Logger:
         """Set up a logger with the given name and log level."""
@@ -53,6 +54,7 @@ class LocalLogger:
         log_formatter = LocalLogger.CustomFormatter(
             message_only=message_only,
             use_color_messages=use_color_messages,
+            show_class_name=show_class_name,
             show_function_name=show_function_name,
         )
 
@@ -71,12 +73,14 @@ class LocalLogger:
             self,
             message_only: bool = False,
             use_color_messages: bool = True,
+            show_class_name: bool = False,
             show_function_name: bool = False,
         ) -> None:
             super().__init__()
             self.basic = message_only
             self.color_messages = use_color_messages
-            self.show_function = show_function_name
+            self.show_class_name = show_class_name
+            self.show_function_name = show_function_name
 
         def formatTime(self, record: logging.LogRecord, datefmt: str | None = None) -> str:  # noqa
             """Format the time in a log record."""
@@ -112,10 +116,10 @@ class LocalLogger:
             log_level = f"{bold}{level_color}{level_text}{reset}"
 
             # Format the function color and name
-            func_color = f"{reset}" if self.color_messages else ""
-            function = f"{func_color}{record.funcName}: " if self.show_function else ""
+            class_name = f" {reset}{record.name}:" if self.show_class_name else " "
+            function = f"{reset}{record.funcName}: " if self.show_function_name else " "
 
             # Format the message color and return the formatted message
             msg_color = f"{level_color}" if self.color_messages else ""
             message = f"{msg_color}{record.getMessage()}{reset}"
-            return f"{timestamp}{log_level} {function}{message}"
+            return f"{timestamp}{log_level}{class_name}{function}{message}"
