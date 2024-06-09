@@ -39,12 +39,22 @@ class LocalLogger:
     GRAY = "\033[90m"
 
     @staticmethod
-    def setup_logger(logger_name: str, level: int = logging.INFO, basic: bool = False) -> logging.Logger:
+    def setup_logger(
+        logger_name: str,
+        level: int = logging.INFO,
+        message_only: bool = False,
+        use_color_messages: bool = True,
+        show_function_name: bool = False,
+    ) -> logging.Logger:
         """Set up a logger with the given name and log level."""
         logger = logging.getLogger(logger_name)
         logger.setLevel(level)
 
-        log_formatter = LocalLogger.CustomFormatter(basic=basic)
+        log_formatter = LocalLogger.CustomFormatter(
+            message_only=message_only,
+            use_color_messages=use_color_messages,
+            show_function_name=show_function_name,
+        )
 
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(log_formatter)
@@ -57,9 +67,16 @@ class LocalLogger:
     class CustomFormatter(logging.Formatter):
         """Custom log formatter supporting both basic and advanced formats."""
 
-        def __init__(self, basic: bool = False) -> None:
+        def __init__(
+            self,
+            message_only: bool = False,
+            use_color_messages: bool = True,
+            show_function_name: bool = False,
+        ) -> None:
             super().__init__()
-            self.basic = basic
+            self.basic = message_only
+            self.color_messages = use_color_messages
+            self.show_function = show_function_name
 
         def formatTime(self, record: logging.LogRecord, datefmt: str | None = None) -> str:  # noqa
             """Format the time in a log record."""
@@ -74,13 +91,31 @@ class LocalLogger:
             bold = LocalLogger.BOLD
             gray = LocalLogger.GRAY
 
+            # Add the timestamp to the record
             record.asctime = self.formatTime(record, "%I:%M:%S %p")
 
+            # If we're using the basic log format, return the message only
             if self.basic:
                 return f"{reset}{bold}{level_color}{record.getMessage()}{reset}"
 
-            timestamp = f"{reset}{gray}{record.asctime}{reset}"
-            msg_color = (
-                f"{reset}{bold}{level_color}" if record.levelname not in ["DEBUG", "INFO"] else f"{reset}"
-            )
-            return f"{timestamp} {level_color}[{record.levelname}] {msg_color}{record.getMessage()}{reset}"
+            # Format the timestamp
+            timestamp = f"{reset}{gray}{record.asctime}{reset} "
+
+            # Format the log level text
+            level_texts = {
+                "CRITICAL": "[CRITICAL]",
+                "ERROR": "[ERROR]",
+                "WARNING": "[WARN]",
+                "INFO": "[INFO]",
+            }
+            level_text = level_texts.get(record.levelname, "")
+            log_level = f"{bold}{level_color}{level_text}{reset}"
+
+            # Format the function color and name
+            func_color = f"{reset}" if self.color_messages else ""
+            function = f"{func_color}{record.funcName}: " if self.show_function else ""
+
+            # Format the message color and return the formatted message
+            msg_color = f"{level_color}" if self.color_messages else ""
+            message = f"{msg_color}{record.getMessage()}{reset}"
+            return f"{timestamp}{log_level} {function}{message}"
