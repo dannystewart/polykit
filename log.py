@@ -117,6 +117,10 @@ class LocalLogger:
             level_text = level_texts.get(record.levelname, "")
             log_level = f"{bold}{level_color}{level_text}{reset}"
 
+            # Note whether we've above INFO level and use level color if so
+            above_info = record.levelname not in ["DEBUG", "INFO"]
+            reset = f"{level_color}" if above_info else f"{reset}"
+
             # Format the function color and name
             class_name = f" {blue}{record.name}:{reset} " if self.show_class_name else " "
             function = f"{reset}{record.funcName}: " if self.show_function_name else " "
