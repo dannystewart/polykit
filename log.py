@@ -44,7 +44,7 @@ class LocalLogger:
         logger_name: str,
         level: int = logging.INFO,
         message_only: bool = False,
-        use_color_messages: bool = True,
+        messages_in_color: bool = True,
         show_class_name: bool = False,
         show_function_name: bool = False,
     ) -> logging.Logger:
@@ -54,7 +54,7 @@ class LocalLogger:
 
         log_formatter = LocalLogger.CustomFormatter(
             message_only=message_only,
-            use_color_messages=use_color_messages,
+            use_color_messages=messages_in_color,
             show_class_name=show_class_name,
             show_function_name=show_function_name,
         )
@@ -102,6 +102,7 @@ class LocalLogger:
 
             # If we're using the basic log format, return the message only
             if self.basic:
+                bold = "" if record.levelname == "DEBUG" else bold
                 return f"{reset}{bold}{level_color}{record.getMessage()}{reset}"
 
             # Format the timestamp
