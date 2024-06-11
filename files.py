@@ -180,15 +180,15 @@ def delete_files(
 
 def _handle_file_deletion(file_path: Path, dry_run: bool = False, show_output: bool = True) -> bool:
     """
-    Attempts to delete a single file, sending it to trash or permanently deleting it.
+    Attempt to delete a single file, sending it to trash or permanently deleting it.
 
     Args:
-        file_path (Path): The path of the file to delete.
+        file_path: The path of the file to delete.
         dry_run: Whether to perform a dry run.
         show_output: Whether to print output messages.
 
     Returns:
-        bool: True if the deletion was successful, False otherwise.
+        True if the deletion was successful, False otherwise.
     """
     try:
         if dry_run:
