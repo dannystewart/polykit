@@ -1,6 +1,4 @@
-"""
-This module contains async utility functions.
-"""
+"""async utility functions."""
 
 import logging
 import time
@@ -18,8 +16,8 @@ def retry_on_exc(
     logger: logging.Logger | None = None,
 ) -> Callable:
     """
-    A decorator to retry a function if a specified exception occurs. This is an async version of the
-    decorator that's in dsutil.sys.
+    Retry a function if a specified exception occurs. This is an async version of the decorator
+    that's in dsutil.sys.
 
     Args:
         exception_to_check: The exception to check for retries.

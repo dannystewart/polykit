@@ -1,13 +1,11 @@
-"""
-This module contains macOS-specific functions and utilities.
-"""
+"""macOS-specific functions and utilities."""
 
 import subprocess
 
 
 def get_timestamps(file: str) -> tuple[str, str]:
     """
-    Gets file creation and modification timestamps. macOS only, as it relies on GetFileInfo.
+    Get file creation and modification timestamps. macOS only, as it relies on GetFileInfo.
 
     Args:
         file: The file to get the timestamps of.
@@ -23,7 +21,7 @@ def get_timestamps(file: str) -> tuple[str, str]:
 
 def set_timestamps(file: str, ctime: str | None = None, mtime: str | None = None) -> None:
     """
-    Sets file creation and/or modification timestamps. macOS only, as it relies on SetFile.
+    Set file creation and/or modification timestamps. macOS only, as it relies on SetFile.
 
     Args:
         file: The file to set the timestamps of.

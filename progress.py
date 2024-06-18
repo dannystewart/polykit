@@ -1,6 +1,4 @@
-"""
-This module provides utilities for displaying progress messages and spinners.
-"""
+"""Utilities for displaying progress messages and spinners."""
 
 import subprocess
 import time
@@ -16,7 +14,7 @@ from dsutil.text import ColorName, print_colored
 
 def with_retries(operation_func: Callable) -> Callable:
     """
-    Decorator for retrying operations with a spinner.
+    Retry operations with a spinner.
 
     Args:
         operation_func: The operation function to retry.
@@ -50,7 +48,7 @@ def with_retries(operation_func: Callable) -> Callable:
 
 def with_spinner(text: str = "Processing...", success: str = "Done!", color: str = "cyan") -> Callable:
     """
-    Decorator that displays a spinner while the decorated function is running.
+    Display a spinner while the decorated function is running.
 
     Args:
         text: The text to display before the spinner. Defaults to "Processing...".
@@ -87,8 +85,8 @@ def halo_progress_context(
     show: bool = True,
 ) -> Any:
     """
-    Context manager to display a Halo spinner while a block of code is executing,
-    with customized start and end messages.
+    Context manager to display a Halo spinner while a block of code is executing, with customized
+    start and end messages.
 
     Args:
         filename: The name of the file being processed.

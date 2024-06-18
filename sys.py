@@ -1,6 +1,4 @@
-"""
-This module contains utility functions for system operations.
-"""
+"""Utility functions for system operations."""
 
 import logging
 import subprocess
@@ -22,7 +20,7 @@ def retry_on_exc(
     logger: logging.Logger | None = None,
 ) -> Callable:
     """
-    A decorator to retry a function if a specified exception occurs.
+    Retry a function if a specified exception occurs.
 
     Args:
         exception_to_check: The exception to check for retries.
@@ -57,10 +55,10 @@ def retry_on_exc(
 @contextmanager
 def popen(*args, **kwargs):
     """
-    A general context manager for running subprocesses safely.
+    Context manager for running subprocesses safely.
 
-    This function abstracts away the setup and teardown logic for running subprocesses,
-    handling their cleanup regardless of whether they exit normally or raise an exception.
+    This function abstracts away the setup and teardown logic for running subprocesses, handling
+    their cleanup regardless of whether they exit normally or raise an exception.
 
     Usage:
         with general_popen(['command', 'arg1', 'arg2'], stdout=subprocess.PIPE) as proc:
@@ -93,7 +91,7 @@ def popen(*args, **kwargs):
 
 
 def run_in_thread(func):
-    """Decorator to run a function in a separate thread."""
+    """Run a function in a separate thread."""
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -105,7 +103,7 @@ def run_in_thread(func):
 
 
 def run_in_executor(func):
-    """Decorator to run a function in ThreadPoolExecutor."""
+    """Run a function in a separate thread using ThreadPoolExecutor."""
 
     @wraps(func)
     def wrapper(*args, **kwargs):

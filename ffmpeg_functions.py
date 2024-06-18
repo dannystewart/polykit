@@ -6,14 +6,14 @@ from dsutil.progress import halo_progress_context
 from dsutil.text import color, print_colored
 
 
-def _run_ffmpeg_command(command, input_file, show_output):
+def _run_ffmpeg_command(command: list[str], input_file: str, show_output: bool) -> None:
     """
     Run a given ffmpeg command and handle progress display and errors.
 
     Args:
-        command (list): The ffmpeg command to execute.
-        input_file (str): The path to the input file.
-        show_output (bool): Whether to display output.
+        command: The ffmpeg command to execute.
+        input_file: The path to the input file.
+        show_output: Whether to display output.
     """
     spinner_messages = {
         "start": "Converting",
@@ -45,15 +45,17 @@ def _run_ffmpeg_command(command, input_file, show_output):
             raise
 
 
-def _generate_output_filename(input_file, output_file, output_format, input_files):
+def _generate_output_filename(
+    input_file: str, output_file: str, output_format: str, input_files: list[str]
+) -> str:
     """
     Generate the output file name based on the input file and the output format.
 
     Args:
-        input_file (str): The path to the input file.
-        output_file (str): The path to the output file. Defaults to None.
-        output_format (str): The desired output format.
-        input_files (list): A list of input files.
+        input_file: The path to the input file.
+        output_file: The path to the output file. Defaults to None.
+        output_format: The desired output format.
+        input_files: A list of input files.
 
     Returns:
         str: The output file name.
@@ -67,13 +69,13 @@ def _generate_output_filename(input_file, output_file, output_format, input_file
     )
 
 
-def _construct_base_command(input_file, overwrite):
+def _construct_base_command(input_file: str, overwrite: bool) -> list[str]:
     """
     Construct the base ffmpeg command.
 
     Args:
-        input_file (str): The path to the input file.
-        overwrite (bool): Whether to overwrite the output file if it already exists.
+        input_file: The path to the input file.
+        overwrite: Whether to overwrite the output file if it already exists.
     """
     command = ["ffmpeg"]
     if overwrite:
@@ -89,17 +91,19 @@ def _construct_base_command(input_file, overwrite):
     return command
 
 
-def _apply_codec_settings_for_audio(command, codec, output_format, audio_bitrate, sample_rate, bit_depth):
+def _apply_codec_settings_for_audio(
+    command: list[str], codec: str, output_format: str, audio_bitrate: str, sample_rate: str, bit_depth: int
+) -> None:
     """
     Apply the codec settings to the ffmpeg command for audio conversion.
 
     Args:
-        command (list): The ffmpeg command to which to apply the settings.
-        codec (str): The desired codec. Defaults to None.
-        output_format (str): The desired output format.
-        audio_bitrate (str): The desired audio bitrate. Defaults to None.
-        sample_rate (str): The desired sample rate. Defaults to None.
-        bit_depth (int): The desired bit depth. Defaults to 16.
+        command: The ffmpeg command to which to apply the settings.
+        codec: The desired codec. Defaults to None.
+        output_format: The desired output format.
+        audio_bitrate: The desired audio bitrate. Defaults to None.
+        sample_rate: The desired sample rate. Defaults to None.
+        bit_depth: The desired bit depth. Defaults to 16.
     """
     if output_format == "m4a" and not codec:
         codec = "alac"
@@ -120,8 +124,10 @@ def _apply_codec_settings_for_audio(command, codec, output_format, audio_bitrate
     if sample_rate:
         command += ["-ar", sample_rate]
 
-    if codec in ["pcm_s16le", "pcm_s24le", "pcm_s32le"] or (
-        bit_depth in [16, 24, 32] and output_format in ["wav", "flac"]
+    if (
+        codec in {"pcm_s16le", "pcm_s24le", "pcm_s32le"}
+        or bit_depth in {16, 24, 32}
+        and output_format in {"wav", "flac"}
     ):
         sample_format_mappings = {
             16: "s16",
@@ -132,15 +138,17 @@ def _apply_codec_settings_for_audio(command, codec, output_format, audio_bitrate
         command += ["-sample_fmt", sample_format]
 
 
-def _apply_codec_settings_for_video(command, video_codec, video_bitrate, audio_codec):
+def _apply_codec_settings_for_video(
+    command: list[str], video_codec: str, video_bitrate: str, audio_codec: str
+) -> None:
     """
     Apply the codec settings to the ffmpeg command for video conversion.
 
     Args:
-        command (list): The ffmpeg command to which to apply the settings.
-        video_codec (str): The desired video codec. Defaults to None.
-        video_bitrate (str): The desired video bitrate. Defaults to None.
-        audio_codec (str): The desired audio codec. Defaults to None.
+        command: The ffmpeg command to which to apply the settings.
+        video_codec: The desired video codec. Defaults to None.
+        video_bitrate: The desired video bitrate. Defaults to None.
+        audio_codec: The desired audio codec. Defaults to None.
     """
     command += ["-c:v", video_codec] if video_codec else ["-c:v", "copy"]
     if video_bitrate:
@@ -149,13 +157,13 @@ def _apply_codec_settings_for_video(command, video_codec, video_bitrate, audio_c
     command += ["-c:a", audio_codec] if audio_codec else ["-c:a", "copy"]
 
 
-def _prioritize_lossless_audio_formats(input_files):
+def _prioritize_lossless_audio_formats(input_files: list[str]) -> list:
     """
     If there are multiple files with the same name, this function will sort the list such
     that uncompressed and lossless files are prioritized over compressed and lossy files.
 
     Args:
-        input_files (list): A list of input files.
+        input_files: A list of input files.
     """
     file_groups = defaultdict(list)
 
@@ -167,7 +175,7 @@ def _prioritize_lossless_audio_formats(input_files):
     prioritized_extensions = [".wav", ".aiff", ".aif", ".flac", ".m4a"]
 
     prioritized_files = []
-    for base_name, files in file_groups.items():
+    for _, files in file_groups.items():
         selected_file = None
         for ext in prioritized_extensions:
             for file in files:
