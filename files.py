@@ -62,7 +62,10 @@ def list_files(
     """
     directory_path = Path(directory)
     if extensions:
-        extensions = [f"*.{ext}" for ext in (extensions if isinstance(extensions, list) else [extensions])]
+        extensions = [
+            ext.lstrip(".") for ext in (extensions if isinstance(extensions, list) else [extensions])
+        ]
+        extensions = [f"*.{ext}" for ext in extensions]
     else:
         extensions = ["*"]
     files_filtered: list = []
