@@ -3,12 +3,12 @@
 import subprocess
 
 from dsutil.ffmpeg_functions import (
-    _apply_codec_settings_for_audio,
-    _apply_codec_settings_for_video,
-    _construct_base_command,
-    _generate_output_filename,
-    _prioritize_lossless_audio_formats,
-    _run_ffmpeg_command,
+    add_audio_flags,
+    add_video_flags,
+    construct_ffmpeg_command,
+    construct_filename,
+    ensure_lossless_first,
+    run_ffmpeg,
 )
 from dsutil.text import print_colored
 
@@ -57,7 +57,8 @@ def ffmpeg_audio(
     bit_depth: int = 16,
     audio_bitrate: str = None,
     sample_rate: str = None,
-    additional_options: list | None = None,
+    preserve_metadata: bool = False,
+    additional_args: list | None = None,
     show_output: bool = False,
 ) -> None:
     """
@@ -73,24 +74,30 @@ def ffmpeg_audio(
         bit_depth: The desired bit depth. Defaults to 16.
         audio_bitrate: The desired audio bitrate. Defaults to None.
         sample_rate: The desired sample rate. Defaults to None.
-        additional_options: Additional options to pass to ffmpeg. Defaults to None.
+        preserve_metadata: Whether to preserve existing metadata and album art. Defaults to False.
+        additional_args: List of additional arguments to pass to ffmpeg. Defaults to None.
         show_output: Whether to display ffmpeg output. Defaults to False.
     """
     if not isinstance(input_files, list):
         input_files = [input_files]
 
-    input_files = _prioritize_lossless_audio_formats(input_files)
+    input_files = ensure_lossless_first(input_files)
 
     for input_file in input_files:
-        current_output_file = _generate_output_filename(input_file, output_file, output_format, input_files)
-        command = _construct_base_command(input_file, overwrite)
-        _apply_codec_settings_for_audio(command, codec, output_format, audio_bitrate, sample_rate, bit_depth)
+        current_output_file = construct_filename(input_file, output_file, output_format, input_files)
+        command = construct_ffmpeg_command(input_file, overwrite)
+        add_audio_flags(command, codec, output_format, audio_bitrate, sample_rate, bit_depth)
 
-        if additional_options:
-            command.extend(additional_options)
+        if preserve_metadata:
+            if additional_args is None:
+                additional_args = []
+            additional_args.extend(["-map_metadata", "0", "-map", "0:v", "-c:v", "copy"])
+
+        if additional_args:
+            command.extend(additional_args)
 
         command.append(current_output_file)
-        _run_ffmpeg_command(command, input_file, show_output)
+        run_ffmpeg(command, input_file, show_output)
 
 
 def ffmpeg_video(
@@ -101,7 +108,7 @@ def ffmpeg_video(
     video_codec: str | None = None,
     video_bitrate: str | None = None,
     audio_codec: str | None = None,
-    additional_options: list[str] = None,
+    additional_args: list[str] = None,
     show_output: bool = False,
 ):
     """
@@ -115,19 +122,19 @@ def ffmpeg_video(
         video_codec: The desired video codec. Defaults to None, which uses "copy".
         video_bitrate: The desired video bitrate. Defaults to None.
         audio_codec: The desired audio codec. Defaults to None, which uses "copy".
-        additional_options: Additional options to pass to ffmpeg. Defaults to None.
+        additional_args: List of additional arguments to pass to ffmpeg. Defaults to None.
         show_output: Whether to display ffmpeg output. Defaults to False.
     """
     if not isinstance(input_files, list):
         input_files = [input_files]
 
     for input_file in input_files:
-        current_output_file = _generate_output_filename(input_file, output_file, output_format, input_files)
-        command = _construct_base_command(input_file, overwrite)
-        _apply_codec_settings_for_video(command, video_codec, video_bitrate, audio_codec)
+        current_output_file = construct_filename(input_file, output_file, output_format, input_files)
+        command = construct_ffmpeg_command(input_file, overwrite)
+        add_video_flags(command, video_codec, video_bitrate, audio_codec)
 
-        if additional_options:
-            command.extend(additional_options)
+        if additional_args:
+            command.extend(additional_args)
 
         command.append(current_output_file)
-        _run_ffmpeg_command(command, input_file, show_output)
+        run_ffmpeg(command, input_file, show_output)

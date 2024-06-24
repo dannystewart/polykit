@@ -6,7 +6,7 @@ from dsutil.progress import halo_progress_context
 from dsutil.text import color, print_colored
 
 
-def _run_ffmpeg_command(command: list[str], input_file: str, show_output: bool) -> None:
+def run_ffmpeg(command: list[str], input_file: str, show_output: bool) -> None:
     """
     Run a given ffmpeg command and handle progress display and errors.
 
@@ -45,11 +45,9 @@ def _run_ffmpeg_command(command: list[str], input_file: str, show_output: bool) 
             raise
 
 
-def _generate_output_filename(
-    input_file: str, output_file: str, output_format: str, input_files: list[str]
-) -> str:
+def construct_filename(input_file: str, output_file: str, output_format: str, input_files: list[str]) -> str:
     """
-    Generate the output file name based on the input file and the output format.
+    Construct the output filename based on the input file and the output format.
 
     Args:
         input_file: The path to the input file.
@@ -58,7 +56,7 @@ def _generate_output_filename(
         input_files: A list of input files.
 
     Returns:
-        str: The output file name.
+        The output filename.
     """
     if not output_file:
         return f"{os.path.splitext(input_file)[0]}.{output_format}"
@@ -69,7 +67,7 @@ def _generate_output_filename(
     )
 
 
-def _construct_base_command(input_file: str, overwrite: bool) -> list[str]:
+def construct_ffmpeg_command(input_file: str, overwrite: bool) -> list[str]:
     """
     Construct the base ffmpeg command.
 
@@ -91,11 +89,11 @@ def _construct_base_command(input_file: str, overwrite: bool) -> list[str]:
     return command
 
 
-def _apply_codec_settings_for_audio(
+def add_audio_flags(
     command: list[str], codec: str, output_format: str, audio_bitrate: str, sample_rate: str, bit_depth: int
 ) -> None:
     """
-    Apply the codec settings to the ffmpeg command for audio conversion.
+    Add the necessary flags for the desired audio codec settings to the ffmpeg command.
 
     Args:
         command: The ffmpeg command to which to apply the settings.
@@ -138,11 +136,9 @@ def _apply_codec_settings_for_audio(
         command += ["-sample_fmt", sample_format]
 
 
-def _apply_codec_settings_for_video(
-    command: list[str], video_codec: str, video_bitrate: str, audio_codec: str
-) -> None:
+def add_video_flags(command: list[str], video_codec: str, video_bitrate: str, audio_codec: str) -> None:
     """
-    Apply the codec settings to the ffmpeg command for video conversion.
+    Add the necessary flags for the desired video codec settings to the ffmpeg command.
 
     Args:
         command: The ffmpeg command to which to apply the settings.
@@ -157,10 +153,10 @@ def _apply_codec_settings_for_video(
     command += ["-c:a", audio_codec] if audio_codec else ["-c:a", "copy"]
 
 
-def _prioritize_lossless_audio_formats(input_files: list[str]) -> list:
+def ensure_lossless_first(input_files: list[str]) -> list:
     """
-    If there are multiple files with the same name, this function will sort the list such
-    that uncompressed and lossless files are prioritized over compressed and lossy files.
+    If there are multiple files with the same name, this function will sort the list such that
+    uncompressed and lossless files are prioritized over compressed and lossy files.
 
     Args:
         input_files: A list of input files.
