@@ -123,7 +123,7 @@ class LocalLogger:
             reset = f"{level_color}" if above_info else f"{reset}"
 
             # Format the function color and name
-            class_name = f" {blue}{record.name}:{reset} " if self.show_class_name else " "
+            class_name = f" {blue}{record.name}:{reset} " if self.show_class_name else ""
             function = f"{reset}{record.funcName}: " if self.show_function_name else " "
 
             # Format the message color and return the formatted message
