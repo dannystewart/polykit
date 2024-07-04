@@ -6,7 +6,9 @@ from dsutil.progress import halo_progress_context
 from dsutil.text import color, print_colored
 
 
-def run_ffmpeg(command: list[str], input_file: str, show_output: bool) -> None:
+def run_ffmpeg(
+    command: list[str], input_file: str, show_output: bool, output_filename: str | None = None
+) -> None:
     """
     Run a given ffmpeg command and handle progress display and errors.
 
@@ -14,6 +16,8 @@ def run_ffmpeg(command: list[str], input_file: str, show_output: bool) -> None:
         command: The ffmpeg command to execute.
         input_file: The path to the input file.
         show_output: Whether to display output.
+        output_filename: The name of the output file to show when converting. Defaults to None, in
+            which case the input filename is used instead.
     """
     spinner_messages = {
         "start": "Converting",
@@ -22,7 +26,7 @@ def run_ffmpeg(command: list[str], input_file: str, show_output: bool) -> None:
     }
 
     with halo_progress_context(
-        filename=os.path.basename(input_file),
+        filename=output_filename or os.path.basename(input_file),
         start_message=spinner_messages["start"],
         end_message=spinner_messages["end"],
         fail_message=spinner_messages["fail"],
@@ -90,7 +94,12 @@ def construct_ffmpeg_command(input_file: str, overwrite: bool) -> list[str]:
 
 
 def add_audio_flags(
-    command: list[str], codec: str, output_format: str, audio_bitrate: str, sample_rate: str, bit_depth: int
+    command: list[str],
+    codec: str,
+    output_format: str,
+    audio_bitrate: str | None = None,
+    sample_rate: str | None = None,
+    bit_depth: int | None = None,
 ) -> None:
     """
     Add the necessary flags for the desired audio codec settings to the ffmpeg command.
@@ -101,7 +110,7 @@ def add_audio_flags(
         output_format: The desired output format.
         audio_bitrate: The desired audio bitrate. Defaults to None.
         sample_rate: The desired sample rate. Defaults to None.
-        bit_depth: The desired bit depth. Defaults to 16.
+        bit_depth: The desired bit depth. Defaults to None.
     """
     if output_format == "m4a" and not codec:
         codec = "alac"
@@ -122,18 +131,21 @@ def add_audio_flags(
     if sample_rate:
         command += ["-ar", sample_rate]
 
-    if (
-        codec in {"pcm_s16le", "pcm_s24le", "pcm_s32le"}
-        or bit_depth in {16, 24, 32}
-        and output_format in {"wav", "flac"}
-    ):
-        sample_format_mappings = {
-            16: "s16",
-            24: "s24",
-            32: "s32",
-        }
-        sample_format = sample_format_mappings.get(bit_depth, "s16")
-        command += ["-sample_fmt", sample_format]
+    if output_format == "flac":
+        command += ["-compression_level", "12"]
+        command += ["-sample_fmt", "s16"]
+    elif output_format == "m4a":
+        if bit_depth:
+            command += ["-bits_per_raw_sample", str(bit_depth)]
+    elif output_format in {"wav", "aif", "aiff"}:
+        if bit_depth in {16, 24, 32}:
+            sample_format_mappings = {
+                16: "s16",
+                24: "s24",
+                32: "s32",
+            }
+            sample_format = sample_format_mappings.get(bit_depth, "s16")
+            command += ["-sample_fmt", sample_format]
 
 
 def add_video_flags(command: list[str], video_codec: str, video_bitrate: str, audio_codec: str) -> None:

@@ -2,6 +2,7 @@
 
 import subprocess
 
+from dsutil.animation import conditional_animation
 from dsutil.ffmpeg_functions import (
     add_audio_flags,
     add_video_flags,
@@ -13,33 +14,35 @@ from dsutil.ffmpeg_functions import (
 from dsutil.text import print_colored
 
 
-def find_bit_depth(input_file: str) -> int:
+def find_bit_depth(input_file: str, show_animation: bool = False) -> int:
     """
     Identify the bit depth of an input audio file using ffprobe.
     Returns the bit depth of the input file, or 0 if the bit depth could not be determined.
 
     Args:
         input_file: The path to the input file.
+        show_animation: Whether to show the loading animation. Defaults to False.
     """
-    bit_depth_command = (  # First, try to get the bit depth in the usual way
-        f"ffprobe -v error -select_streams a:0 -show_entries stream=bits_per_raw_sample "
-        f'-of default=noprint_wrappers=1:nokey=1 "{input_file}"'
-    )
-    bit_depth = subprocess.getoutput(bit_depth_command)
-    if bit_depth.isdigit():
-        return int(bit_depth)
+    with conditional_animation(show_animation):
+        bit_depth_command = (  # First, try to get the bit depth in the usual way
+            f"ffprobe -v error -select_streams a:0 -show_entries stream=bits_per_raw_sample "
+            f'-of default=noprint_wrappers=1:nokey=1 "{input_file}"'
+        )
+        bit_depth = subprocess.getoutput(bit_depth_command)
+        if bit_depth.isdigit():
+            return int(bit_depth)
 
-    codec_command = (  # If that fails, try to extract the audio codec format
-        f"ffprobe -v error -select_streams a:0 -show_entries stream=codec_name "
-        f'-of default=noprint_wrappers=1:nokey=1 "{input_file}"'
-    )
-    codec = subprocess.getoutput(codec_command)
-    if "pcm_s16" in codec:
-        return 16
-    if "pcm_s24" in codec:
-        return 24
-    if "pcm_s32" in codec:
-        return 32
+        codec_command = (  # If that fails, try to extract the audio codec format
+            f"ffprobe -v error -select_streams a:0 -show_entries stream=codec_name "
+            f'-of default=noprint_wrappers=1:nokey=1 "{input_file}"'
+        )
+        codec = subprocess.getoutput(codec_command)
+        if "pcm_s16" in codec:
+            return 16
+        if "pcm_s24" in codec:
+            return 24
+        if "pcm_s32" in codec:
+            return 32
 
     print_colored(
         "Bit depth could not be determined. Skipping 24-bit conversion.",
@@ -54,12 +57,13 @@ def ffmpeg_audio(
     output_file: str | None = None,
     overwrite: bool = True,
     codec: str | None = None,
-    bit_depth: int = 16,
-    audio_bitrate: str = None,
-    sample_rate: str = None,
+    bit_depth: int | None = None,
+    audio_bitrate: str | None = None,
+    sample_rate: str | None = None,
     preserve_metadata: bool = False,
     additional_args: list | None = None,
     show_output: bool = False,
+    show_animation: bool = False,
 ) -> None:
     """
     Convert an audio file to a different format using ffmpeg with various options.
@@ -77,6 +81,7 @@ def ffmpeg_audio(
         preserve_metadata: Whether to preserve existing metadata and album art. Defaults to False.
         additional_args: List of additional arguments to pass to ffmpeg. Defaults to None.
         show_output: Whether to display ffmpeg output. Defaults to False.
+        show_animation: Whether to show the loading animation. Defaults to False.
     """
     if not isinstance(input_files, list):
         input_files = [input_files]
@@ -84,9 +89,13 @@ def ffmpeg_audio(
     input_files = ensure_lossless_first(input_files)
 
     for input_file in input_files:
+        current_bit_depth = bit_depth
+        if current_bit_depth is None:
+            current_bit_depth = find_bit_depth(input_file, show_animation=show_animation)
+
         current_output_file = construct_filename(input_file, output_file, output_format, input_files)
         command = construct_ffmpeg_command(input_file, overwrite)
-        add_audio_flags(command, codec, output_format, audio_bitrate, sample_rate, bit_depth)
+        add_audio_flags(command, codec, output_format, audio_bitrate, sample_rate, current_bit_depth)
 
         if preserve_metadata:
             if additional_args is None:
@@ -97,7 +106,7 @@ def ffmpeg_audio(
             command.extend(additional_args)
 
         command.append(current_output_file)
-        run_ffmpeg(command, input_file, show_output)
+        run_ffmpeg(command, input_file, show_output, current_output_file)
 
 
 def ffmpeg_video(
