@@ -1,24 +1,75 @@
-from threading import Thread
+import sys
 import time
-
-from termcolor import colored
+from contextlib import contextmanager, nullcontext
+from threading import Thread
 
 from dsutil.shell import handle_keyboard_interrupt
+from dsutil.text import ColorName
+from dsutil.text import color as colorize
 
 ANIMATION_RUNNING = False
 
 
-@handle_keyboard_interrupt()
-def print_animation_frame(character: str, position: int, color: str | None = None) -> None:
-    """Print a single frame of the walking animation."""
-    colored_character = colored(character, color) if color else character
-    print(" " * position + colored_character, end="\r")
-    time.sleep(0.2)
+class AnimationManager:
+    """Manage a cute and entertaining walking animation for actions that take time to complete."""
+
+    def __init__(self, loading_text: str | None = None, color: str | None = None, width: int = 40):
+        self.loading_text = loading_text
+        self.color = color
+        self.width = width
+        self.animation_thread = None
+
+    def __enter__(self):
+        """Start the walking animation when entering the context manager."""
+        self.animation_thread = start_animation(self.loading_text, self.color, self.width)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Stop the walking animation when exiting the context manager."""
+        stop_animation(self.animation_thread)
+        if self.loading_text:
+            sys.stdout.write("\033[F")  # Move cursor up one line
+            sys.stdout.write("\033[K")  # Clear the line
+            sys.stdout.flush()
+
+
+@contextmanager
+def walking_animation(loading_text: str | None = None, color: ColorName | None = None, width: int = 40):
+    """
+    Manage a walking animation as a context manager. All arguments are optional.
+
+    Args:
+        loading_text: Text to print before starting the animation. Defaults to None.
+        color: Color to print the animation in. Defaults to None.
+        width: The width of the screen for the animation. Defaults to 40.
+
+    Usage:
+        with walking_animation("Loading...", "yellow", 40):
+            long_running_function()
+    """
+    manager = AnimationManager(loading_text, color, width)
+    with manager:
+        yield
+
+
+def conditional_animation(condition: bool, message: str | None = None) -> contextmanager:
+    """
+    Run the walking animation if the condition is met.
+
+    Args:
+        condition: The condition that must be met for the animation to display.
+        message: The message to display during the animation. Defaults to None.
+
+    Usage:
+        with conditional_animation(condition, "Loading..."):
+            long_running_function()
+    """
+    return walking_animation(message) if condition else nullcontext()
 
 
 @handle_keyboard_interrupt()
 def show_walking_animation(
-    loading_text: str | None = None, color: str | None = None, width: int = 40
+    loading_text: str | None = None, color: ColorName | None = None, width: int = 40
 ) -> None:
     """Print a walking animation until the animation_running flag is set to False."""
     character_right = " (>'-')>"
@@ -40,14 +91,17 @@ def show_walking_animation(
 
 
 @handle_keyboard_interrupt()
-def start_animation(loading_text: str | None = None, color: str | None = None, width: int = 40) -> Thread:
+def start_animation(
+    loading_text: str | None = None, color: ColorName | None = None, width: int = 40
+) -> Thread:
     """
     Start the walking animation.
 
     Usage (all arguments optional):
-        from dsutil import animation
-        animation_thread = animation.start_animation("Loading...", "yellow", 40)
-        animation.stop_animation(animation_thread)
+        from dsutil.animation import start_animation, stop_animation
+
+        animation_thread = start_animation("Loading...", "yellow", 40)
+        stop_animation(animation_thread)
 
     Args:
         loading_text: Text to print before starting the animation.
@@ -75,3 +129,11 @@ def stop_animation(animation_thread: Thread) -> None:
     ANIMATION_RUNNING = False
 
     animation_thread.join()
+
+
+@handle_keyboard_interrupt()
+def print_animation_frame(character: str, position: int, color: ColorName | None = None) -> None:
+    """Print a single frame of the walking animation."""
+    colored_character = colorize(character, color) if color else character
+    print(" " * position + colored_character, end="\r")
+    time.sleep(0.2)
