@@ -1,4 +1,5 @@
 import re
+import sys
 from typing import Literal
 
 ColorName = Literal[
@@ -91,6 +92,28 @@ def colorize(text: str, color_name: ColorName, out: bool = True, end: str = "\n"
     else:
         return colored_text
     return None
+
+
+def info(message: str) -> None:
+    """Print an informational message."""
+    print_colored(message, "blue")
+
+
+def progress(message: str) -> None:
+    """Print a success/progress message."""
+    print_colored(f"✔ {message}", "green")
+
+
+def warning(message: str) -> None:
+    """Print a warning message."""
+    print_colored(message, "yellow")
+
+
+def error(message: str, skip_exit: bool = False) -> None:
+    """Print an error message and exit the program."""
+    print_colored(f"\n{message}", "red")
+    if not skip_exit:
+        sys.exit(1)
 
 
 def remove_html_tags(text):
