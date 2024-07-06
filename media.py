@@ -89,18 +89,21 @@ def ffmpeg_audio(
     input_files = ensure_lossless_first(input_files)
 
     for input_file in input_files:
-        current_bit_depth = bit_depth
-        if current_bit_depth is None:
-            current_bit_depth = find_bit_depth(input_file, show_animation=show_animation)
+        current_bit_depth = bit_depth or find_bit_depth(input_file, show_animation=show_animation)
 
         current_output_file = construct_filename(input_file, output_file, output_format, input_files)
         command = construct_ffmpeg_command(input_file, overwrite)
-        add_audio_flags(command, codec, output_format, audio_bitrate, sample_rate, current_bit_depth)
 
-        if preserve_metadata:
-            if additional_args is None:
-                additional_args = []
-            additional_args.extend(["-map_metadata", "0", "-map", "0:v", "-c:v", "copy"])
+        add_audio_flags(
+            command,
+            codec,
+            output_format,
+            audio_bitrate,
+            sample_rate,
+            current_bit_depth,
+            preserve_metadata,
+            input_file,
+        )
 
         if additional_args:
             command.extend(additional_args)

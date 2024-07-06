@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 from collections import defaultdict
@@ -93,6 +94,19 @@ def construct_ffmpeg_command(input_file: str, overwrite: bool) -> list[str]:
     return command
 
 
+def get_stream_info(file_path: str) -> dict:
+    """Get stream information from the input file."""
+    command = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", file_path]
+    result = subprocess.run(command, capture_output=True, text=True)
+    return json.loads(result.stdout)
+
+
+def has_video_stream(file_path: str) -> bool:
+    """Check if the file has a video stream (potentially cover art)."""
+    stream_info = get_stream_info(file_path)
+    return any(stream["codec_type"] == "video" for stream in stream_info["streams"])
+
+
 def add_audio_flags(
     command: list[str],
     codec: str,
@@ -100,6 +114,8 @@ def add_audio_flags(
     audio_bitrate: str | None = None,
     sample_rate: str | None = None,
     bit_depth: int | None = None,
+    preserve_metadata: bool = False,
+    input_file: str | None = None,
 ) -> None:
     """
     Add the necessary flags for the desired audio codec settings to the ffmpeg command.
@@ -111,10 +127,20 @@ def add_audio_flags(
         audio_bitrate: The desired audio bitrate. Defaults to None.
         sample_rate: The desired sample rate. Defaults to None.
         bit_depth: The desired bit depth. Defaults to None.
+        preserve_metadata: Whether to preserve existing metadata. Defaults to False.
+        input_file: The path to the input file. Needed for checking video streams. Defaults to None.
     """
     if output_format == "m4a" and not codec:
         codec = "alac"
-    command += ["-vn"]
+
+    if preserve_metadata:
+        command.extend(["-map_metadata", "0"])
+        if input_file and has_video_stream(input_file):
+            command.extend(["-map", "0:v", "-c:v", "copy"])
+        command.extend(["-map", "0:a"])
+    else:
+        command.append("-vn")
+
     if codec:
         command += ["-acodec", codec]
     else:
@@ -122,6 +148,7 @@ def add_audio_flags(
             "mp3": "libmp3lame",
             "wav": "pcm_s16le",
             "flac": "flac",
+            "m4a": "alac",  # Default to ALAC for m4a
         }
         command += ["-acodec", codec_to_format.get(output_format, "copy")]
 
@@ -131,6 +158,12 @@ def add_audio_flags(
     if sample_rate:
         command += ["-ar", sample_rate]
 
+    command += _get_arguments_for_codec(output_format, bit_depth)
+
+
+def _get_arguments_for_codec(output_format: str, bit_depth: int) -> tuple[str, str]:
+    """Get the additional arguments needed specifically for the output format and bit depth."""
+    command = []
     if output_format == "flac":
         command += ["-compression_level", "12"]
         command += ["-sample_fmt", "s16"]
@@ -146,6 +179,7 @@ def add_audio_flags(
             }
             sample_format = sample_format_mappings.get(bit_depth, "s16")
             command += ["-sample_fmt", sample_format]
+    return command
 
 
 def add_video_flags(command: list[str], video_codec: str, video_bitrate: str, audio_codec: str) -> None:
