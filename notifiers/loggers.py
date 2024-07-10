@@ -1,6 +1,4 @@
-"""
-This module contains the logging setup for the project.
-"""
+"""Loggers for the notifiers."""
 
 import logging
 

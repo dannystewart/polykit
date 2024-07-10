@@ -1,7 +1,4 @@
-"""
-This module contains the MailSender class, which is used to send emails using an SMTP
-server configured via environment variables.
-"""
+"""Send emails using an SMTP server configured via environment variables."""
 
 import os
 import smtplib
@@ -14,8 +11,8 @@ from .loggers import LogHelper
 
 class MailSender:
     """
-    This class is used to send emails over SMTP. SMTP credentials must be provided. It
-    then provides a send_email method to send an email with the given subject and body.
+    Send emails over SMTP. SMTP credentials must be provided. It then provides a send_email method
+    to send an email with the given subject and body.
 
     Attributes:
         name: The name to use for the sender of the email.
