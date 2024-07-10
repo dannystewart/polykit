@@ -114,6 +114,7 @@ class LocalLogger:
                 "ERROR": "[ERROR]",
                 "WARNING": "[WARN]",
                 "INFO": "[INFO]",
+                "DEBUG": "[DEBUG]",
             }
             level_text = level_texts.get(record.levelname, "")
             log_level = f"{bold}{level_color}{level_text}{reset}"
