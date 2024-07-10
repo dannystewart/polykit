@@ -3,7 +3,8 @@
 import requests
 
 from dsutil.log import LocalLogger
-from notifiers.telegram_api_helper import TelegramAPIHelper
+
+from .telegram_api_helper import TelegramAPIHelper
 
 
 class TelegramSender:
@@ -19,6 +20,7 @@ class TelegramSender:
     def __init__(self, token: str, chat_id: str):
         self.logger = LocalLogger.setup_logger(f"{self.__class__.__name__}")
         self.api = TelegramAPIHelper(token, chat_id)
+        self.chat_id = chat_id
 
     def send_message(self, message: str, chat_id: str | None = None, parse_mode: str | None = None):
         """
@@ -42,7 +44,7 @@ class TelegramSender:
             payload["parse_mode"] = parse_mode
 
         try:
-            self.call_api("sendMessage", payload)
+            self.api.call_api("sendMessage", payload)
             self.logger.info("Message sent to Telegram successfully.")
             return True
         except requests.exceptions.RequestException as e:
@@ -81,7 +83,7 @@ class TelegramSender:
                     "performer": performer,
                     "caption": caption,
                 }
-                self.call_api("sendAudio", payload, files={"audio": audio_file})
+                self.api.call_api("sendAudio", payload, files={"audio": audio_file})
             return True
         except Exception as e:
             self.logger.error("Failed to send audio file: %s", str(e))
