@@ -1,12 +1,9 @@
 """Send emails using an SMTP server configured via environment variables."""
 
-import os
 import smtplib
-import sys
 from email.mime.text import MIMEText
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from .loggers import LogHelper
+from dsutil.log import LocalLogger
 
 
 class MailSender:
@@ -34,7 +31,7 @@ class MailSender:
         smtp_password: str,
         timeout: int = 10,
     ):
-        self.logger = LogHelper.setup_logger(f"{self.__class__.__name__}")
+        self.logger = LocalLogger.setup_logger(f"{self.__class__.__name__}")
         self.name = name
         self.email = email
         self.smtp_server = smtp_server
