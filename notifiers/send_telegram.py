@@ -22,7 +22,9 @@ class TelegramSender:
         self.api = TelegramAPIHelper(token, chat_id)
         self.chat_id = chat_id
 
-    def send_message(self, message: str, chat_id: str | None = None, parse_mode: str | None = None):
+    def send_message(
+        self, message: str, chat_id: str | None = None, parse_mode: str | None = None, log: bool = False
+    ):
         """
         Send a message to a Telegram chat. Uses the chat ID and token provided during
         initialization of the class.
@@ -34,6 +36,7 @@ class TelegramSender:
             parse_mode: The parse mode to use for message formatting. Supports "Markdown",
                 "MarkdownV2", or "HTML". Defaults to None, in which case parse_mode won't be
                 included in the payload at all.
+            log: Whether to log a successful send. Defaults to False.
 
         Returns:
             True if the message was sent successfully, False if the message failed to send.
@@ -45,7 +48,8 @@ class TelegramSender:
 
         try:
             self.api.call_api("sendMessage", payload)
-            self.logger.info("Message sent to Telegram successfully.")
+            if log:
+                self.logger.info("Telegram message sent successfully.")
             return True
         except requests.exceptions.RequestException as e:
             self.logger.error("Failed to send message to Telegram: %s", str(e))
