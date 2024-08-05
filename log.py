@@ -7,9 +7,11 @@ the formatter to colorize messages by log level.
 import logging
 import os
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
 
 from zoneinfo import ZoneInfo
+
+from dsutil.time import get_pretty_time
 
 FormatterLevel = Literal["basic", "advanced"]
 
@@ -143,3 +145,44 @@ class LocalLogger:
             msg_color = f"{level_color}" if self.color_messages else ""
             message = f"{msg_color}{record.getMessage()}{reset}"
             return f"{timestamp}{log_level}{class_name}{function}{message}"
+
+
+class TimeAwareLogger:
+    """A logger class that formats datetime objects into human-readable strings."""
+
+    def __init__(self, logger: logging.Logger) -> None:
+        self.logger = logger
+
+    def __getattr__(self, item: Any) -> Any:
+        """
+        Delegate attribute access to the underlying logger object. This handles cases where the
+        logger's method is called directly on this class instance.
+        """
+        return getattr(self.logger, item)
+
+    def _format_args(self, *args: Any) -> list[Any]:
+        return [get_pretty_time(arg) if isinstance(arg, datetime) else arg for arg in args]
+
+    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log a debug message with time formatted arguments."""
+        formatted_args = self._format_args(*args)
+        kwargs.setdefault("stacklevel", 2)
+        self.logger.debug(msg, *formatted_args, **kwargs)
+
+    def info(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log an info message with time formatted arguments."""
+        formatted_args = self._format_args(*args)
+        kwargs.setdefault("stacklevel", 2)
+        self.logger.info(msg, *formatted_args, **kwargs)
+
+    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log a warning message with time formatted arguments."""
+        formatted_args = self._format_args(*args)
+        kwargs.setdefault("stacklevel", 2)
+        self.logger.warning(msg, *formatted_args, **kwargs)
+
+    def error(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log an error message with time formatted arguments."""
+        formatted_args = self._format_args(*args)
+        kwargs.setdefault("stacklevel", 2)
+        self.logger.error(msg, *formatted_args, **kwargs)
