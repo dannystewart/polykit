@@ -13,6 +13,14 @@ from zoneinfo import ZoneInfo
 
 FormatterLevel = Literal["basic", "advanced"]
 
+log_levels = {
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warning": logging.WARNING,
+    "error": logging.ERROR,
+    "critical": logging.CRITICAL,
+}
+
 
 class LocalLogger:
     """
@@ -42,7 +50,7 @@ class LocalLogger:
     @staticmethod
     def setup_logger(
         logger_name: str,
-        level: int = logging.INFO,
+        level: int | str = "debug",
         message_only: bool = False,
         messages_in_color: bool = True,
         show_class_name: bool = False,
@@ -50,6 +58,10 @@ class LocalLogger:
     ) -> logging.Logger:
         """Set up a logger with the given name and log level."""
         logger = logging.getLogger(logger_name)
+
+        if isinstance(level, str):
+            level = log_levels.get(level, logging.DEBUG)
+
         logger.setLevel(level)
 
         log_formatter = LocalLogger.CustomFormatter(
