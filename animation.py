@@ -34,7 +34,11 @@ class AnimationManager:
 
 
 @contextmanager
-def walking_animation(loading_text: str | None = None, color: ColorName | None = None, width: int = 40):
+def walking_animation(
+    loading_text: str | None = None,
+    color: ColorName | None = None,
+    width: int = 40,
+):
     """
     Manage a walking animation as a context manager. All arguments are optional.
 
@@ -69,7 +73,9 @@ def conditional_animation(condition: bool, message: str | None = None) -> contex
 
 @handle_keyboard_interrupt()
 def show_walking_animation(
-    loading_text: str | None = None, color: ColorName | None = None, width: int = 40
+    loading_text: str | None = None,
+    color: ColorName | None = None,
+    width: int = 40,
 ) -> None:
     """Print a walking animation until the animation_running flag is set to False."""
     character_right = " (>'-')>"
@@ -79,7 +85,10 @@ def show_walking_animation(
     direction = 1  # 1 for right, -1 for left
 
     if loading_text:
-        print(loading_text)
+        if color:
+            print(colorize(loading_text, color))
+        else:
+            print(loading_text)
 
     while ANIMATION_RUNNING:
         print_animation_frame(character, position, color)
@@ -92,7 +101,9 @@ def show_walking_animation(
 
 @handle_keyboard_interrupt()
 def start_animation(
-    loading_text: str | None = None, color: ColorName | None = None, width: int = 40
+    loading_text: str | None = None,
+    color: ColorName | None = None,
+    width: int = 40,
 ) -> Thread:
     """
     Start the walking animation.
@@ -111,7 +122,7 @@ def start_animation(
     Returns:
         The thread running the animation.
     """
-    global ANIMATION_RUNNING  # pylint: disable=global-statement
+    global ANIMATION_RUNNING
     ANIMATION_RUNNING = True
 
     animation_thread = Thread(target=show_walking_animation, args=(loading_text, color, width))
@@ -124,7 +135,7 @@ def start_animation(
 @handle_keyboard_interrupt()
 def stop_animation(animation_thread: Thread) -> None:
     """Stop the walking animation."""
-    global ANIMATION_RUNNING  # pylint: disable=global-statement
+    global ANIMATION_RUNNING
 
     ANIMATION_RUNNING = False
 
