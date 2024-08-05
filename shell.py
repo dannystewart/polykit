@@ -36,12 +36,13 @@ def handle_keyboard_interrupt(
                 sys.stdout.flush()
                 if callback:
                     callback()
+                log_message = color(message, "red")
                 if logger:  # Use root logger
-                    logger.info(message)
+                    logger.info(log_message)
                 elif use_logging:  # Use supplied logger
-                    logging.info(message)
+                    logging.info(log_message)
                 else:  # Just print the message
-                    print(message)
+                    print(log_message)
                 sys.exit(exit_code)
 
         return wrapper
