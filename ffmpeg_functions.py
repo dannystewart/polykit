@@ -8,7 +8,10 @@ from dsutil.text import color, print_colored
 
 
 def run_ffmpeg(
-    command: list[str], input_file: str, show_output: bool, output_filename: str | None = None
+    command: list[str],
+    input_file: str,
+    show_output: bool,
+    output_filename: str | None = None,
 ) -> None:
     """
     Run a given ffmpeg command and handle progress display and errors.
@@ -50,7 +53,12 @@ def run_ffmpeg(
             raise
 
 
-def construct_filename(input_file: str, output_file: str, output_format: str, input_files: list[str]) -> str:
+def construct_filename(
+    input_file: str,
+    output_file: str,
+    output_format: str,
+    input_files: list[str],
+) -> str:
     """
     Construct the output filename based on the input file and the output format.
 
@@ -182,7 +190,12 @@ def _get_arguments_for_codec(output_format: str, bit_depth: int) -> tuple[str, s
     return command
 
 
-def add_video_flags(command: list[str], video_codec: str, video_bitrate: str, audio_codec: str) -> None:
+def add_video_flags(
+    command: list[str],
+    video_codec: str,
+    video_bitrate: str,
+    audio_codec: str,
+) -> None:
     """
     Add the necessary flags for the desired video codec settings to the ffmpeg command.
 
