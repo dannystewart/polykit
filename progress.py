@@ -46,7 +46,11 @@ def with_retries(operation_func: Callable) -> Callable:
     return wrapper
 
 
-def with_spinner(text: str = "Processing...", success: str = "Done!", color: str = "cyan") -> Callable:
+def with_spinner(
+    text: str = "Processing...",
+    success: str | None = None,
+    color: ColorName | None = None,
+) -> Callable:
     """
     Display a spinner while the decorated function is running.
 
@@ -59,11 +63,15 @@ def with_spinner(text: str = "Processing...", success: str = "Done!", color: str
     def spinner_decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
-            spinner = Halo(text=colorize(text, color), spinner="dots", color=color)
+            spinner_text = colorize(text, color) if color else text
+            spinner = Halo(text=spinner_text, spinner="dots", color=color)
             spinner.start()
             try:
                 result = func(*args, **kwargs)
-                spinner.succeed(colorize(success, color))
+                if success:
+                    spinner.succeed(colorize(success, color))
+                else:
+                    spinner.stop()
             except Exception as e:
                 spinner.fail(colorize(f"Failed: {e}", "red"))
                 raise
