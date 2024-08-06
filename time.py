@@ -119,7 +119,7 @@ def convert_sec_to_interval(interval: int, omit_one: bool = False) -> str:
     return " and ".join(parts)
 
 
-def add_time(
+def add_time_to_datetime(
     original_datetime: datetime,
     hours: int = 0,
     minutes: int = 0,
