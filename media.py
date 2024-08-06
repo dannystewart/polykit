@@ -91,7 +91,12 @@ def ffmpeg_audio(
     for input_file in input_files:
         current_bit_depth = bit_depth or find_bit_depth(input_file, show_animation=show_animation)
 
-        current_output_file = construct_filename(input_file, output_file, output_format, input_files)
+        current_output_file = construct_filename(
+            input_file,
+            output_file,
+            output_format,
+            input_files,
+        )
         command = construct_ffmpeg_command(input_file, overwrite)
 
         add_audio_flags(
@@ -141,7 +146,12 @@ def ffmpeg_video(
         input_files = [input_files]
 
     for input_file in input_files:
-        current_output_file = construct_filename(input_file, output_file, output_format, input_files)
+        current_output_file = construct_filename(
+            input_file,
+            output_file,
+            output_format,
+            input_files,
+        )
         command = construct_ffmpeg_command(input_file, overwrite)
         add_video_flags(command, video_codec, video_bitrate, audio_codec)
 
