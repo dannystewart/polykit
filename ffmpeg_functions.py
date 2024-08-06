@@ -3,7 +3,7 @@ import os
 import subprocess
 from collections import defaultdict
 
-from dsutil.progress import halo_progress_context
+from dsutil.progress import halo_progress
 from dsutil.text import color, print_colored
 
 
@@ -29,7 +29,7 @@ def run_ffmpeg(
         "fail": "Failed to convert",
     }
 
-    with halo_progress_context(
+    with halo_progress(
         filename=output_filename or os.path.basename(input_file),
         start_message=spinner_messages["start"],
         end_message=spinner_messages["end"],

@@ -85,7 +85,7 @@ def with_spinner(
 
 
 @contextmanager
-def halo_progress_context(
+def halo_progress(
     filename: str | None = None,
     start_message: str = "Processing",
     end_message: str = "Processed",
@@ -105,7 +105,7 @@ def halo_progress_context(
 
     Usage:
         file_path = "example.txt"
-        with halo_progress_context(filename=file_path) as spinner:
+        with halo_progress(filename=file_path) as spinner:
             process_file(file_path)
 
         You can use spinner.succeed() or spinner.fail() to update the spinner status.
