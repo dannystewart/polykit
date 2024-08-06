@@ -11,7 +11,7 @@ from typing import Any, Literal
 
 from zoneinfo import ZoneInfo
 
-from dsutil.time import get_pretty_time
+from dsutil.time_utils import get_pretty_time
 
 FormatterLevel = Literal["basic", "advanced"]
 
