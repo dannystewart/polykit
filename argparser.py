@@ -1,5 +1,26 @@
 import argparse
 import textwrap
+from dataclasses import dataclass
+from typing import Any, Type
+
+
+@dataclass
+class ArgInfo:
+    """Information for a command-line argument."""
+
+    help: str
+    type: Type | None = None
+    default: Any = None
+    action: str | None = None
+    nargs: str | None = None
+    dest: str | None = None
+    required: bool = False
+
+
+class ArgumentsBase:
+    @classmethod
+    def as_dict(cls) -> dict[str, ArgInfo]:
+        return {name: value for name, value in cls.__dict__.items() if isinstance(value, ArgInfo)}
 
 
 class CustomHelpFormatter(argparse.HelpFormatter):
@@ -21,7 +42,7 @@ class CustomHelpFormatter(argparse.HelpFormatter):
     def _split_lines(self, text: str, width: int) -> list[str]:
         return textwrap.wrap(text, width)
 
-    def _format_action(self, action: str) -> str:
+    def _format_action(self, action: argparse.Action) -> str:
         parts = super()._format_action(action)
         if action.help:
             help_position = parts.find(action.help)
@@ -43,12 +64,47 @@ class ArgParser(argparse.ArgumentParser):
     """
 
     def __init__(self, *args, **kwargs):
-        max_help_position = kwargs.pop("arg_width", 24)
-        width = kwargs.pop("max_width", 120)
+        self.arg_width = kwargs.pop("arg_width", 24)
+        self.max_width = kwargs.pop("max_width", 120)
         super().__init__(
             *args,
             **kwargs,
             formatter_class=lambda prog: CustomHelpFormatter(
-                prog, max_help_position=max_help_position, width=width
+                prog,
+                max_help_position=self.arg_width,
+                width=self.max_width,
             ),
         )
+
+    def add_argument_from_info(self, name: str, arg_info: ArgInfo) -> None:
+        """Add an argument to the parser based on ArgInfo."""
+        kwargs: dict[str, Any] = {"help": arg_info.help}
+
+        if arg_info.action in ["store_true", "store_false"]:
+            kwargs["action"] = arg_info.action
+        else:
+            if arg_info.type is not None:
+                kwargs["type"] = arg_info.type
+            if arg_info.default is not None:
+                kwargs["default"] = arg_info.default
+            if arg_info.action:
+                kwargs["action"] = arg_info.action
+            if arg_info.nargs:
+                kwargs["nargs"] = arg_info.nargs
+
+        if arg_info.dest:
+            kwargs["dest"] = arg_info.dest
+        if arg_info.required:
+            kwargs["required"] = arg_info.required
+
+        if name == "file":
+            self.add_argument(name, **kwargs)
+        elif name in {"creation", "modification"}:
+            self.add_argument(f"-{name[0]}", f"--{name}", **kwargs)
+        else:
+            self.add_argument(f"--{name.replace('_', '-')}", **kwargs)
+
+    def add_args_from_class(self, arg_class: Type[ArgumentsBase]) -> None:
+        """Automatically add arguments to the parser based on a class of ArgInfo instances."""
+        for field_name, arg_info in arg_class.as_dict().items():
+            self.add_argument_from_info(field_name, arg_info)
