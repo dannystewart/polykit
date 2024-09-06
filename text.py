@@ -24,7 +24,7 @@ ColorName = Literal[
 ColorAttrs = list[Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]]
 
 
-def color(text: str, color_name: ColorName) -> str:
+def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
     """
     Use termcolor to return a string in the specified color if termcolor is available.
     Otherwise, gracefully falls back to returning the text as is.
@@ -32,6 +32,7 @@ def color(text: str, color_name: ColorName) -> str:
     Args:
         text: The text to colorize.
         color_name: The name of the color.
+        attrs: A list of attributes to apply to the text (e.g., ['bold', 'underline']).
 
     Returns:
         The colorized text.
@@ -41,10 +42,15 @@ def color(text: str, color_name: ColorName) -> str:
     except ImportError:
         return text
 
-    return colored(text, color_name)
+    return colored(text, color_name, attrs=attrs)
 
 
-def print_colored(text: str, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None) -> None:
+def print_colored(
+    text: str,
+    color_name: ColorName,
+    end: str = "\n",
+    attrs: ColorAttrs | None = None,
+) -> None:
     r"""
     Use termcolor to print text in the specified color if termcolor is available.
     Otherwise, gracefully falls back to printing the text as is.
