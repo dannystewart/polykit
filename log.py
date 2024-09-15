@@ -90,7 +90,7 @@ class LocalLogger:
             message_in_color: bool = True,
             show_class: bool = False,
             show_function: bool = False,
-        ) -> None:
+        ):
             super().__init__()
             self.message_only = message_only
             self.message_in_color = message_in_color
@@ -150,7 +150,7 @@ class LocalLogger:
 class TimeAwareLogger:
     """A logger class that formats datetime objects into human-readable strings."""
 
-    def __init__(self, logger: logging.Logger) -> None:
+    def __init__(self, logger: logging.Logger):
         self.logger = logger
 
     def __getattr__(self, item: Any) -> Any:

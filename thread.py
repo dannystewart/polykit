@@ -16,7 +16,7 @@ from log import LocalLogger
 class LocalThreader:
     """A class that provides methods for starting threads and checking if a thread is active."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         if not hasattr(self, "_initialized"):
             self.executor = ThreadPoolExecutor(max_workers=10)
             self.logger = LocalLogger.setup_logger(f"{self.__class__.__name__}")

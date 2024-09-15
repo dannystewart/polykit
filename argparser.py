@@ -40,7 +40,7 @@ class CustomHelpFormatter(argparse.HelpFormatter):
     default and allows you to specify the column widths as arguments.
     """
 
-    def __init__(self, prog: str, max_help_position: int = 24, width: int = 120) -> None:
+    def __init__(self, prog: str, max_help_position: int = 24, width: int = 120):
         super().__init__(prog, max_help_position=max_help_position, width=width)
         self.custom_max_help_position = max_help_position
 
