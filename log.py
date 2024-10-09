@@ -7,6 +7,7 @@ the formatter to colorize messages by log level.
 import logging
 import os
 from datetime import datetime
+from threading import Lock
 from typing import Any, Literal
 
 from zoneinfo import ZoneInfo
@@ -36,6 +37,9 @@ class LocalLogger:
         logger = LocalLogger.setup_logger("MyClassLogger", advanced=True)
     """
 
+    loggers: dict[str, logging.Logger] = {}
+    _lock = Lock()
+
     LEVEL_COLORS = {
         "DEBUG": "\033[90m",  # Gray
         "INFO": "\033[32m",  # Green
@@ -49,8 +53,9 @@ class LocalLogger:
     GRAY = "\033[90m"
     BLUE = "\033[34m"
 
-    @staticmethod
+    @classmethod
     def setup_logger(
+        cls,
         logger_name: str,
         level: int | str = "debug",
         message_only: bool = False,
@@ -59,27 +64,66 @@ class LocalLogger:
         show_function: bool = False,
     ) -> logging.Logger:
         """Set up a logger with the given name and log level."""
-        logger = logging.getLogger(logger_name)
+        with cls._lock:
+            if logger_name in cls.loggers:
+                return cls.loggers[logger_name]
 
+            logger = logging.getLogger(logger_name)
+            log_level = cls.get_level_name(level)
+            logger.setLevel(log_level)
+
+            log_formatter = cls.CustomFormatter(
+                message_only=message_only,
+                message_in_color=message_in_color,
+                show_class=show_class,
+                show_function=show_function,
+            )
+
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(log_formatter)
+            console_handler.setLevel(log_level)
+            logger.addHandler(console_handler)
+
+            logger.propagate = False
+            cls.loggers[logger_name] = logger
+            return logger
+
+    @staticmethod
+    def update_level(logger: logging.Logger, level: str, log: bool = False) -> None:
+        """
+        Update the log level of a specific logger and all of its handlers.
+
+        Usage:
+            LocalLogger.update_level(logger, "debug")
+        """
+        log_level = LocalLogger.get_level_name(level)
+        logger.setLevel(log_level)
+        for handler in logger.handlers:
+            handler.setLevel(log_level)
+        if log:
+            logger.info("Log level changed to %s.", level)
+
+    @classmethod
+    def update_all_levels(cls, new_level: str, log: bool = False) -> None:
+        """
+        Update log levels for all currently registered loggers.
+
+        Usage:
+            LocalLogger.update_all_levels("debug")
+        """
+        with cls._lock:
+            for logger in cls.loggers.values():
+                cls.update_level(logger, new_level)
+                if log:
+                    log_level = LocalLogger.get_level_name(new_level)
+                    logger.info("Log level for logger '%s' changed to %s.", logger.name, log_level)
+
+    @staticmethod
+    def get_level_name(level: int | str) -> str:
+        """Get the name of a log level."""
         if isinstance(level, str):
-            level = log_levels.get(level, logging.DEBUG)
-
-        logger.setLevel(level)
-
-        log_formatter = LocalLogger.CustomFormatter(
-            message_only=message_only,
-            message_in_color=message_in_color,
-            show_class=show_class,
-            show_function=show_function,
-        )
-
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(log_formatter)
-        console_handler.setLevel(level)
-        logger.addHandler(console_handler)
-
-        logger.propagate = False
-        return logger
+            level = log_levels.get(level.lower(), logging.DEBUG)
+        return logging.getLevelName(level)
 
     class CustomFormatter(logging.Formatter):
         """Custom log formatter supporting both basic and advanced formats."""
