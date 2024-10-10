@@ -3,6 +3,7 @@
 import hashlib
 import os
 import shutil
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Callable
@@ -63,7 +64,8 @@ def list_files(
     directory_path = Path(directory)
     if extensions:
         extensions = [
-            ext.lstrip(".") for ext in (extensions if isinstance(extensions, list) else [extensions])
+            ext.lstrip(".")
+            for ext in (extensions if isinstance(extensions, list) else [extensions])
         ]
         extensions = [f"*.{ext}" for ext in extensions]
     else:
@@ -116,7 +118,12 @@ def file_matches_criteria(
             is_modified_too_early = modified_after is not None and file_mtime <= modified_after
             is_modified_too_late = modified_before is not None and file_mtime >= modified_before
 
-            if is_below_min_size or is_above_max_size or is_modified_too_early or is_modified_too_late:
+            if (
+                is_below_min_size
+                or is_above_max_size
+                or is_modified_too_early
+                or is_modified_too_late
+            ):
                 result = False
     except FileNotFoundError:
         print(f"Error accessing file {file_path}: File not found")
@@ -166,7 +173,9 @@ def delete_files(
                 print(colored(f"\nFile {file_path.name} does not exist.", "yellow"))
             continue
 
-        if _handle_file_deletion(file_path, dry_run=dry_run, show_output=show_individual and show_output):
+        if _handle_file_deletion(
+            file_path, dry_run=dry_run, show_output=show_individual and show_output
+        ):
             successful_deletions += 1
         else:
             failed_deletions += 1
@@ -175,7 +184,9 @@ def delete_files(
         message = f"{successful_deletions} file{'s' if successful_deletions != 1 else ''} trashed."
         color: ColorName = "green" if successful_deletions > 0 else "red"
         if failed_deletions > 0:
-            message += f" Failed to delete {failed_deletions} file{'s' if failed_deletions != 1 else ''}."
+            message += (
+                f" Failed to delete {failed_deletions} file{'s' if failed_deletions != 1 else ''}."
+            )
         print(colored(message, color))
 
     return successful_deletions, failed_deletions
@@ -214,7 +225,11 @@ def _handle_file_deletion(file_path: Path, dry_run: bool = False, show_output: b
                 return True
             except OSError as err:
                 if show_output:
-                    print(colored(f"\nError: Failed to permanently delete {file_path.name} : {err}", "red"))
+                    print(
+                        colored(
+                            f"\nError: Failed to permanently delete {file_path.name} : {err}", "red"
+                        )
+                    )
     return False
 
 
@@ -252,7 +267,38 @@ def copy_file(source, destination, overwrite=True, show_output=True):
         return False
 
 
-def move_file(source: Path, destination: Path, overwrite: bool = False, show_output: bool = True) -> bool:
+def copy_win32_file(source: str, destination: str) -> None:
+    """Copy a file from source to destination, preserving attributes and permissions."""
+    try:
+        import win32file  # type: ignore
+    except ImportError as e:
+        if sys.platform != "win32":  # Check if the system is Windows
+            raise OSError("This function is only supported on Windows.") from e
+        raise ImportError("pywin32 is required for copying files on Windows.") from e
+
+    try:
+        # Copy the file with metadata
+        shutil.copy2(source, destination)
+
+        # Ensure the destination file is not read-only
+        os.chmod(destination, os.stat(source).st_mode)
+
+        # Set file attributes to match the source
+        source_attributes = win32file.GetFileAttributes(source)
+        win32file.SetFileAttributes(destination, source_attributes)
+
+        # Ensure the file is closed and not locked
+        with open(destination, "a"):
+            pass
+
+    except Exception as e:
+        msg = f"Failed to copy {source} to {destination}: {str(e)}"
+        raise OSError(msg) from e
+
+
+def move_file(
+    source: Path, destination: Path, overwrite: bool = False, show_output: bool = True
+) -> bool:
     """
     Move a file from source to destination.
 
