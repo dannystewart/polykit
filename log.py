@@ -59,7 +59,7 @@ class LocalLogger:
         logger_name: str,
         level: int | str = "debug",
         message_only: bool = False,
-        message_in_color: bool = True,
+        use_color: bool = True,
         show_class: bool = False,
         show_function: bool = False,
     ) -> logging.Logger:
@@ -74,7 +74,7 @@ class LocalLogger:
 
             log_formatter = cls.CustomFormatter(
                 message_only=message_only,
-                message_in_color=message_in_color,
+                use_color=use_color,
                 show_class=show_class,
                 show_function=show_function,
             )
@@ -131,13 +131,13 @@ class LocalLogger:
         def __init__(
             self,
             message_only: bool = False,
-            message_in_color: bool = True,
+            use_color: bool = True,
             show_class: bool = False,
             show_function: bool = False,
         ):
             super().__init__()
             self.message_only = message_only
-            self.message_in_color = message_in_color
+            self.use_color = use_color
             self.show_class = show_class
             self.show_function = show_function
 
@@ -164,7 +164,8 @@ class LocalLogger:
                 return f"{reset}{bold}{level_color}{record.getMessage()}{reset}"
 
             # Format the timestamp
-            timestamp = f"{reset}{gray}{record.asctime}{reset} "
+            timestamp_color = gray if self.use_color else reset
+            timestamp = f"{reset}{timestamp_color}{record.asctime}{reset} "
 
             # Format the log level text
             level_texts = {
@@ -175,19 +176,20 @@ class LocalLogger:
                 "DEBUG": "[DEBUG]",
             }
             level_text = level_texts.get(record.levelname, "")
-            log_level = f"{bold}{level_color}{level_text}{reset}"
+            line_color = level_color if self.use_color else reset
+            log_level = f"{bold}{line_color}{level_text}{reset}"
 
             # Note whether we've above INFO level and use level color if so
             above_info = record.levelname not in ["DEBUG", "INFO"]
-            reset = f"{level_color}" if above_info else f"{reset}"
+            reset = f"{line_color}" if above_info else f"{reset}"
 
             # Format the function color and name
-            class_name = f" {blue}{record.name}:{reset} " if self.show_class else ""
+            class_color = blue if self.use_color else reset
+            class_name = f" {class_color}{record.name}:{reset} " if self.show_class else ""
             function = f"{reset}{record.funcName}: " if self.show_function else " "
 
             # Format the message color and return the formatted message
-            msg_color = f"{level_color}" if self.message_in_color else ""
-            message = f"{msg_color}{record.getMessage()}{reset}"
+            message = f"{line_color}{record.getMessage()}{reset}"
             return f"{timestamp}{log_level}{class_name}{function}{message}"
 
 
