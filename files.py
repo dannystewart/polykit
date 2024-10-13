@@ -10,10 +10,9 @@ from typing import Callable
 
 from natsort import natsorted
 from send2trash import send2trash
-from termcolor import colored
 
 from dsutil.shell import confirm_action
-from dsutil.text import ColorName
+from dsutil.text import ColorName, print_colored
 
 # ==================================================================================================
 # List files
@@ -126,7 +125,7 @@ def file_matches_criteria(
             ):
                 result = False
     except FileNotFoundError:
-        print(f"Error accessing file {file_path}: File not found")
+        print_colored(f"Error accessing file {file_path}: File not found", "red")
         result = False
     return result
 
@@ -158,7 +157,7 @@ def delete_files(
         The number of successful deletions and failed deletions.
     """
     if dry_run and show_output:
-        print(colored("NOTE: Dry run, not actually deleting!", "yellow"))
+        print_colored("NOTE: Dry run, not actually deleting!", "yellow")
 
     if not isinstance(file_paths, list):
         file_paths = [file_paths]
@@ -170,7 +169,7 @@ def delete_files(
         if not file_path.exists():
             failed_deletions += 1
             if show_individual and show_output:
-                print(colored(f"\nFile {file_path.name} does not exist.", "yellow"))
+                print_colored(f"\nFile {file_path.name} does not exist.", "yellow")
             continue
 
         if _handle_file_deletion(
@@ -187,7 +186,7 @@ def delete_files(
             message += (
                 f" Failed to delete {failed_deletions} file{'s' if failed_deletions != 1 else ''}."
             )
-        print(colored(message, color))
+        print_colored(message, color)
 
     return successful_deletions, failed_deletions
 
@@ -207,28 +206,26 @@ def _handle_file_deletion(file_path: Path, dry_run: bool = False, show_output: b
     try:
         if dry_run:
             if show_output:
-                print(colored(f"Would delete: {file_path}", "cyan"))
+                print_colored(f"Would delete: {file_path}", "cyan")
             return True
 
         send2trash(str(file_path))
         if show_output:
-            print(colored(f"✔ Trashed {file_path.name}", "green"))
+            print_colored(f"✔ Trashed {file_path.name}", "green")
         return True
     except Exception as e:
         if show_output:
-            print(colored(f"\nFailed to send file to trash: {e}", "red"))
+            print_colored(f"\nFailed to send file to trash: {e}", "red")
         if confirm_action("Do you want to permanently delete the file?"):
             try:
                 file_path.unlink()
                 if show_output:
-                    print(colored(f"✔ Permanently deleted {file_path.name}", "green"))
+                    print_colored(f"✔ Permanently deleted {file_path.name}", "green")
                 return True
             except OSError as err:
                 if show_output:
-                    print(
-                        colored(
-                            f"\nError: Failed to permanently delete {file_path.name} : {err}", "red"
-                        )
+                    print_colored(
+                        f"\nError: Failed to permanently delete {file_path.name} : {err}", "red"
                     )
     return False
 
@@ -238,7 +235,12 @@ def _handle_file_deletion(file_path: Path, dry_run: bool = False, show_output: b
 # ==================================================================================================
 
 
-def copy_file(source, destination, overwrite=True, show_output=True):
+def copy_file(
+    source: str | Path,
+    destination: str,
+    overwrite: bool = True,
+    show_output: bool = True,
+) -> bool:
     """
     Copy a file from source to destination.
 
@@ -249,55 +251,66 @@ def copy_file(source, destination, overwrite=True, show_output=True):
         show_output: Whether to print output.
     """
     try:
-        if not overwrite and os.path.exists(destination):
-            print(
-                colored(
+        source = Path(source)
+        destination = Path(destination)
+
+        if not overwrite and destination.exists():
+            if show_output:
+                print_colored(
                     f"Error: Destination file {destination} already exists. Use overwrite=True to overwrite it.",
                     "yellow",
                 )
-            )
             return False
 
-        shutil.copy2(source, destination)
+        if sys.platform == "win32":
+            _copy_win32_file(source, destination)
+        else:
+            shutil.copy2(source, destination)
+
         if show_output:
-            print(colored(f"Copied {source} to {destination}.", "green"))
+            print_colored(f"Copied {source} to {destination}.", "green")
         return True
     except Exception as e:
-        print(colored(f"Error copying file: {e}", "red"))
+        if show_output:
+            print_colored(f"Error copying file: {e}", "red")
         return False
 
 
-def copy_win32_file(source: str, destination: str) -> None:
-    """Copy a file from source to destination, preserving attributes and permissions."""
+def _copy_win32_file(source: Path, destination: Path) -> None:
+    """Copy a file on Windows, preserving attributes and permissions."""
     try:
+        import win32con  # type: ignore
         import win32file  # type: ignore
     except ImportError as e:
-        if sys.platform != "win32":  # Check if the system is Windows
-            raise OSError("This function is only supported on Windows.") from e
         raise ImportError("pywin32 is required for copying files on Windows.") from e
 
-    try:
-        # Copy the file with metadata
-        shutil.copy2(source, destination)
+    # Copy the file with metadata
+    shutil.copy2(source, destination)
 
-        # Ensure the destination file is not read-only
-        os.chmod(destination, os.stat(source).st_mode)
+    # Ensure the destination file is not read-only
+    destination.chmod(source.stat().st_mode)
 
-        # Set file attributes to match the source
-        source_attributes = win32file.GetFileAttributes(source)
-        win32file.SetFileAttributes(destination, source_attributes)
+    # Set file attributes to match the source
+    source_attributes = win32file.GetFileAttributes(str(source))
+    win32file.SetFileAttributes(str(destination), source_attributes)
 
-        # Ensure the file is closed and not locked
-        with open(destination, "a"):
-            pass
-
-    except Exception as e:
-        msg = f"Failed to copy {source} to {destination}: {str(e)}"
-        raise OSError(msg) from e
+    # Ensure the file is closed and not locked
+    win32file.CreateFile(
+        str(destination),
+        win32con.GENERIC_READ | win32con.GENERIC_WRITE,
+        win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE | win32con.FILE_SHARE_DELETE,
+        None,
+        win32con.OPEN_EXISTING,
+        win32con.FILE_ATTRIBUTE_NORMAL,
+        None,
+    ).Close()
 
 
 def move_file(
-    source: Path, destination: Path, overwrite: bool = False, show_output: bool = True
+    source: str | Path,
+    destination: Path,
+    overwrite: bool = False,
+    show_output: bool = True,
 ) -> bool:
     """
     Move a file from source to destination.
@@ -309,21 +322,23 @@ def move_file(
         show_output: Whether to print output.
     """
     try:
-        if not overwrite and os.path.exists(destination):
-            print(
-                colored(
+        source = Path(source)
+        destination = Path(destination)
+
+        if not overwrite and destination.exists():
+            if show_output:
+                print_colored(
                     f"Error: Destination file {destination} already exists. Use overwrite=True to overwrite it.",
                     "yellow",
                 )
-            )
             return False
 
-        shutil.move(source, destination)
+        shutil.move(str(source), str(destination))
         if show_output:
-            print(colored(f"Moved {source} to {destination}.", "green"))
+            print_colored(f"Moved {source} to {destination}.", "green")
         return True
     except Exception as e:
-        print(colored(f"Error moving file: {e}", "red"))
+        print_colored(f"Error moving file: {e}", "red")
         return False
 
 
@@ -388,9 +403,9 @@ def find_duplicate_files_by_hash(files: list[Path]) -> None:
     for file_hash, file_list in hash_map.items():
         if len(file_list) > 1:
             print("\nHash:", file_hash)
-            print(colored("Duplicate files:", "yellow"))
+            print_colored("Duplicate files:", "yellow")
             for duplicate_file in file_list:
                 print(f"  - {duplicate_file}")
 
     if not duplicates_found:
-        print(colored("\nNo duplicates found!", "green"))
+        print_colored("\nNo duplicates found!", "green")
