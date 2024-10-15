@@ -13,7 +13,7 @@ ANIMATION_RUNNING = False
 class AnimationManager:
     """Manage a cute and entertaining walking animation for actions that take time to complete."""
 
-    def __init__(self, loading_text: str | None = None, color: str | None = None, width: int = 40):
+    def __init__(self, loading_text: str | None = None, color: str | None = None, width: int = 30):
         self.loading_text = loading_text
         self.color = color
         self.width = width
@@ -37,7 +37,7 @@ class AnimationManager:
 def walking_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
-    width: int = 40,
+    width: int = 30,
 ):
     """
     Manage a walking animation as a context manager. All arguments are optional.
@@ -45,10 +45,10 @@ def walking_animation(
     Args:
         loading_text: Text to print before starting the animation. Defaults to None.
         color: Color to print the animation in. Defaults to None.
-        width: The width of the screen for the animation. Defaults to 40.
+        width: The width of the screen for the animation. Defaults to 30.
 
     Usage:
-        with walking_animation("Loading...", "yellow", 40):
+        with walking_animation("Loading...", "yellow", 30):
             long_running_function()
     """
     manager = AnimationManager(loading_text, color, width)
@@ -75,7 +75,7 @@ def conditional_animation(condition: bool, message: str | None = None) -> contex
 def show_walking_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
-    width: int = 40,
+    width: int = 30,
 ) -> None:
     """Print a walking animation until the animation_running flag is set to False."""
     character_right = " (>'-')>"
@@ -103,7 +103,7 @@ def show_walking_animation(
 def start_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
-    width: int = 40,
+    width: int = 30,
 ) -> Thread:
     """
     Start the walking animation.
@@ -111,7 +111,7 @@ def start_animation(
     Usage (all arguments optional):
         from dsutil.animation import start_animation, stop_animation
 
-        animation_thread = start_animation("Loading...", "yellow", 40)
+        animation_thread = start_animation("Loading...", "yellow", 30)
         stop_animation(animation_thread)
 
     Args:
