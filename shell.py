@@ -125,11 +125,20 @@ def acquire_sudo() -> bool:
     Returns:
         Whether sudo access was successfully acquired.
     """
-    try:
-        subprocess.check_call(["sudo", "-v"])
+    try:  # Check if we already have sudo privileges
+        subprocess.run(
+            ["sudo", "-n", "true"],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         return True
     except subprocess.CalledProcessError:
-        return False
+        try:  # If we don't have sudo privileges, try to acquire them
+            subprocess.run(["sudo", "-v"], check=True)
+            return True
+        except subprocess.CalledProcessError:
+            return False
 
 
 def get_single_char_input(prompt: str) -> str:
