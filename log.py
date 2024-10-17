@@ -4,10 +4,13 @@ up a logger with a console handler. The ConsoleColors class defines console colo
 the formatter to colorize messages by log level.
 """
 
+import inspect
 import logging
+import logging.config
 import os
 from datetime import datetime
 from threading import Lock
+from types import FrameType
 from typing import Any, Literal
 
 from zoneinfo import ZoneInfo
@@ -56,7 +59,7 @@ class LocalLogger:
     @classmethod
     def setup_logger(
         cls,
-        logger_name: str,
+        logger_name: str | None = None,
         level: int | str = "debug",
         message_only: bool = False,
         use_color: bool = True,
@@ -65,6 +68,9 @@ class LocalLogger:
     ) -> logging.Logger:
         """Set up a logger with the given name and log level."""
         with cls._lock:
+            frame = inspect.currentframe().f_back
+            logger_name = LocalLogger.get_logger_identifier(frame, logger_name)
+
             if logger_name in cls.loggers:
                 return cls.loggers[logger_name]
 
@@ -87,6 +93,21 @@ class LocalLogger:
             logger.propagate = False
             cls.loggers[logger_name] = logger
             return logger
+
+    @staticmethod
+    def get_logger_identifier(frame: FrameType, logger_name: str | None = None) -> str:
+        """Generate a logger identifier based on the provided parameters and calling context."""
+
+        def get_class_name() -> str:
+            if "self" in frame.f_locals:
+                return frame.f_locals["self"].__class__.__name__
+            if "cls" in frame.f_locals:
+                return frame.f_locals["cls"].__name__
+            module = inspect.getmodule(frame)
+            return module.__name__.split(".")[-1]
+
+        # If no identifier is given, use the class name and bot name if provided
+        return get_class_name() if logger_name is None else logger_name
 
     @staticmethod
     def update_level(logger: logging.Logger, level: str, log: bool = False) -> None:
