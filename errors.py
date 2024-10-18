@@ -8,9 +8,14 @@ import traceback
 import types
 from typing import Any, Callable
 
-from pygments import highlight
-from pygments.formatters import TerminalFormatter
-from pygments.lexers import PythonTracebackLexer
+try:
+    from pygments import highlight
+    from pygments.formatters import TerminalFormatter
+    from pygments.lexers import PythonTracebackLexer
+
+    PYGMENTS_AVAILABLE = True
+except ImportError:
+    PYGMENTS_AVAILABLE = False
 
 
 def log_traceback(exc_info: tuple | None = None, trim_levels: int = 0) -> None:
@@ -25,13 +30,17 @@ def log_traceback(exc_info: tuple | None = None, trim_levels: int = 0) -> None:
 
     # Log traceback and exception details
     if exc_value is not None and exc_traceback is not None:
-        traceback_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-        traceback_string = "".join(traceback_list)
-        colored_traceback = highlight(traceback_string, PythonTracebackLexer(), TerminalFormatter())
-        sys.stderr.write(colored_traceback)
+        tb_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+        tb = "".join(tb_list)
+        if PYGMENTS_AVAILABLE:
+            tb = highlight(tb, PythonTracebackLexer(), TerminalFormatter())
+        else:
+            print("Can't colorize traceback because Pygments is not installed.")
+        sys.stderr.write(tb)
 
 
-def configure_traceback():
+def configure_traceback() -> None:
+    """Configure the system to log tracebacks for unhandled exceptions."""
     sys.excepthook = lambda exctype, value, tb: log_traceback((exctype, value, tb))
 
 
