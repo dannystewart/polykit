@@ -31,6 +31,10 @@ def log_traceback(exc_info: tuple | None = None, trim_levels: int = 0) -> None:
         sys.stderr.write(colored_traceback)
 
 
+def configure_traceback():
+    sys.excepthook = lambda exctype, value, tb: log_traceback((exctype, value, tb))
+
+
 def catch_errors(
     show_tb: bool = True,
     on_error: Callable | None = None,
