@@ -70,36 +70,6 @@ def print_colored(
     print(colored(text, color_name, attrs=attrs), end=end)
 
 
-def colorize(text: str, color_name: ColorName, out: bool = True, end: str = "\n") -> str | None:
-    r"""
-    Use termcolor to color a string, if termcolor is available. By default, it prints the
-    output, but if out=False, it simply returns the colored string. This is an all-in-one
-    function that does what color() and print_colored() do, with the option for either.
-
-    Args:
-        text: The text to colorize.
-        color_name: The name of the color to use.
-        out: Whether to print the output (default: True).
-        end: The string to append after the output (default: "\n").
-
-    Returns:
-        None if out=True, otherwise the colored string.
-    """
-    try:
-        from termcolor import colored
-    except ImportError:
-        if out:
-            print(text, end=end)
-        return text
-
-    colored_text = colored(text, color_name)
-    if out:
-        print(colored_text, end=end)
-    else:
-        return colored_text
-    return None
-
-
 def info(message: str) -> None:
     """Print an informational message."""
     print_colored(message, "blue")
@@ -120,6 +90,32 @@ def error(message: str, skip_exit: bool = False) -> None:
     print_colored(f"\n{message}", "red")
     if not skip_exit:
         sys.exit(1)
+
+
+def pluralize(word: str, count: int | None) -> str:
+    """Pluralize a word."""
+    if count is None or count == 1:
+        return word
+    return f"{word}es" if word.endswith("s") else f"{word}s"
+
+
+def print_time(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
+    """Print a formatted time duration."""
+    sec_str = f"{seconds} {pluralize("second", seconds)}"
+    min_str = f"{minutes} {pluralize("minute", minutes)}"
+    hour_str = f"{hours} {pluralize("hour", hours)}"
+
+    if hours == 0:
+        if minutes == 0 and seconds == 0:
+            return sec_str
+        if seconds == 0:
+            return min_str
+        return sec_str if minutes == 0 else f"{min_str} and {sec_str}"
+    if minutes == 0:
+        return hour_str if seconds == 0 else f"{hour_str} and {sec_str}"
+    if seconds == 0:
+        return f"{hour_str} and {min_str}"
+    return f"{hour_str}, {min_str} and {sec_str}"
 
 
 def remove_html_tags(text):
