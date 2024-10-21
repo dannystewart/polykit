@@ -179,9 +179,8 @@ class LocalLogger:
             # Add the timestamp to the record
             record.asctime = self.formatTime(record, "%I:%M:%S %p")
 
-            # For basic logging, return the message only
-            if self.message_only:
-                bold = "" if record.levelname == "DEBUG" else bold
+            if self.message_only:  # Messages above INFO show in bold
+                bold = "" if record.levelname in ["DEBUG", "INFO"] else bold
                 return f"{reset}{bold}{level_color}{record.getMessage()}{reset}"
 
             # Format the timestamp
