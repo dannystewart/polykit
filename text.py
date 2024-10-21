@@ -99,7 +99,7 @@ def pluralize(word: str, count: int | None) -> str:
     return f"{word}es" if word.endswith("s") else f"{word}s"
 
 
-def print_time(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
+def format_duration(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
     """Print a formatted time duration."""
     sec_str = f"{seconds} {pluralize("second", seconds)}"
     min_str = f"{minutes} {pluralize("minute", minutes)}"
