@@ -74,11 +74,87 @@ indent-width = 4
 quote-style = "double"
 
 [tool.ruff.lint]
-select = ["E", "F", "C", "W"]
-ignore = ["E501"]
+select = [
+    "A",      # flake8-builtins
+    "ANN",    # flake8-annotations
+    "ARG",    # flake8-unused-arguments
+    "B",      # flake8-bugbear
+    "C",      # pylint convention
+    "C4",     # flake8-comprehensions
+    "COM",    # flake8-commas
+    "D",      # pydocstyle
+    "DTZ",    # flake8-datetimez
+    "E",      # pycodestyle errors
+    "EM",     # flake8-errmsg
+    "F",      # pyflakes
+    "FA",     # flake8-future-annotations
+    "G001",   # Logging statement uses str.format
+    "G003",   # Logging statement uses +
+    "G004",   # Logging statement uses f-strings
+    "G010",   # Logging statement uses warn instead of warning
+    "G201",   # Logging uses exc_info=True instead of .exception
+    "G202",   # Logging statement has redundant exc_info
+    "ISC",    # flake8-implicit-str-concat
+    "N",      # pep8-naming
+    "PIE",    # flake8-pie
+    "Q",      # flake8-quotes
+    "R",      # pylint refactor
+    "RET",    # flake8-return
+    "RSE",    # flake8-raise
+    "SIM",    # flake8-simplify
+    "SLF",    # flake8-self
+    "TCH",    # flake8-type-checking
+    "TD",     # flake8-todos
+    "TID",    # flake8-tidy-imports
+    "UP",     # pyupgrade
+    "W",      # pylint warnings
+]
+ignore = [
+    "ANN101", # Missing type annotation for 'self'
+    "ANN102", # Missing type annotation for 'cls'
+    "ANN204", # Missing return type annotation for __init__
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed
+    "B010",   # 'No docstring in module/class/method'
+    "COM812", # Trailing comma missing
+    "COM819", # Trailing comma prohibited (redundant with Ruff formatter)
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "D105",   # Missing docstring in magic method
+    "D107",   # Missing docstring in __init__
+    "D201",   # 'No blank lines allowed before function docstring'
+    "D202",   # Blank lines after function definition
+    "D203",   # 1 blank line required before class docstring
+    "D204",   # 1 blank line required after class docstring
+    "D205",   # 1 blank line required between summary line and description
+    "D206",   # Docstring should be indented with spaces not tabs
+    "D212",   # Multi-line docstring summary style
+    "D300",   # Triple single quotes (redundant with Ruff formatter)
+    "D400",   # First line should end with a period
+    "D406",   # Section name should end with a newline
+    "D407",   # Missing dashed underline after section
+    "D413",   # Missing blank line after last section
+    "E111",   # Indentation with invalid multiple (redundant with Ruff formatter)
+    "E114",   # Indentation with invalid multiple comment (redundant with Ruff formatter)
+    "E117",   # Over-indented (redundant with Ruff formatter)
+    "E261",   # At least two spaces before inline comment (formatter fixes this)
+    "E303",   # Too many blank lines (formatter fixes this)
+    "E501",   # Line too long
+    "ISC001", # Single-line implicit string concatenation (redundant with Ruff formatter)
+    "ISC002", # Multi-line  implicit string concatenation (redundant with Ruff formatter)
+    "Q000",   # Bad quotes inline string (redundant with Ruff formatter)
+    "Q001",   # Bad quotes multiline string (redundant with Ruff formatter)
+    "Q002",   # Bad quotes docstring (redundant with Ruff formatter)
+    "Q003",   # Avoidable escaped quote (redundant with Ruff formatter)
+    "RET502", # Do not implicitly `return None` in function able to return non-`None` value
+    "RET503", # Missing explicit return at the end of function able to return non-None value
+    "SIM102", # Use a single if statement instead of nested if statements (Sourcery)
+    "TD001",  # Invalid TODO format
+    "TD002",  # Missing author in TODO
+    "TD003",  # Missing issue link on the line following this TODO
+    "W191",   # Tab indentation (redundant with Ruff formatter)
+    "W291",   # Trailing whitespace
+    "W293",   # Blank line contains whitespace
+]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
-
-[tool.mypy]
-ignore_missing_imports = true
+"__init__.py" = ["F401"]  # Imported but unused module-level import
