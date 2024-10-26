@@ -69,7 +69,7 @@ class LocalLogger:
         """Set up a logger with the given name and log level."""
         with cls._lock:
             frame = inspect.currentframe().f_back
-            logger_name = LocalLogger.get_logger_identifier(frame, logger_name)
+            logger_name = LocalLogger.get_logger_name(frame, logger_name)
 
             if logger_name in cls.loggers:
                 return cls.loggers[logger_name]
@@ -95,7 +95,7 @@ class LocalLogger:
             return logger
 
     @staticmethod
-    def get_logger_identifier(frame: FrameType, logger_name: str | None = None) -> str:
+    def get_logger_name(frame: FrameType, logger_name: str | None = None) -> str:
         """Generate a logger identifier based on the provided parameters and calling context."""
 
         def get_class_name() -> str:
@@ -106,7 +106,7 @@ class LocalLogger:
             module = inspect.getmodule(frame)
             return module.__name__.split(".")[-1]
 
-        # If no identifier is given, use the class name and bot name if provided
+        # If no identifier is given, use the class name if provided
         return get_class_name() if logger_name is None else logger_name
 
     @staticmethod
