@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 import sys
 import time
-from contextlib import contextmanager, nullcontext
+from contextlib import AbstractContextManager, contextmanager, nullcontext
 from threading import Thread
+from typing import TYPE_CHECKING
 
 from dsutil.shell import handle_keyboard_interrupt
 from dsutil.text import ColorName
 from dsutil.text import color as colorize
+
+if TYPE_CHECKING:
+    from types import TracebackType
 
 ANIMATION_RUNNING = False
 
@@ -24,7 +30,12 @@ class AnimationManager:
         self.animation_thread = start_animation(self.loading_text, self.color, self.width)
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Stop the walking animation when exiting the context manager."""
         stop_animation(self.animation_thread)
         if self.loading_text:
@@ -56,7 +67,9 @@ def walking_animation(
         yield
 
 
-def conditional_animation(condition: bool, message: str | None = None) -> contextmanager:
+def conditional_animation(
+    condition: bool, message: str | None = None
+) -> AbstractContextManager[None]:
     """
     Run the walking animation if the condition is met.
 

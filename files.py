@@ -1,4 +1,5 @@
 # pylint: disable=too-many-branches
+from __future__ import annotations
 
 import hashlib
 import os
@@ -6,13 +7,18 @@ import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING
 
 from natsort import natsorted
 from send2trash import send2trash
 
+from globals import TZ
+
 from dsutil.shell import confirm_action
 from dsutil.text import ColorName, print_colored
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ==================================================================================================
 # List files
@@ -71,10 +77,7 @@ def list_files(
         extensions = ["*"]
     files_filtered: list = []
     for extension in extensions:
-        if recursive:
-            files = directory_path.rglob(extension)
-        else:
-            files = directory_path.glob(extension)
+        files = directory_path.rglob(extension) if recursive else directory_path.glob(extension)
         files_filtered.extend(
             file
             for file in files
@@ -105,13 +108,16 @@ def file_matches_criteria(
     """Check if a file matches the given criteria."""
     result = True
     try:
-        if not include_hidden and file_path.name.startswith("."):
-            result = False
-        elif exclude_patterns and any(file_path.match(pattern) for pattern in exclude_patterns):
+        if (
+            not include_hidden
+            and file_path.name.startswith(".")
+            or exclude_patterns
+            and any(file_path.match(pattern) for pattern in exclude_patterns)
+        ):
             result = False
         else:
             file_stats = file_path.stat()
-            file_mtime = datetime.fromtimestamp(file_stats.st_mtime)
+            file_mtime = datetime.fromtimestamp(file_stats.st_mtime, tz=TZ)
             is_below_min_size = min_size is not None and file_stats.st_size < min_size
             is_above_max_size = max_size is not None and file_stats.st_size > max_size
             is_modified_too_early = modified_after is not None and file_mtime <= modified_after
@@ -237,7 +243,7 @@ def _handle_file_deletion(file_path: Path, dry_run: bool = False, show_output: b
 
 def copy_file(
     source: str | Path,
-    destination: str,
+    destination: str | Path,
     overwrite: bool = True,
     show_output: bool = True,
 ) -> bool:
@@ -282,7 +288,8 @@ def _copy_win32_file(source: Path, destination: Path) -> None:
         import win32con  # type: ignore
         import win32file  # type: ignore
     except ImportError as e:
-        raise ImportError("pywin32 is required for copying files on Windows.") from e
+        msg = "pywin32 is required for copying files on Windows."
+        raise ImportError(msg) from e
 
     # Copy the file with metadata
     shutil.copy2(source, destination)

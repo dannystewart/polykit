@@ -1,18 +1,25 @@
 """Utilities for displaying progress messages and spinners."""
 
+from __future__ import annotations
+
 import subprocess
 import time
 from contextlib import contextmanager
 from functools import wraps
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from halo import Halo
 
 from dsutil.shell import color as colorize
 from dsutil.text import ColorName, print_colored
 
+if TYPE_CHECKING:
+    from collections.abc import Callable, Generator
 
-def with_retries(operation_func: Callable) -> Callable:
+T = TypeVar("T")
+
+
+def with_retries(operation_func: Callable[..., T]) -> Callable[..., T]:
     """
     Retry operations with a spinner.
 
@@ -23,7 +30,13 @@ def with_retries(operation_func: Callable) -> Callable:
         callable: The decorated function with retry handling.
     """
 
-    def wrapper(*args, retries=3, wait_time=3, spinner=None, **kwargs):
+    def wrapper(
+        *args: Any,
+        retries: int = 3,
+        wait_time: float = 3,
+        spinner: Halo = None,
+        **kwargs: Any,
+    ) -> T:
         last_exception = None
         for attempt in range(retries):
             try:
@@ -39,9 +52,8 @@ def with_retries(operation_func: Callable) -> Callable:
                     "yellow",
                 )
                 time.sleep(wait_time)
-        raise RuntimeError(
-            f"Operation failed after {retries} attempts: {operation_func.__name__}"
-        ) from last_exception
+        msg = f"Operation failed after {retries} attempts: {operation_func.__name__}"
+        raise RuntimeError(msg) from last_exception
 
     return wrapper
 
@@ -50,7 +62,7 @@ def with_spinner(
     text: str = "Processing...",
     success: str | None = None,
     color: ColorName | None = None,
-) -> Callable:
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """
     Display a spinner while the decorated function is running.
 
@@ -60,9 +72,9 @@ def with_spinner(
         color: The color of the text. Defaults to "cyan".
     """
 
-    def spinner_decorator(func: Callable) -> Callable:
+    def spinner_decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> T:
             spinner_text = colorize(text, color) if color else text
             spinner = Halo(text=spinner_text, spinner="dots", color=color)
             spinner.start()
@@ -91,7 +103,7 @@ def halo_progress(
     end_message: str = "Processed",
     fail_message: str = "Failed",
     show: bool = True,
-) -> Any:
+) -> Generator[Halo | None, None, None]:
     """
     Context manager to display a Halo spinner while a block of code is executing, with customized
     start and end messages.
@@ -146,7 +158,7 @@ def halo_progress(
 
 
 @contextmanager
-def conversion_list_context(file_name: str) -> Any:
+def conversion_list_context(file_name: str) -> Generator[None, None, None]:
     """
     Context manager to print a converting message at the start and a completion message at the end.
 

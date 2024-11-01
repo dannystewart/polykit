@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import atexit
 import concurrent
 import concurrent.futures
@@ -8,9 +10,12 @@ import threading
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor, wait
-from typing import Callable
+from typing import TYPE_CHECKING
 
 from log import LocalLogger
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class LocalThreader:
@@ -146,10 +151,14 @@ class LocalThreader:
             self.handle_thread_exception(e, target, *args, **kwargs)
 
     def handle_thread_exception(
-        self, e: Exception, target: Callable, *args: list, **kwargs: dict
+        self,
+        e: Exception,
+        target: Callable,
+        *args: list,  # noqa: ARG002
+        **kwargs: dict,  # noqa: ARG002
     ) -> None:
         """
-        Handle exceptions for functions executed in threads, similar to what the
+        Handle exceptions for functions executed in threads, similar to @catch_errors.
 
         Args:
             e: The caught exception.

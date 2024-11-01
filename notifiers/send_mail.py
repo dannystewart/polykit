@@ -1,5 +1,7 @@
 """Send emails using an SMTP server configured via environment variables."""
 
+from __future__ import annotations
+
 import smtplib
 from email.mime.text import MIMEText
 
@@ -26,7 +28,7 @@ class MailSender:
         name: str,
         email: str,
         smtp_server: str,
-        smtp_port,
+        smtp_port: int,
         smtp_user: str,
         smtp_password: str,
         timeout: int = 10,
@@ -40,7 +42,9 @@ class MailSender:
         self.smtp_password = smtp_password
         self.timeout = timeout
 
-    def send_email(self, subject: str, body: str, recipients: str | list[str] | None = None) -> bool:
+    def send_email(
+        self, subject: str, body: str, recipients: str | list[str] | None = None
+    ) -> bool:
         """
         Compose and prepare an email with the given subject and body, then send it using
         the configured SMTP server.

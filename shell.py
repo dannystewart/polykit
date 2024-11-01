@@ -3,14 +3,20 @@ Utility functions for working with the shell, such as handling keyboard interrup
 colors, as well as reading and writing files.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import subprocess
 import sys
 from functools import wraps
-from typing import Callable
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from dsutil.text import ColorName, color
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+T = TypeVar("T")
 
 
 def handle_keyboard_interrupt(
@@ -20,12 +26,12 @@ def handle_keyboard_interrupt(
     use_newline: bool = False,
     use_logging: bool = False,
     logger: logging.Logger | None = None,
-) -> Callable:
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Handle KeyboardInterrupt exceptions."""
 
-    def decorator(func):
+    def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> T:
             try:
                 return func(*args, **kwargs)
             except KeyboardInterrupt:
@@ -50,7 +56,9 @@ def handle_keyboard_interrupt(
     return decorator
 
 
-def catch_errors(additional_errors: dict | None = None) -> Callable:
+def catch_errors(
+    additional_errors: dict[type[Exception], str] | None = None,
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """
     Handle errors. Includes handling for common errors and allows specification of additional,
     more specific errors.
@@ -66,9 +74,9 @@ def catch_errors(additional_errors: dict | None = None) -> Callable:
     if additional_errors:
         error_map.update(additional_errors)
 
-    def decorator(func):
+    def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> T:
             try:
                 return func(*args, **kwargs)
             except tuple(error_map.keys()) as e:
@@ -172,7 +180,9 @@ def get_single_char_input(prompt: str) -> str:
     return char
 
 
-def confirm_action(prompt, default_to_yes: bool = False, prompt_color: ColorName = "white") -> bool:
+def confirm_action(
+    prompt: str, default_to_yes: bool = False, prompt_color: ColorName = "white"
+) -> bool:
     """
     Ask the user to confirm an action before proceeding.
 

@@ -1,10 +1,12 @@
 """Send Telegram messages."""
 
+from __future__ import annotations
+
 import requests
 
-from dsutil.log import LocalLogger
-
 from .telegram_api_helper import TelegramAPIHelper
+
+from dsutil.log import LocalLogger
 
 
 class TelegramSender:
@@ -23,8 +25,12 @@ class TelegramSender:
         self.chat_id = chat_id
 
     def send_message(
-        self, message: str, chat_id: str | None = None, parse_mode: str | None = None, log: bool = False
-    ):
+        self,
+        message: str,
+        chat_id: str | None = None,
+        parse_mode: str | None = None,
+        log: bool = False,
+    ) -> bool:
         """
         Send a message to a Telegram chat. Uses the chat ID and token provided during
         initialization of the class.
@@ -63,7 +69,7 @@ class TelegramSender:
         duration: int = None,
         title: str | None = None,
         performer: str | None = None,
-    ):
+    ) -> bool:
         """
         Send a local audio file to a specified chat. Supports optional message modification and
         deletion by providing a message ID and new text. Optionally remove an attached keyboard

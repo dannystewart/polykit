@@ -1,24 +1,31 @@
 """Utility functions for system operations."""
 
-import logging
+from __future__ import annotations
+
 import subprocess
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from contextlib import contextmanager
 from functools import wraps
 from threading import Thread
-from typing import Callable
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from dsutil.text import print_colored
 
+if TYPE_CHECKING:
+    import logging
+    from collections.abc import Callable
+
+T = TypeVar("T")
+
 
 def retry_on_exc(
-    exception_to_check: Exception,
+    exception_to_check: type[Exception],
     tries: int = 4,
     delay: int = 3,
     backoff: int = 2,
     logger: logging.Logger | None = None,
-) -> Callable:
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """
     Retry a function if a specified exception occurs.
 
@@ -30,16 +37,16 @@ def retry_on_exc(
         logger: Logger for logging retries. If None, print to stdout instead.
     """
 
-    def decorator(func):
+    def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> T:
             nonlocal tries, delay
             while tries > 1:
                 try:
                     return func(*args, **kwargs)
                 except exception_to_check as e:
                     if logger:
-                        logger.warning(f"{e}. Retrying in {delay} seconds...")
+                        logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
                         print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
@@ -53,7 +60,7 @@ def retry_on_exc(
 
 
 @contextmanager
-def popen(*args, **kwargs):
+def popen(*args: Any, **kwargs: Any):
     """
     Context manager for running subprocesses safely.
 
@@ -90,11 +97,11 @@ def popen(*args, **kwargs):
             process.wait()
 
 
-def run_in_thread(func):
+def run_in_thread(func: Callable[..., T]) -> Callable[..., Thread]:
     """Run a function in a separate thread."""
 
     @wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: Any, **kwargs: Any) -> Thread:
         thread = Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
         return thread
@@ -102,13 +109,13 @@ def run_in_thread(func):
     return wrapper
 
 
-def run_in_executor(func):
+def run_in_executor(func: Callable[..., T]) -> Callable[..., T]:
     """Run a function in a separate thread using ThreadPoolExecutor."""
 
     @wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: Any, **kwargs: Any) -> T:
         with ThreadPoolExecutor() as executor:
-            future = executor.submit(func, *args, **kwargs)
+            future: Future[T] = executor.submit(func, *args, **kwargs)
             return future.result()
 
     return wrapper

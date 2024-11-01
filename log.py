@@ -4,18 +4,21 @@ up a logger with a console handler. The ConsoleColors class defines console colo
 the formatter to colorize messages by log level.
 """
 
+from __future__ import annotations
+
 import inspect
 import logging
 import logging.config
 import os
 from datetime import datetime
 from threading import Lock
-from types import FrameType
-from typing import Any, Literal
-
+from typing import TYPE_CHECKING, Any, Literal
 from zoneinfo import ZoneInfo
 
 from dsutil.time_utils import get_pretty_time
+
+if TYPE_CHECKING:
+    from types import FrameType
 
 FormatterLevel = Literal["basic", "advanced"]
 

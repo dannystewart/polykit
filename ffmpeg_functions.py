@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import os
 import subprocess
@@ -166,10 +168,10 @@ def add_audio_flags(
     if sample_rate:
         command += ["-ar", sample_rate]
 
-    command += _get_arguments_for_codec(output_format, bit_depth)
+    command.extend(_get_arguments_for_codec(output_format, bit_depth))
 
 
-def _get_arguments_for_codec(output_format: str, bit_depth: int) -> tuple[str, str]:
+def _get_arguments_for_codec(output_format: str, bit_depth: int) -> list[str]:
     """Get the additional arguments needed specifically for the output format and bit depth."""
     command = []
     if output_format == "flac":

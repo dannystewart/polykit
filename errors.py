@@ -6,7 +6,10 @@ import logging
 import sys
 import traceback
 import types
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 try:
     from pygments import highlight

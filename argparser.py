@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import argparse
 import textwrap
 from dataclasses import dataclass
-from typing import Any, Type
+from typing import Any
 
 
 @dataclass
@@ -9,7 +11,7 @@ class ArgInfo:
     """Information for a command-line argument."""
 
     help: str
-    type: Type | None = None
+    type: type | None = None
     default: Any = None
     action: str | None = None
     nargs: str | None = None
@@ -18,8 +20,11 @@ class ArgInfo:
 
 
 class ArgumentsBase:
+    """Base class for command-line arguments."""
+
     @classmethod
     def as_dict(cls) -> dict[str, ArgInfo]:
+        """Return a dictionary of argument names and ArgInfo instances in the class."""
         return {name: value for name, value in cls.__dict__.items() if isinstance(value, ArgInfo)}
 
 
@@ -72,7 +77,7 @@ class ArgParser(argparse.ArgumentParser):
         - add_args_from_class: Adds multiple arguments based on a class of ArgInfo instances.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         self.arg_width = kwargs.pop("arg_width", 24)
         self.max_width = kwargs.pop("max_width", 120)
         super().__init__(
@@ -131,7 +136,7 @@ class ArgParser(argparse.ArgumentParser):
         else:
             self.add_argument(f"--{name.replace('_', '-')}", **kwargs)
 
-    def add_args_from_class(self, arg_class: Type[ArgumentsBase]) -> None:
+    def add_args_from_class(self, arg_class: type[ArgumentsBase]) -> None:
         """
         Automatically add arguments to the parser based on a class of ArgInfo instances.
 

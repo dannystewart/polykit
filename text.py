@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 import sys
 from typing import Literal
@@ -118,6 +120,6 @@ def format_duration(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
     return f"{hour_str}, {min_str} and {sec_str}"
 
 
-def remove_html_tags(text):
+def remove_html_tags(text: str) -> str:
     """Remove HTML tags from a string."""
     return re.sub("<[^>]*>", "", text)

@@ -1,5 +1,7 @@
 """macOS-specific functions and utilities."""
 
+from __future__ import annotations
+
 import subprocess
 
 
@@ -29,7 +31,8 @@ def set_timestamps(file: str, ctime: str | None = None, mtime: str | None = None
         mtime: The modification timestamp to set. If None, modification time won't be set.
     """
     if ctime is None and mtime is None:
-        raise ValueError("At least one of ctime or mtime must be set.")
+        msg = "At least one of ctime or mtime must be set."
+        raise ValueError(msg)
     if ctime:
         subprocess.run(["SetFile", "-d", ctime, file])
     if mtime:

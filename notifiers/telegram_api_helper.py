@@ -1,5 +1,7 @@
 """Send Telegram messages."""
 
+from __future__ import annotations
+
 import requests
 
 from dsutil.log import LocalLogger
@@ -30,7 +32,7 @@ class TelegramAPIHelper:
         payload: dict | None = None,
         timeout: int | None = None,
         files: dict | None = None,
-    ):
+    ) -> dict:
         """
         Make a POST request to the Telegram API using the specified method, payload, and timeout.
 
@@ -71,8 +73,10 @@ class TelegramAPIHelper:
                 error_msg = response_data.get("description", "Unknown error.")
                 self.logger.error("Failed to call %s: %s", api_method, error_msg)
                 self.logger.debug("Code %s: %s", response.status_code, response_data)
-                raise Exception(f"Failed to call {api_method}: {error_msg}")
+                msg = f"Failed to call {api_method}: {error_msg}"
+                raise Exception(msg)
             return response_data
         except requests.RequestException as e:
             self.logger.warning("Request to Telegram API failed: %s", str(e))
-            raise Exception(f"Request to Telegram API failed: {e}") from e
+            msg = f"Request to Telegram API failed: {e}"
+            raise Exception(msg) from e

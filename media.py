@@ -1,5 +1,7 @@
 """Functions for working with media files using ffmpeg."""
 
+from __future__ import annotations
+
 import subprocess
 
 from dsutil.animation import conditional_animation
