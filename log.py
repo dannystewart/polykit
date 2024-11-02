@@ -11,6 +11,7 @@ import logging
 import logging.config
 import os
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
 from threading import Lock
 from typing import TYPE_CHECKING, Any, Literal
 from zoneinfo import ZoneInfo
@@ -68,6 +69,8 @@ class LocalLogger:
         use_color: bool = True,
         show_class: bool = False,
         show_function: bool = False,
+        log_file: str | None = None,
+        log_file_level: int | str = "debug",
     ) -> logging.Logger:
         """Set up a logger with the given name and log level."""
         with cls._lock:
@@ -92,6 +95,9 @@ class LocalLogger:
             console_handler.setFormatter(log_formatter)
             console_handler.setLevel(log_level)
             logger.addHandler(console_handler)
+
+            if log_file:
+                cls.add_file_handler(logger, log_file, log_file_level)
 
             logger.propagate = False
             cls.loggers[logger_name] = logger
@@ -148,6 +154,40 @@ class LocalLogger:
         if isinstance(level, str):
             level = log_levels.get(level.lower(), logging.DEBUG)
         return logging.getLevelName(level)
+
+    @staticmethod
+    def add_file_handler(
+        logger: logging.Logger,
+        log_file: str,
+        level: int | str = logging.DEBUG,
+        max_bytes: int = 5 * 1024 * 1024,  # 5 MB
+        backup_count: int = 5,
+    ) -> None:
+        """
+        Add a file handler to the given logger.
+
+        Args:
+            logger: The logger to add the file handler to.
+            log_file: The path to the log file.
+            level: The logging level for the file handler.
+            max_bytes: The maximum size of the log file before it rolls over.
+            backup_count: The number of backup files to keep.
+        """
+        formatter = LocalLogger.FileFormatter()
+        log_dir = os.path.dirname(log_file)
+        log_file_path = log_file
+
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+
+        if not os.path.isfile(log_file_path):
+            with open(log_file_path, "a", encoding="utf-8"):
+                os.utime(log_file_path, None)
+
+        file_handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
+        file_handler.setFormatter(formatter)
+        file_handler.setLevel(LocalLogger.get_level_name(level))
+        logger.addHandler(file_handler)
 
     class CustomFormatter(logging.Formatter):
         """Custom log formatter supporting both basic and advanced formats."""
@@ -214,6 +254,14 @@ class LocalLogger:
             # Format the message color and return the formatted message
             message = f"{line_color}{record.getMessage()}{reset}"
             return f"{timestamp}{log_level}{class_name}{function}{message}"
+
+    class FileFormatter(logging.Formatter):
+        """Formatter class for file log messages."""
+
+        def format(self, record: logging.LogRecord) -> str:
+            """Format a log record for file output."""
+            record.asctime = self.formatTime(record, "%Y-%m-%d %H:%M:%S")
+            return f"[{record.asctime}] [{record.levelname}] {record.name}: {record.funcName}: {record.getMessage()}"
 
 
 class TimeAwareLogger:
