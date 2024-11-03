@@ -1,3 +1,3 @@
 from __future__ import annotations
 
-from .globals import TZ
+from .time_utils import TZ
