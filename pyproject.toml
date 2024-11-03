@@ -14,15 +14,16 @@ halo = "^0.0.31"
 natsort = "^8.4.0"
 pathlib = "^1.0.1"
 pygments = "^2.18.0"
-requests = "^2.32.2"
-Send2Trash = "^1.8.3"
+requests = "^2.32.3"
+send2trash = "^1.8.3"
 soundfile = "^0.12.1"
-termcolor = "^2.4.0"
+termcolor = "^2.5.0"
+tzdata = "^2024.2"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.10.0"
-ruff = "^0.7.1"
-types-requests = "^2.32.0.20240523"
+mypy = "^1.13.0"
+ruff = "^0.7.2"
+types-requests = "^2.32.0.20241016"
 types-send2trash = "^1.8.2.7"
 
 [build-system]
