@@ -13,13 +13,21 @@ from dsutil.text import color as colorize
 if TYPE_CHECKING:
     from types import TracebackType
 
+# Animation character width
+ANIMATION_WIDTH = 30
+
 ANIMATION_RUNNING = False
 
 
 class AnimationManager:
     """Manage a cute and entertaining walking animation for actions that take time to complete."""
 
-    def __init__(self, loading_text: str | None = None, color: str | None = None, width: int = 30):
+    def __init__(
+        self,
+        loading_text: str | None = None,
+        color: str | None = None,
+        width: int = ANIMATION_WIDTH,
+    ):
         self.loading_text = loading_text
         self.color = color
         self.width = width
@@ -48,7 +56,7 @@ class AnimationManager:
 def walking_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
-    width: int = 30,
+    width: int = ANIMATION_WIDTH,
 ):
     """
     Manage a walking animation as a context manager. All arguments are optional.
@@ -56,7 +64,7 @@ def walking_animation(
     Args:
         loading_text: Text to print before starting the animation. Defaults to None.
         color: Color to print the animation in. Defaults to None.
-        width: The width of the screen for the animation. Defaults to 30.
+        width: The width of the screen for the animation. Defaults to ANIMATION_WIDTH.
 
     Usage:
         with walking_animation("Loading...", "yellow", 30):
@@ -88,7 +96,7 @@ def conditional_animation(
 def show_walking_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
-    width: int = 30,
+    width: int = ANIMATION_WIDTH,
 ) -> None:
     """Print a walking animation until the animation_running flag is set to False."""
     character_right = " (>'-')>"
@@ -116,7 +124,7 @@ def show_walking_animation(
 def start_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
-    width: int = 30,
+    width: int = ANIMATION_WIDTH,
 ) -> Thread:
     """
     Start the walking animation.
