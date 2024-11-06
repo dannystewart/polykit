@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dsutil"
-version = "1.0.5"
+version = "1.0.6"
 description = "Danny's Python utility scripts"
 authors = ["Danny Stewart <danny@stewart.cc>"]
 readme = "README.md"

@@ -4,8 +4,6 @@ import os
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-TZ = ZoneInfo("America/New_York")
-
 
 def get_timezone() -> ZoneInfo:
     """Get the timezone and return it as a ZoneInfo object."""
