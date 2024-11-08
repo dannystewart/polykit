@@ -244,7 +244,7 @@ class LocalLogger:
 
             # Note whether we've above INFO level and use level color if so
             above_info = record.levelname not in ["DEBUG", "INFO"]
-            reset = f"{line_color}" if above_info else f"{reset}"
+            reset = f"{line_color}{reset}" if above_info else f"{reset}"
 
             # Format the function color and name
             class_color = blue if self.use_color else reset
