@@ -102,27 +102,41 @@ def update_config_file(config: ConfigFile, content: str, is_package: bool = Fals
 
 def update_configs() -> None:
     """Pull down latest configs from GitLab, updating both local and package copies."""
+    changes_made = set()
+
     for config in CONFIGS:
         try:
+            # Get remote version
             response = requests.get(config.url)
             response.raise_for_status()
-            content = response.text
+            remote_content = response.text
 
-            # Ensure package directory exists
+            # Always update the package copy first as this is our fallback
             config.package_path.parent.mkdir(exist_ok=True)
+            config.package_path.write_text(remote_content)
 
-            # Update both copies if needed
-            local_updated = update_config_file(config, content)
-            package_updated = update_config_file(config, content, is_package=True)
-
-            if not (local_updated or package_updated):
-                logger.info("No changes needed for %s config.", config.name)
+            if config.local_path.exists():  # Check and update the local copy if needed
+                current_content = config.local_path.read_text()
+                if current_content != remote_content:
+                    show_diff(remote_content, current_content, config.local_path.name)
+                    if confirm_action(f"Update local {config.name} config?", default_to_yes=True):
+                        config.local_path.write_text(remote_content)
+                        logger.info("Updated %s config.", config.name)
+                        changes_made.add(config.name)
+            else:  # If no local copy exists, create one now
+                config.local_path.write_text(remote_content)
+                logger.info("Created new %s config.", config.name)
+                changes_made.add(config.name)
 
         except requests.RequestException:
-            if config.package_path.exists():  # If download fails, copy from package to local
+            if config.package_path.exists():
                 shutil.copy(config.package_path, config.local_path)
                 logger.warning(
                     "Failed to download %s config, copied from package version.", config.name
                 )
             else:
                 logger.error("Failed to update %s config.", config.name)
+
+    unchanged = [c.name for c in CONFIGS if c.name not in changes_made]
+    if unchanged:
+        logger.info("No changes needed for: %s", ", ".join(unchanged))
