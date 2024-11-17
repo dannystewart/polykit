@@ -17,6 +17,7 @@ requests = "^2.32.3"
 send2trash = "^1.8.3"
 soundfile = "^0.12.1"
 termcolor = "^2.5.0"
+textual = "<0.86.0,>=0.85.2"
 tzdata = "^2024.2"
 
 [tool.poetry.group.dev.dependencies]
