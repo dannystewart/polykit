@@ -16,6 +16,20 @@ class DSPaths:
     r"""
     Manage paths in a DS-friendly way.
 
+    Args:
+        app_name: Name of the application.
+        app_author: Author of the application.
+        app_domain: Domain for macOS paths.
+        version: Application version.
+        create_dirs: Whether to create directories if they don't exist.
+
+    Usage:
+        paths = DSPaths("dsmusic")
+
+        db_path = paths.get_data_path("upload_log.db")
+        cache_path = paths.get_cache_path("api_responses", "tracks.json")
+        log_path = paths.get_log_path("debug.log")
+
     Platform-specific paths:
         Linux:
             data:      ~/.local/share/app_name
@@ -40,13 +54,6 @@ class DSPaths:
             logs:      C:\\Users\\<user>\\AppData\\Local\\app_author\\app_name\\Logs
             state:     C:\\Users\\<user>\\AppData\\Local\\app_author\\app_name
             documents: C:\\Users\\<user>\\Documents
-
-    Usage:
-        paths = DSPaths("dsmusic")
-
-        db_path = paths.get_data_path("upload_log.db")
-        cache_path = paths.get_cache_path("api_responses", "tracks.json")
-        log_path = paths.get_log_path("debug.log")
     """
 
     app_name: str
