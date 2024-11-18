@@ -105,8 +105,9 @@ class DSEnv:
     """
 
     app_name: str
-    env_file: str | None = field(default=None)
+    env_file: str | None = "~/.env"
     log_level: str = "info"
+    validate_on_add: bool = True
 
     _vars: dict[str, EnvVar] = field(default_factory=dict)
     _values: dict[str, Any] = field(default_factory=dict)
@@ -157,6 +158,13 @@ class DSEnv:
             description=description,
             secret=secret,
         )
+
+        # Validate immediately if enabled
+        if self.validate_on_add:
+            try:
+                self.get(name)
+            except Exception as e:
+                raise ValueError(str(e)) from e
 
     def validate(self) -> list[str]:
         """
