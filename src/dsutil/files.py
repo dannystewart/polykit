@@ -12,9 +12,9 @@ from typing import TYPE_CHECKING
 from natsort import natsorted
 from send2trash import send2trash
 
+from dsutil import TZ
 from dsutil.shell import confirm_action
 from dsutil.text import ColorName, print_colored
-from dsutil.tz import TZ
 
 if TYPE_CHECKING:
     from collections.abc import Callable

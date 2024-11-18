@@ -16,7 +16,7 @@ from threading import Lock
 from typing import TYPE_CHECKING, Any, Literal
 from zoneinfo import ZoneInfo
 
-from dsutil.time_utils import get_pretty_time
+from dsutil.tools import get_pretty_time
 
 if TYPE_CHECKING:
     from types import FrameType

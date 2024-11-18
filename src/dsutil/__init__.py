@@ -1,3 +1,3 @@
 from __future__ import annotations
 
-from .tz import TZ
+from dsutil.tools.time import TZ

@@ -5,7 +5,7 @@ from __future__ import annotations
 import subprocess
 
 from dsutil.animation import conditional_animation
-from dsutil.ffmpeg_functions import (
+from dsutil.media.ffmpeg import (
     add_audio_flags,
     add_video_flags,
     construct_ffmpeg_command,

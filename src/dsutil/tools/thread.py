@@ -12,7 +12,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor, wait
 from typing import TYPE_CHECKING
 
-from log import LocalLogger
+from dsutil.log import LocalLogger
 
 if TYPE_CHECKING:
     from collections.abc import Callable

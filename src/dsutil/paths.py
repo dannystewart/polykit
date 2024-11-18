@@ -77,16 +77,16 @@ class DSPaths:
         """Get user's home directory."""
         return os.path.expanduser("~")
 
-    def get_home_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_home_path(self, *paths: str, no_create: bool = False) -> str:
         """
         Get a path in the user's home directory.
 
         Args:
-            *paths: Path components to join (e.g., ".ssh", "id_rsa")
-            ensure_exists: Whether to create parent directories
+            *paths: Path components to join (e.g., "subfolder", "file.txt").
+            no_create: Whether to avoid creating directories that don't exist.
         """
         path = os.path.join(self.home_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -95,10 +95,10 @@ class DSPaths:
         """Get user's Documents directory."""
         return os.path.join(self.home_dir, "Documents")
 
-    def get_documents_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_documents_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Documents directory."""
         path = os.path.join(self.documents_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -107,10 +107,10 @@ class DSPaths:
         """Get user's Downloads directory."""
         return os.path.join(self.home_dir, "Downloads")
 
-    def get_downloads_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_downloads_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Downloads directory."""
         path = os.path.join(self.downloads_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -119,10 +119,10 @@ class DSPaths:
         """Get user's Music directory."""
         return os.path.join(self.home_dir, "Music")
 
-    def get_music_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_music_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Music directory."""
         path = os.path.join(self.music_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -131,10 +131,10 @@ class DSPaths:
         """Get user's Pictures directory."""
         return os.path.join(self.home_dir, "Pictures")
 
-    def get_pictures_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_pictures_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Pictures directory."""
         path = os.path.join(self.pictures_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -147,10 +147,10 @@ class DSPaths:
         """Get data directory for storing persistent data."""
         return self._dirs.user_data_dir
 
-    def get_data_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_data_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the data directory."""
         path = os.path.join(self.data_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -159,10 +159,10 @@ class DSPaths:
         """Get cache directory for temporary data."""
         return self._dirs.user_cache_dir
 
-    def get_cache_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_cache_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the cache directory."""
         path = os.path.join(self.cache_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -171,10 +171,10 @@ class DSPaths:
         """Get config directory for settings."""
         return self._dirs.user_config_dir
 
-    def get_config_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_config_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the config directory."""
         path = os.path.join(self.config_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -183,10 +183,10 @@ class DSPaths:
         """Get log directory."""
         return self._dirs.user_log_dir
 
-    def get_log_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_log_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the log directory."""
         path = os.path.join(self.log_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
@@ -195,10 +195,10 @@ class DSPaths:
         """Get state directory for runtime state."""
         return self._dirs.user_state_dir
 
-    def get_state_path(self, *paths: str, ensure_exists: bool = True) -> str:
+    def get_state_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the state directory."""
         path = os.path.join(self.state_dir, *paths)
-        if ensure_exists and self.create_dirs:
+        if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 

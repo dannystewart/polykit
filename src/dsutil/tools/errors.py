@@ -4,12 +4,16 @@ import functools
 import inspect
 import logging
 import sys
+import time
 import traceback
 import types
-from typing import TYPE_CHECKING, Any
+from functools import wraps
+from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
+
+from dsutil.text import print_colored
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Coroutine
 
 try:
     from pygments import highlight
@@ -19,6 +23,9 @@ try:
     PYGMENTS_AVAILABLE = True
 except ImportError:
     PYGMENTS_AVAILABLE = False
+
+T = TypeVar("T")
+P = ParamSpec("P")
 
 
 def log_traceback(exc_info: tuple | None = None, trim_levels: int = 0) -> None:
@@ -143,3 +150,86 @@ def get_formatted_error(func: Callable, e: Exception, trim_levels: int = 0) -> s
         caller=get_caller_name(start_index=2 + trim_levels),
         error=str(e) + query_details,
     )
+
+
+def retry_on_exception(
+    exception_to_check: type[Exception],
+    tries: int = 4,
+    delay: int = 3,
+    backoff: int = 2,
+    logger: logging.Logger | None = None,
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
+    """
+    Retry a function if a specified exception occurs.
+
+    Args:
+        exception_to_check: The exception to check for retries.
+        tries: Maximum number of retries.
+        delay: Initial delay between retries in seconds.
+        backoff: Multiplier applied to delay each retry.
+        logger: Logger for logging retries. If None, print to stdout instead.
+    """
+
+    def decorator(func: Callable[..., T]) -> Callable[..., T]:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> T:
+            nonlocal tries, delay
+            while tries > 1:
+                try:
+                    return func(*args, **kwargs)
+                except exception_to_check as e:
+                    if logger:
+                        logger.warning("%s. Retrying in %s seconds...", str(e), delay)
+                    else:
+                        print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
+                    time.sleep(delay)
+                    tries -= 1
+                    delay *= backoff
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def async_retry_on_exception(
+    exception_to_check: type[Exception],
+    tries: int = 4,
+    delay: float = 3,
+    backoff: float = 2,
+    logger: logging.Logger | None = None,
+) -> Callable[[Callable[P, Coroutine[Any, Any, T]]], Callable[P, Coroutine[Any, Any, T]]]:
+    """
+    Retry a function if a specified exception occurs.
+
+    Args:
+        exception_to_check: The exception to check for retries.
+        tries: Maximum number of retries.
+        delay: Initial delay between retries in seconds.
+        backoff: Multiplier applied to delay each retry.
+        logger: Logger for logging retries. If None, print to stdout instead.
+    """
+
+    def decorator(
+        func: Callable[..., Coroutine[Any, Any, T]],
+    ) -> Callable[..., Coroutine[Any, Any, T]]:
+        @wraps(func)
+        async def wrapper(*args: Any, **kwargs: Any) -> T:
+            """Wrap the function with retry logic."""
+            nonlocal tries, delay
+            while tries > 1:
+                try:
+                    return await func(*args, **kwargs)
+                except exception_to_check as e:
+                    if logger:
+                        logger.warning("%s. Retrying in %s seconds...", str(e), delay)
+                    else:
+                        print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
+                    time.sleep(delay)
+                    tries -= 1
+                    delay *= backoff
+            return await func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
