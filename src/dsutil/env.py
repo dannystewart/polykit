@@ -70,40 +70,51 @@ class DSEnv:
     """
     Manage environment variables in a DS-friendly way.
 
+    This class allows you to add environment variables with type conversion, validation, and secret
+    masking. Variables can be accessed as attributes. Defaults to loading environment variables from
+    ~/.env, but also uses the current environment and allows specifying custom files.
+
     Usage:
-        env = DSEnv("dsmusic", env_file="~/.env")
+        # Basic usage with default ~/.env
+            env = DSEnv("dsmusic")
+
+        # Custom .env file
+            env = DSEnv("dsmusic", env_file="~/.env.local")
+
+        # Multiple .env files (processed in order)
+            env = DSEnv("dsmusic", env_file=["~/.env", "~/.env.local"])
 
         # Add variables with automatic attribute names
-        env.add_var(
-            "SSH_PASSPHRASE",
-            description="SSH key passphrase",
-            secret=True,
-        )
+            env.add_var(
+                "SSH_PASSPHRASE",
+                description="SSH key passphrase",
+                secret=True,
+            )
         # Access as env.ssh_passphrase
 
         # Add variables with custom attribute names
-        env.add_var(
-            "MYSQL_PASSWORD",
-            attr_name="db_password",
-            description="MySQL password for upload user",
-            secret=True,
-        )
+            env.add_var(
+                "MYSQL_PASSWORD",
+                attr_name="db_password",
+                description="MySQL password for upload user",
+                secret=True,
+            )
         # Access as env.db_password
 
         # Validate all variables
-        if errors := env.validate():
-            for error in errors:
-                raise ValueError(error)
+            if errors := env.validate():
+                for error in errors:
+                    raise ValueError(error)
 
         # Use variables through attributes
-        ssh_pass = env.ssh_passphrase
-        db_pass = env.db_password
+            ssh_pass = env.ssh_passphrase
+            db_pass = env.db_password
 
         # Or use traditional get() method
-        ssh_pass = env.get("SSH_PASSPHRASE")
+            ssh_pass = env.get("SSH_PASSPHRASE")
 
         # Print status (with secrets masked)
-        env.print_status()
+            env.print_status()
     """
 
     app_name: str
@@ -126,7 +137,7 @@ class DSEnv:
                 expanded_path = os.path.expanduser(file)
                 if os.path.exists(expanded_path):
                     self.logger.debug("Loading environment from: %s", expanded_path)
-                    load_dotenv(expanded_path)
+                    load_dotenv(expanded_path, override=False)
 
     def add_var(
         self,
@@ -196,7 +207,13 @@ class DSEnv:
             return self._values[name]
 
         var = self._vars[name]
-        value = os.getenv(name)
+
+        # First, try to get the value from the current environment
+        value = os.environ.get(name)
+
+        # If not found in the current environment, use the value from .env file (if any)
+        if value is None:
+            value = os.getenv(name)
 
         if value is None:
             if var.required:
