@@ -171,9 +171,21 @@ class DSPaths:
         """Get config directory for settings."""
         return self._dirs.user_config_dir
 
-    def get_config_path(self, *paths: str, no_create: bool = False) -> str:
-        """Get a path in the config directory."""
-        path = os.path.join(self.config_dir, *paths)
+    def get_config_path(self, *paths: str, no_create: bool = False, legacy: bool = False) -> str:
+        """
+        Get a path in the config directory.
+
+        Args:
+            *paths: Path components to join.
+            no_create: If True, don't create parent directories.
+            legacy: If True, use ~/.config instead of platform-specific location.
+        """
+        if legacy:
+            base = os.path.expanduser(f"~/.config/{self.app_name}")
+            path = os.path.join(base, *paths)
+        else:
+            path = os.path.join(self.config_dir, *paths)
+
         if self.create_dirs and not no_create:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
