@@ -4,6 +4,8 @@ import os
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, TypeVar
 
+from dotenv import load_dotenv
+
 from dsutil.log import LocalLogger
 
 if TYPE_CHECKING:
@@ -105,7 +107,7 @@ class DSEnv:
     """
 
     app_name: str
-    env_file: str | None = "~/.env"
+    env_file: str | list[str] | None = "~/.env"
     log_level: str = "info"
     validate_on_add: bool = True
 
@@ -119,10 +121,12 @@ class DSEnv:
         """Initialize with default environment variables."""
         self.logger = LocalLogger.setup_logger(level=self.log_level)
         if self.env_file:
-            self.env_file = os.path.expanduser(self.env_file)
-            if os.path.exists(self.env_file):
-                self.logger.debug("Loading environment from: %s", self.env_file)
-                self._load_env_file()
+            env_files = [self.env_file] if isinstance(self.env_file, str) else self.env_file
+            for file in env_files:
+                expanded_path = os.path.expanduser(file)
+                if os.path.exists(expanded_path):
+                    self.logger.debug("Loading environment from: %s", expanded_path)
+                    load_dotenv(expanded_path)
 
     def add_var(
         self,
