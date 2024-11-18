@@ -145,6 +145,23 @@ class DSPaths:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         return path
 
+    @property
+    def onedrive_dir(self) -> str:
+        """Get the platform-specific OneDrive base directory."""
+        if sys.platform == "darwin":
+            return os.path.join(self.home_dir, "Library/CloudStorage/OneDrive-Personal")
+        if sys.platform == "win32":
+            return os.path.join(self.home_dir, "OneDrive")
+        msg = "OneDrive path not supported on this platform."
+        raise NotImplementedError(msg)
+
+    def get_onedrive_path(self, *paths: str, ensure_exists: bool = True) -> str:
+        """Get a path in the user's OneDrive directory."""
+        path = os.path.join(self.onedrive_dir, *paths)
+        if ensure_exists and self.create_dirs:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+        return path
+
     def get_ssh_key(self, *paths: str) -> str:
         """Get an SSH key from the user's .ssh directory."""
         return os.path.join(self.home_dir, ".ssh", *paths)
