@@ -314,7 +314,7 @@ def _copy_win32_file(source: Path, destination: Path) -> None:
 
 def move_file(
     source: str | Path,
-    destination: Path,
+    destination: str | Path,
     overwrite: bool = False,
     show_output: bool = True,
 ) -> bool:
