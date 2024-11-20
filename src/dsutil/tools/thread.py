@@ -150,8 +150,8 @@ class LocalThreader:
         except Exception as e:
             self.handle_thread_exception(e, target, *args, **kwargs)
 
+    @staticmethod
     def handle_thread_exception(
-        self,
         e: Exception,
         target: Callable,
         *args: list,  # noqa: ARG002
@@ -201,8 +201,6 @@ class LocalThreader:
         Returns:
             The number of threads cleaned up.
         """
-        threads_cleaned = 0
-
         # If a specific key is provided, clean up only that thread
         if cleanup_key:
             future = self.active_threads.get(cleanup_key)

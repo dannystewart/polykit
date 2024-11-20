@@ -82,6 +82,9 @@ class DSPaths:
             version=self.version,
         )
 
+        # Convert expanduser result to str
+        home = str(os.path.expanduser("~"))
+
         # Set up path groups
         self.data = PathGroup(self, self.dirs.user_data_dir)
         self.cache = PathGroup(self, self.dirs.user_cache_dir)
@@ -90,7 +93,6 @@ class DSPaths:
         self.state = PathGroup(self, self.dirs.user_state_dir)
 
         # User directories
-        home = os.path.expanduser("~")
         self.home = PathGroup(self, home)
         self.documents = PathGroup(self, os.path.join(home, "Documents"))
         self.downloads = PathGroup(self, os.path.join(home, "Downloads"))
@@ -102,9 +104,9 @@ class DSPaths:
     def onedrive_dir(self) -> str:
         """Get the platform-specific OneDrive base directory."""
         if sys.platform == "darwin":
-            return os.path.join(self.home, "Library/CloudStorage/OneDrive-Personal")
+            return str(os.path.join(self.home.base, "Library/CloudStorage/OneDrive-Personal"))
         if sys.platform == "win32":
-            return os.path.join(self.home, "OneDrive")
+            return str(os.path.join(self.home.base, "OneDrive"))
         msg = "OneDrive path not supported on this platform."
         raise NotImplementedError(msg)
 

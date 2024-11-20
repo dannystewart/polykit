@@ -277,7 +277,8 @@ class TimeAwareLogger:
         """
         return getattr(self.logger, item)
 
-    def _format_args(self, *args: Any) -> list[Any]:
+    @staticmethod
+    def _format_args(*args: Any) -> list[Any]:
         return [get_pretty_time(arg) if isinstance(arg, datetime) else arg for arg in args]
 
     def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:

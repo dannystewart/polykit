@@ -26,6 +26,8 @@ def get_pretty_time(
         capitalize: If True, the first letter of the string will be capitalized.
         time_only: If True, only the time will be returned, not the date.
     """
+    pretty_time = ""
+
     if isinstance(time, datetime):
         now = datetime.now(tz=get_timezone())
         if time_only:
