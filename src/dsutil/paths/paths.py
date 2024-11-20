@@ -53,7 +53,6 @@ class DSPaths:
         app_author: Author of the application.
         app_domain: Domain for macOS paths.
         version: Application version.
-        create_dirs: Whether to create directories if they don't exist.
 
     Usage:
         paths = DSPaths("dsmusic")

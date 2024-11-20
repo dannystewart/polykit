@@ -76,7 +76,7 @@ def walking_animation(
 
 
 def conditional_animation(
-    condition: bool, message: str | None = None
+    condition: bool, message: str | None = None, color: ColorName | None = None, width: int = ANIMATION_WIDTH
 ) -> AbstractContextManager[None]:
     """
     Run the walking animation if the condition is met.
@@ -84,12 +84,14 @@ def conditional_animation(
     Args:
         condition: The condition that must be met for the animation to display.
         message: The message to display during the animation. Defaults to None.
+        color: The color of the animation. Defaults to None.
+        width: The width of the screen for the animation. Defaults to ANIMATION_WIDTH.
 
     Usage:
         with conditional_animation(condition, "Loading..."):
             long_running_function()
     """
-    return walking_animation(message) if condition else nullcontext()
+    return walking_animation(message, color, width) if condition else nullcontext()
 
 
 @handle_keyboard_interrupt()
