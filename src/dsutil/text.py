@@ -23,10 +23,10 @@ ColorName = Literal[
     "light_cyan",
     "white",
 ]
-ColorAttrs = list[Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]]
+ColorAttrs = Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]
 
 
-def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
+def color(text: str, color_name: ColorName, attrs: list[ColorAttrs] | None = None) -> str:
     """
     Use termcolor to return a string in the specified color if termcolor is available.
     Otherwise, gracefully falls back to returning the text as is.
