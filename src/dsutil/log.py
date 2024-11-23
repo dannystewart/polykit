@@ -160,8 +160,8 @@ class LocalLogger:
         logger: logging.Logger,
         log_file: str,
         level: int | str = logging.DEBUG,
-        max_bytes: int = 5 * 1024 * 1024,  # 5 MB
-        backup_count: int = 5,
+        max_bytes: int = 512 * 1024,  # 500 KB
+        backup_count: int = 2,
     ) -> None:
         """
         Add a file handler to the given logger.
