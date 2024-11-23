@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import sys
 from typing import Literal
+from collections.abc import Iterable
 
 ColorName = Literal[
     "black",
@@ -23,10 +24,10 @@ ColorName = Literal[
     "light_cyan",
     "white",
 ]
-ColorAttrs = Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]
+ColorAttrs = Iterable[Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]]
 
 
-def color(text: str, color_name: ColorName, attrs: list[ColorAttrs] | None = None) -> str:
+def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
     """
     Use termcolor to return a string in the specified color if termcolor is available.
     Otherwise, gracefully falls back to returning the text as is.
@@ -48,10 +49,7 @@ def color(text: str, color_name: ColorName, attrs: list[ColorAttrs] | None = Non
 
 
 def print_colored(
-    text: str,
-    color_name: ColorName,
-    end: str = "\n",
-    attrs: ColorAttrs | None = None,
+    text: str, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
 ) -> None:
     r"""
     Use termcolor to print text in the specified color if termcolor is available.
