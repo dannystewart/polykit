@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import re
 import sys
-from typing import Literal
 from collections.abc import Iterable
+from typing import Literal
 
 ColorName = Literal[
     "black",
