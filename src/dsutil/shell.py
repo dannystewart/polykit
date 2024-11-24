@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 from dsutil.text import ColorName, color
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable
     from collections.abc import Callable
 T = TypeVar("T")
 
@@ -207,3 +208,47 @@ def confirm_action(
     sys.stdout.flush()
 
     return char != "n" if default_to_yes else char == "y"
+
+
+def handle_async_keyboard_interrupt(
+    message: str = "Interrupted by user. Exiting...",
+    exit_code: int = 1,
+    callback: Callable | None = None,
+    use_newline: bool = False,
+    use_logging: bool = False,
+    logger: logging.Logger | None = None,
+) -> Callable[[Callable[..., Awaitable[T]]], Callable[..., Awaitable[T]]]:
+    """Handle KeyboardInterrupt exceptions in async functions."""
+
+    def decorator(func: Callable[..., Awaitable[T]]) -> Callable[..., Awaitable[T]]:
+        @wraps(func)
+        async def wrapper(*args: Any, **kwargs: Any) -> T:
+            try:
+                return await func(*args, **kwargs)
+            except KeyboardInterrupt:
+                if use_newline:
+                    sys.stdout.write("\n")
+                else:
+                    sys.stdout.write("\r\033[K")
+                sys.stdout.flush()
+
+                if callback:
+                    import asyncio
+
+                    if asyncio.iscoroutinefunction(callback):
+                        await callback()
+                    else:
+                        callback()
+
+                log_message = message  # Assuming color() was imported
+                if logger:
+                    logger.info(log_message)
+                elif use_logging:
+                    logging.info(log_message)
+                else:
+                    print(log_message)
+                sys.exit(exit_code)
+
+        return wrapper
+
+    return decorator
