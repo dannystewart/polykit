@@ -144,7 +144,7 @@ class DSEnv:
         name: str,
         attr_name: str | None = None,
         required: bool = True,
-        default: Any = None,
+        default: Any = "",
         var_type: Callable[[str], Any] = str,
         description: str = "",
         secret: bool = False,
