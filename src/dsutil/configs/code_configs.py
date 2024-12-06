@@ -4,12 +4,12 @@ import argparse
 import shutil
 from argparse import Namespace
 from dataclasses import dataclass
-from difflib import unified_diff
 from pathlib import Path
 from typing import Final
 
 import requests
 
+from dsutil.diff import show_diff
 from dsutil.log import LocalLogger
 from dsutil.shell import confirm_action
 
@@ -56,30 +56,6 @@ def parse_args() -> Namespace:
         "-y", "--yes", action="store_true", help="update all configs without confirmation"
     )
     return parser.parse_args()
-
-
-def show_diff(current: str, new: str, filename: str) -> None:
-    """Show a unified diff between current and new content."""
-    diff = list(
-        unified_diff(
-            new.splitlines(keepends=True),
-            current.splitlines(keepends=True),
-            fromfile=f"current {filename}",
-            tofile=f"new {filename}",
-        )
-    )
-
-    if diff:
-        logger.warning("Changes detected in %s:", filename)
-        for line in diff:
-            if line.startswith("+"):
-                logger.info("  %s", line.rstrip())
-            elif line.startswith("-"):
-                logger.warning("  %s", line.rstrip())
-            else:
-                logger.info("  %s", line.rstrip())
-    else:
-        logger.info("No changes detected in %s.", filename)
 
 
 def update_config_file(config: ConfigFile, content: str, is_package: bool = False) -> bool:
