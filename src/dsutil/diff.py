@@ -117,7 +117,7 @@ def _process_diff_line(
         elif line.startswith("-"):
             log_func.warning("  %s", line.rstrip())
         else:
-            log_func.info("  %s", line.rstrip())
+            log_func.debug("  %s", line.rstrip())
     else:
         log_func.info("  %s", line.rstrip())
 
