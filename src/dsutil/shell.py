@@ -15,8 +15,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 from dsutil.text import ColorName, color
 
 if TYPE_CHECKING:
-    from collections.abc import Awaitable
-    from collections.abc import Callable
+    from collections.abc import Awaitable, Callable
 T = TypeVar("T")
 
 
@@ -210,7 +209,7 @@ def confirm_action(
     return char != "n" if default_to_yes else char == "y"
 
 
-def handle_async_keyboard_interrupt(
+def async_handle_keyboard_interrupt(
     message: str = "Interrupted by user. Exiting...",
     exit_code: int = 1,
     callback: Callable | None = None,
