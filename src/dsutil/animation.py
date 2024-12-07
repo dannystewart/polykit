@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 # Animation character width
 ANIMATION_WIDTH = 30
 
-ANIMATION_RUNNING = False
+animation_running = False
 
 
 class AnimationManager:
@@ -76,7 +76,10 @@ def walking_animation(
 
 
 def conditional_animation(
-    condition: bool, message: str | None = None, color: ColorName | None = None, width: int = ANIMATION_WIDTH
+    condition: bool,
+    message: str | None = None,
+    color: ColorName | None = None,
+    width: int = ANIMATION_WIDTH,
 ) -> AbstractContextManager[None]:
     """
     Run the walking animation if the condition is met.
@@ -113,7 +116,7 @@ def show_walking_animation(
         else:
             print(loading_text)
 
-    while ANIMATION_RUNNING:
+    while animation_running:
         print_animation_frame(character, position, color)
         position += direction
 
@@ -145,8 +148,8 @@ def start_animation(
     Returns:
         The thread running the animation.
     """
-    global ANIMATION_RUNNING
-    ANIMATION_RUNNING = True
+    global animation_running
+    animation_running = True
 
     animation_thread = Thread(target=show_walking_animation, args=(loading_text, color, width))
     animation_thread.daemon = True  # This makes it killable with Ctrl-C
@@ -158,9 +161,9 @@ def start_animation(
 @handle_keyboard_interrupt()
 def stop_animation(animation_thread: Thread) -> None:
     """Stop the walking animation."""
-    global ANIMATION_RUNNING
+    global animation_running
 
-    ANIMATION_RUNNING = False
+    animation_running = False
 
     animation_thread.join()
 
