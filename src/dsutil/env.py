@@ -185,7 +185,7 @@ class DSEnv:
         self,
         name: str,
         attr_name: str | None = None,
-        required: bool = True,
+        required: bool = False,
         default: bool = False,
         description: str = "",
     ) -> None:
@@ -214,6 +214,12 @@ class DSEnv:
             description=description,
             secret=False,
         )
+
+    def add_debug_var(
+        self, name: str = "DEBUG", default: bool = False, description: str = "Enable debug mode"
+    ) -> None:
+        """Simple shortcut to add a consistent boolean DEBUG environment variable."""
+        self.add_bool(name=name, required=False, default=default, description=description)
 
     def validate(self) -> list[str]:
         """Validate all environment variables.
