@@ -17,8 +17,7 @@ T = TypeVar("T")
 
 @dataclass
 class EnvVar:
-    """
-    Represents an environment variable with validation and type conversion.
+    """Represents an environment variable with validation and type conversion.
 
     Args:
         name: Environment variable name.
@@ -53,7 +52,7 @@ class EnvVar:
     """
 
     name: str
-    required: bool = True
+    required: bool = False
     default: Any = None
     var_type: Callable[[str], Any] = str
     description: str = ""
@@ -67,8 +66,7 @@ class EnvVar:
 
 @dataclass
 class DSEnv:
-    """
-    Manage environment variables in a DS-friendly way.
+    """Manage environment variables in a DS-friendly way.
 
     This class allows you to add environment variables with type conversion, validation, and secret
     masking. Variables can be accessed as attributes. Defaults to loading environment variables from
@@ -149,8 +147,7 @@ class DSEnv:
         description: str = "",
         secret: bool = False,
     ) -> None:
-        """
-        Add an environment variable to track.
+        """Add an environment variable to track.
 
         Args:
             name: Environment variable name (e.g., "SSH_PASSPHRASE").
@@ -182,8 +179,7 @@ class DSEnv:
                 raise ValueError(str(e)) from e
 
     def validate(self) -> list[str]:
-        """
-        Validate all environment variables.
+        """Validate all environment variables.
 
         Returns:
             List of error messages, empty if all valid
