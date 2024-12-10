@@ -99,6 +99,9 @@ class DSEnv:
             )
         # Access as env.db_password
 
+        # Add boolean variable with smart string conversion
+            env.add_bool("DEBUG_MODE", description="Enable debug mode")
+
         # Validate all variables
             if errors := env.validate():
                 for error in errors:
@@ -178,6 +181,40 @@ class DSEnv:
             except Exception as e:
                 raise ValueError(str(e)) from e
 
+    def add_bool(
+        self,
+        name: str,
+        attr_name: str | None = None,
+        required: bool = True,
+        default: bool = False,
+        description: str = "",
+    ) -> None:
+        """Add a boolean environment variable with smart string conversion.
+
+        This is a convenience wrapper around add_var() specifically for boolean values.
+        It handles various string representations of boolean values in a case-insensitive way.
+
+        Valid input values (case-insensitive):
+        - True: "true", "1", "yes", "on", "t", "y"
+        - False: "false", "0", "no", "off", "f", "n"
+
+        Args:
+            name: Environment variable name (e.g., "ENABLE_FEATURE")
+            attr_name: Optional attribute name override (e.g., "feature_enabled")
+            required: Whether this variable is required.
+            default: Default boolean value if not required.
+            description: Human-readable description.
+        """
+        self.add_var(
+            name=name,
+            attr_name=attr_name,
+            required=required,
+            default=default,
+            var_type=self.bool_converter,
+            description=description,
+            secret=False,
+        )
+
     def validate(self) -> list[str]:
         """Validate all environment variables.
 
@@ -242,3 +279,37 @@ class DSEnv:
                 if line and not line.startswith("#"):
                     key, value = line.split("=", 1)
                     os.environ[key.strip()] = value.strip()
+
+    @staticmethod
+    def bool_converter(value: str) -> bool:
+        """Convert various string representations to boolean values.
+
+        Handles common truth/false string values in a case-insensitive way:
+        - True values: "true", "1", "yes", "on", "t", "y"
+        - False values: "false", "0", "no", "off", "f", "n"
+
+        Args:
+            value: String value to convert to boolean
+
+        Returns:
+            bool: Converted boolean value
+
+        Raises:
+            ValueError: If the string cannot be converted to a boolean
+        """
+        value = str(value).lower().strip()
+
+        true_values = {"true", "1", "yes", "on", "t", "y"}
+        false_values = {"false", "0", "no", "off", "f", "n"}
+
+        if value in true_values:
+            return True
+        if value in false_values:
+            return False
+
+        msg = (
+            f"Cannot convert '{value}' to boolean. "
+            f"Valid true values: {', '.join(sorted(true_values))}. "
+            f"Valid false values: {', '.join(sorted(false_values))}."
+        )
+        raise ValueError(msg)
