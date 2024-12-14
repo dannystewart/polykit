@@ -41,7 +41,7 @@ def get_pretty_time(
         else:
             pretty_time = time.strftime("%B %d, %Y at %-I:%M %p")
 
-    elif isinstance(time, timedelta):
+    else:
         total_seconds = int(time.total_seconds())
         hours = total_seconds // 3600
         minutes = (total_seconds % 3600) // 60
@@ -62,10 +62,6 @@ def convert_to_12h(hour: int, minutes: int = 0) -> str:
         hour: The hour in 24-hour format.
         minutes: The minutes.
     """
-    if not isinstance(hour, int) or not isinstance(minutes, int):
-        msg = "Expected integer values for hour and minutes."
-        raise TypeError(msg)
-
     period = "PM" if hour >= 12 else "AM"
     if hour > 12:
         hour -= 12
