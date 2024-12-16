@@ -1,12 +1,16 @@
 [build-system]
-requires = ["hatchling"]
+requires = [
+    "hatchling",
+]
 build-backend = "hatchling.build"
 
 [project]
 name = "dsutil"
 description = "Danny's Python utility scripts"
-version = "1.4.0"
-authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
+version = "1.4.1"
+authors = [
+    { name = "Danny Stewart", email = "danny@stewart.cc" },
+]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -32,11 +36,13 @@ dev = [
     "types-send2trash>=1.8.2.7",
 ]
 
+[project.scripts]
+code-configs = "dsutil.configs.code_configs:main"
+
 [tool.hatch.version]
 path = "src/dsutil/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/dsutil"]
-
-[project.scripts]
-code-configs = "dsutil.configs.code_configs:main"
+packages = [
+    "src/dsutil",
+]
