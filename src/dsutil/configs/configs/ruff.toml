@@ -1,4 +1,4 @@
-# Ruff config version: 5
+# Ruff config version: 6
 # ----------------------
 
 # Extend any existing pyproject.toml configuration
@@ -178,7 +178,7 @@ forced-separate = ["dsutil"]
 max-complexity = 10
 
 [lint.pycodestyle]
-max-doc-length = 110
+max-doc-length = 100
 
 [lint.pydocstyle]
 convention = "google"
