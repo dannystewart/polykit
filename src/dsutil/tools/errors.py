@@ -20,9 +20,9 @@ try:
     from pygments.formatters import TerminalFormatter
     from pygments.lexers import PythonTracebackLexer
 
-    PYGMENTS_AVAILABLE = True
+    pygments_available = True
 except ImportError:
-    PYGMENTS_AVAILABLE = False
+    pygments_available = False
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -42,7 +42,7 @@ def log_traceback(exc_info: tuple | None = None, trim_levels: int = 0) -> None:
     if exc_value is not None and exc_traceback is not None:
         tb_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
         tb = "".join(tb_list)
-        if PYGMENTS_AVAILABLE:
+        if pygments_available:
             tb = highlight(tb, PythonTracebackLexer(), TerminalFormatter())
         else:
             print("Can't colorize traceback because Pygments is not installed.")
