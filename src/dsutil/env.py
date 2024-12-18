@@ -119,7 +119,7 @@ class DSEnv:
     """
 
     app_name: str
-    env_file: str | list[str] | None = "~/.env"
+    env_file: str | list[str] | None = [".env", "~/.env"]
     log_level: str = "info"
     validate_on_add: bool = True
 
