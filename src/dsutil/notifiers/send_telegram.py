@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import requests
 
-from .telegram_api_helper import TelegramAPIHelper
+from .telegram_api import TelegramAPIHelper
 
 from dsutil.log import LocalLogger
 
@@ -31,9 +31,9 @@ class TelegramSender:
         parse_mode: str | None = None,
         log: bool = False,
     ) -> bool:
-        """
-        Send a message to a Telegram chat. Uses the chat ID and token provided during
-        initialization of the class.
+        """Send a message to a Telegram chat.
+
+        Uses the chat ID and token provided during initialization of the class.
 
         Args:
             message: The message to send.
