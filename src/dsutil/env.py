@@ -15,6 +15,11 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 
 
+def default_env_files() -> list[str]:
+    """Default .env files to load."""
+    return [".env", "~/.env"]
+
+
 @dataclass
 class EnvVar:
     """Represents an environment variable with validation and type conversion.
@@ -119,7 +124,7 @@ class DSEnv:
     """
 
     app_name: str
-    env_file: str | list[str] | None = [".env", "~/.env"]
+    env_file: str | list[str] | None = field(default_factory=default_env_files)
     log_level: str = "info"
     validate_on_add: bool = True
 
