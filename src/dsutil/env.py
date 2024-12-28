@@ -75,7 +75,7 @@ class DSEnv:
 
     This class allows you to add environment variables with type conversion, validation, and secret
     masking. Variables can be accessed as attributes. Defaults to loading environment variables from
-    ~/.env, but also uses the current environment and allows specifying custom files.
+    .env and ~/.env, but also uses the current environment and allows specifying custom files.
 
     Usage:
         # Basic usage with default values of .env and ~/.env
@@ -84,7 +84,7 @@ class DSEnv:
         # Custom .env file
             env = DSEnv(env_file="~/.env.local")
 
-        # Multiple .env files (processed in order)
+        # Multiple .env files (processed in order, so later files take precedence)
             env = DSEnv(env_file=["~/.env", "~/.env.local"])
 
         # Add variables with automatic attribute names
@@ -116,8 +116,8 @@ class DSEnv:
             ssh_pass = env.ssh_passphrase
             db_pass = env.db_password
 
-        # Or use traditional get() method
-            ssh_pass = env.get("SSH_PASSPHRASE")
+        # Or use traditional get() method (with optional default value)
+            ssh_pass = env.get("DEBUG_MODE", False)
 
         # Print status (with secrets masked)
             env.print_status()
@@ -125,7 +125,6 @@ class DSEnv:
 
     env_file: str | list[str] | None = field(default_factory=default_env_files)
     log_level: str = "info"
-    validate_on_add: bool = True
 
     _vars: dict[str, EnvVar] = field(default_factory=dict)
     _values: dict[str, Any] = field(default_factory=dict)
@@ -157,8 +156,8 @@ class DSEnv:
         """Add an environment variable to track.
 
         Args:
-            name: Environment variable name (e.g., "SSH_PASSPHRASE").
-            attr_name: Optional attribute name override (e.g., "ssh_pass").
+            name: Environment variable name (e.g. "SSH_PASSPHRASE").
+            attr_name: Optional attribute name override (e.g. "ssh_pass").
             required: Whether this variable is required.
             default: Default value if not required.
             var_type: Type to convert value to (e.g. int, float, str, bool).
@@ -178,12 +177,11 @@ class DSEnv:
             secret=secret,
         )
 
-        # Validate immediately if enabled
-        if self.validate_on_add:
-            try:
-                self.get(name)
-            except Exception as e:
-                raise ValueError(str(e)) from e
+        # Validate immediately to catch any issues
+        try:
+            self.get(name)
+        except Exception as e:
+            raise ValueError(str(e)) from e
 
     def add_bool(
         self,
@@ -203,8 +201,8 @@ class DSEnv:
         - False: 'false', '0', 'no', 'off', 'f', 'n'
 
         Args:
-            name: Environment variable name (e.g., "ENABLE_FEATURE")
-            attr_name: Optional attribute name override (e.g., "feature_enabled")
+            name: Environment variable name (e.g. "ENABLE_FEATURE")
+            attr_name: Optional attribute name override (e.g. "feature_enabled")
             required: Whether this variable is required.
             default: Default boolean value if not required.
             description: Human-readable description.
@@ -242,7 +240,7 @@ class DSEnv:
                 errors.append(str(e))
         return errors
 
-    def get(self, name: str) -> Any:
+    def get(self, name: str, default: Any = None) -> Any:
         """Get the value of an environment variable."""
         if name not in self._vars:
             msg = f"Unknown environment variable: {name}"
@@ -267,7 +265,10 @@ class DSEnv:
                 if var.description:
                     msg += f" ({var.description})"
                 raise ValueError(msg)
-            value = var.default
+            value = var.default if var.default is not None else default
+
+        if value is None and default is not None:
+            return default
 
         try:
             converted = var.var_type(value)
@@ -297,9 +298,9 @@ class DSEnv:
     def bool_converter(value: str) -> bool:
         """Convert various string representations to boolean values.
 
-        Handles common truth/false string values in a case-insensitive way:
-        - True values: "true", "1", "yes", "on", "t", "y"
-        - False values: "false", "0", "no", "off", "f", "n"
+        Handles common truthy/falsey string values in a case-insensitive way:
+            - True values: 'true', '1', 'yes', 'on', 't', 'y'
+            - False values: 'false', '0', 'no', 'off', 'f', 'n'
 
         Args:
             value: String value to convert to boolean
