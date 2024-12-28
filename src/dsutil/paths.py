@@ -42,11 +42,10 @@ logger = LocalLogger.setup_logger()
 
 @dataclass
 class DSPaths:
-    """
-    Manage paths in a DS-friendly way.
+    """Manage paths in a DS-friendly way.
 
     Args:
-        app_name: Name of the application.
+        app_name: Name of the application. Required due to the need for a base directory.
         app_author: Author of the application.
         app_domain_prefix: Domain prefix for macOS paths. Application name will be appended.
         version: Application version.
@@ -88,8 +87,7 @@ class DSPaths:
         return os.path.expanduser("~")
 
     def get_home_path(self, *paths: str, no_create: bool = False) -> str:
-        """
-        Get a path in the user's home directory.
+        """Get a path in the user's home directory.
 
         Args:
             *paths: Path components to join (e.g. 'subfolder', 'file.txt').
@@ -199,8 +197,7 @@ class DSPaths:
         return self._dirs.user_config_dir
 
     def get_config_path(self, *paths: str, no_create: bool = False, legacy: bool = False) -> str:
-        """
-        Get a path in the config directory.
+        """Get a path in the config directory.
 
         Args:
             *paths: Path components to join.
