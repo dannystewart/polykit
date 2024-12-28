@@ -60,7 +60,7 @@ def list_files(
         `file_list = list_files(directory, sort_key=os.path.basename)`
 
     Notes:
-        - The `extensions` parameter should not include the dot prefix (e.g., 'txt' not '.txt').
+        - The `extensions` parameter should not include the dot prefix (e.g. 'txt' not '.txt').
         - The `modified_after` and `modified_before` expect datetime.datetime objects.
         - Sorting is performed by modification time in ascending order by default. Customize sorting
             with the 'sort_key' and 'reverse' parameters.

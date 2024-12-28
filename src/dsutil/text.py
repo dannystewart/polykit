@@ -35,7 +35,7 @@ def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> 
     Args:
         text: The text to colorize.
         color_name: The name of the color.
-        attrs: A list of attributes to apply to the text (e.g., ['bold', 'underline']).
+        attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
 
     Returns:
         The colorized text.
@@ -59,7 +59,7 @@ def print_colored(
         text: The text to print in color.
         color_name: The name of the color.
         end: The string to append after the last value. Defaults to "\n".
-        attrs: A list of attributes to apply to the text (e.g., ['bold', 'underline']).
+        attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
     """
     try:
         from termcolor import colored

@@ -92,7 +92,7 @@ class DSPaths:
         Get a path in the user's home directory.
 
         Args:
-            *paths: Path components to join (e.g., "subfolder", "file.txt").
+            *paths: Path components to join (e.g. 'subfolder', 'file.txt').
             no_create: Whether to avoid creating directories that don't exist.
         """
         path = os.path.join(self.home_dir, *paths)
