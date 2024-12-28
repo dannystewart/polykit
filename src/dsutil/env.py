@@ -241,34 +241,44 @@ class DSEnv:
         return errors
 
     def get(self, name: str, default: Any = None) -> Any:
-        """Get the value of an environment variable."""
+        """Get the value of an environment variable.
+
+        Args:
+            name: The environment variable's name.
+            default: Default value if not found (overrides variable's default).
+
+        Raises:
+            KeyError: If the given name is unknown.
+            ValueError: If the required variable is missing or has an invalid value.
+
+        Returns:
+            The value of the environment variable.
+        """
         if name not in self._vars:
             msg = f"Unknown environment variable: {name}"
             raise KeyError(msg)
 
-        # Return cached value if we have it
+        # Return the cached value first if we have it
         if name in self._values:
             return self._values[name]
 
         var = self._vars[name]
 
-        # First, try to get the value from the current environment
-        value = os.environ.get(name)
+        # Try to get the value from the current environment
+        value = os.environ.get(name) or os.getenv(name)
 
-        # If not found in the current environment, use the value from .env file (if any)
-        if value is None:
-            value = os.getenv(name)
-
-        if value is None:
-            if var.required:
+        if value is None:  # If there's no environment value, fall back through defaults
+            if default is not None:  # Use get() default if provided
+                value = default
+            elif var.default is not None:  # Fall back to variable's default if defined
+                value = var.default
+            elif var.required:  # If there are no defaults and it's required, raise an error
                 msg = f"Required environment variable {name} not set"
                 if var.description:
                     msg += f" ({var.description})"
                 raise ValueError(msg)
-            value = var.default if var.default is not None else default
-
-        if value is None and default is not None:
-            return default
+            else:  # If it's not required and has no default, return None
+                return None
 
         try:
             converted = var.var_type(value)
