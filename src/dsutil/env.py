@@ -33,7 +33,7 @@ class EnvVar:
         secret: Whether to mask the value in logs.
 
     NOTE: var_type is used as a converter function to wrap the provided data. This means it can also
-        use custom conversion functions to get other types of data with convert(value) -> Any.
+          use custom conversion functions to get other types of data with convert(value) -> Any.
 
     Usage:
         env.add_var(
@@ -78,14 +78,14 @@ class DSEnv:
     ~/.env, but also uses the current environment and allows specifying custom files.
 
     Usage:
-        # Basic usage with default ~/.env
-            env = DSEnv("dsmusic")
+        # Basic usage with default values of .env and ~/.env
+            env = DSEnv()
 
         # Custom .env file
-            env = DSEnv("dsmusic", env_file="~/.env.local")
+            env = DSEnv(env_file="~/.env.local")
 
         # Multiple .env files (processed in order)
-            env = DSEnv("dsmusic", env_file=["~/.env", "~/.env.local"])
+            env = DSEnv(env_file=["~/.env", "~/.env.local"])
 
         # Add variables with automatic attribute names
             env.add_var(
@@ -123,7 +123,6 @@ class DSEnv:
             env.print_status()
     """
 
-    app_name: str
     env_file: str | list[str] | None = field(default_factory=default_env_files)
     log_level: str = "info"
     validate_on_add: bool = True
@@ -162,7 +161,7 @@ class DSEnv:
             attr_name: Optional attribute name override (e.g., "ssh_pass").
             required: Whether this variable is required.
             default: Default value if not required.
-            var_type: Type to convert value to (e.g., int, float, str, bool).
+            var_type: Type to convert value to (e.g. int, float, str, bool).
             description: Human-readable description.
             secret: Whether to mask the value in logs.
         """
@@ -200,8 +199,8 @@ class DSEnv:
         It handles various string representations of boolean values in a case-insensitive way.
 
         Valid input values (case-insensitive):
-        - True: "true", "1", "yes", "on", "t", "y"
-        - False: "false", "0", "no", "off", "f", "n"
+        - True: 'true', '1', 'yes', 'on', 't', 'y'
+        - False: 'false', '0', 'no', 'off', 'f', 'n'
 
         Args:
             name: Environment variable name (e.g., "ENABLE_FEATURE")
@@ -221,7 +220,10 @@ class DSEnv:
         )
 
     def add_debug_var(
-        self, name: str = "DEBUG", default: bool = False, description: str = "Enable debug mode"
+        self,
+        name: str = "DEBUG",
+        default: bool = False,
+        description: str = "Enable debug mode",
     ) -> None:
         """Simple shortcut to add a consistent boolean DEBUG environment variable."""
         self.add_bool(name=name, required=False, default=default, description=description)
@@ -302,11 +304,11 @@ class DSEnv:
         Args:
             value: String value to convert to boolean
 
-        Returns:
-            bool: Converted boolean value
-
         Raises:
-            ValueError: If the string cannot be converted to a boolean
+            ValueError: If the string cannot be converted to a boolean.
+
+        Returns:
+            Converted boolean value.
         """
         value = str(value).lower().strip()
 
