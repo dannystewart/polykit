@@ -1,4 +1,4 @@
-# Ruff config version: 8
+# Ruff config version: 9
 # ----------------------
 
 # Files and directories to exclude
@@ -129,6 +129,8 @@ ignore = [
     "PLR0904", # Too many public methods
     "PLR0911", # Too many return statements
     "PLR0913", # Too many arguments
+    "PLR0914", # Too many local variables
+    "PLR0916", # Too many boolean expressions
     "PLR0917", # Too many positional arguments
     "PLR2004", # Magic value used in comparison, consider replacing with a constant variable
     "PLR6301", # Unused `self` means it could be a static method (this is very unreliable)
