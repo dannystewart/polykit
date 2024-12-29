@@ -125,6 +125,7 @@ class DSEnv:
 
     env_file: str | list[str] | None = field(default_factory=default_env_files)
     log_level: str = "info"
+    validate_on_add: bool = True
 
     _vars: dict[str, EnvVar] = field(default_factory=dict)
     _values: dict[str, Any] = field(default_factory=dict)
@@ -177,11 +178,12 @@ class DSEnv:
             secret=secret,
         )
 
-        # Validate immediately to catch any issues
-        try:
-            self.get(name)
-        except Exception as e:
-            raise ValueError(str(e)) from e
+        # Validate immediately if enabled
+        if self.validate_on_add:
+            try:
+                self.get(name)
+            except Exception as e:
+                raise ValueError(str(e)) from e
 
     def add_bool(
         self,
