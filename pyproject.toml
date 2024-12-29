@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 [project]
 name = "dsutil"
 description = "Danny's Python utility scripts"
-version = "1.4.3"
+version = "1.5.0"
 authors = [
     { name = "Danny Stewart", email = "danny@stewart.cc" },
 ]
