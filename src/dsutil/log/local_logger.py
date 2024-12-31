@@ -1,7 +1,7 @@
-"""
-Classes for setting up and formatting loggers. The LocalLogger class provides a method for setting
-up a logger with a console handler. The ConsoleColors class defines console color codes for use in
-the formatter to colorize messages by log level.
+"""Classes for setting up and formatting loggers.
+
+LocalLogger and related classes provide methods for setting up a logger with a console handler,
+defining console color codes for use in the formatter to colorize messages by log level, and more.
 """
 
 from __future__ import annotations
@@ -12,21 +12,18 @@ import logging.config
 import os
 from logging import Logger
 from logging.handlers import RotatingFileHandler
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from dsutil.log.log_formatters import CustomFormatter, FileFormatter
-from dsutil.log.log_levels import get_level_name
+from dsutil.log.log_metadata import LogLevel
 from dsutil.tools import Singleton
-
-if TYPE_CHECKING:
-    from types import FrameType
 
 
 class LocalLogger(metaclass=Singleton):
     """Set up an easy local logger with a console handler.
 
-    Logs at INFO level by default, but can be set to any level using the log_level parameter. Uses a
-    custom formatter that includes the time, logger name, function name, and log message.
+    Logs at DEBUG level by default, but can be set to any level using the log_level parameter. Uses
+    a custom formatter that includes the time, logger name, function name, and log message.
 
     Usage:
         from dsutil.log import LocalLogger
@@ -46,29 +43,30 @@ class LocalLogger(metaclass=Singleton):
         log_file_level: int | str = "debug",
     ) -> Logger:
         """Set up a logger with the given name and log level."""
-        frame = inspect.currentframe().f_back
-        logger_name = LocalLogger().get_logger_name(frame, logger_name)
-
+        logger_name = LocalLogger().get_logger_name(logger_name)
         logger = logging.getLogger(logger_name)
-        log_level = get_level_name(level)
-        logger.setLevel(log_level)
 
-        log_formatter = CustomFormatter(
-            message_only=message_only,
-            use_color=use_color,
-            show_class=show_class,
-            show_function=show_function,
-        )
+        if not logger.handlers:
+            log_level = LogLevel.get_level(level)
+            logger.setLevel(log_level)
 
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(log_formatter)
-        console_handler.setLevel(log_level)
-        logger.addHandler(console_handler)
+            log_formatter = CustomFormatter(
+                message_only=message_only,
+                use_color=use_color,
+                show_class=show_class,
+                show_function=show_function,
+            )
 
-        if log_file:
-            self.add_file_handler(logger, log_file, log_file_level)
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(log_formatter)
+            console_handler.setLevel(log_level)
+            logger.addHandler(console_handler)
 
-        logger.propagate = False
+            if log_file:
+                self.add_file_handler(logger, log_file, log_file_level)
+
+            logger.propagate = False
+
         return logger
 
     @staticmethod
@@ -77,8 +75,9 @@ class LocalLogger(metaclass=Singleton):
         return LocalLogger().get_logger(*args, **kwargs)
 
     @staticmethod
-    def get_logger_name(frame: FrameType, logger_name: str | None = None) -> str:
+    def get_logger_name(logger_name: str | None = None) -> str:
         """Generate a logger identifier based on the provided parameters and calling context."""
+        frame = inspect.currentframe().f_back.f_back  # get_logger's caller
 
         def get_class_name() -> str:
             if "self" in frame.f_locals:
