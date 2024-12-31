@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from dotenv import load_dotenv
 
+from .env_var import EnvVar, VarAdder, default_env_files
+
 from dsutil.log import LocalLogger
 
 if TYPE_CHECKING:
@@ -16,176 +18,9 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 
 
-def default_env_files() -> list[str]:
-    """Default .env files to load."""
-    return [".env", "~/.env"]
-
-
-@dataclass
-class EnvVar:
-    """Represents an environment variable with validation and type conversion.
-
-    Args:
-        name: Environment variable name.
-        required: Whether this variable is required.
-        default: Default value if not required.
-        var_type: Type to convert value to (e.g., int, float, str, bool).
-        description: Human-readable description of the variable.
-        secret: Whether to mask the value in logs.
-
-    NOTE: var_type is used as a converter function to wrap the provided data. This means it can also
-          use custom conversion functions to get other types of data with convert(value) -> Any.
-
-    Usage:
-        env.add_var(
-            "SSH_PASSPHRASE",
-            description="Passphrase for SSH key",
-            secret=True
-        )
-        env.add_var(
-            "DEBUG_LEVEL",
-            required=False,
-            default="info",
-            description="Logging level"
-        )
-        env.add_var(
-            "MAX_UPLOAD_SIZE",
-            var_type=int,
-            required=False,
-            default=10485760,
-            description="Maximum upload size in bytes"
-        )
-    """
-
-    name: str
-    required: bool = False
-    default: Any = None
-    var_type: Callable[[str], Any] = str
-    description: str = ""
-    secret: bool = False
-
-    def __post_init__(self) -> None:
-        if not self.required and self.default is None:
-            msg = f"Non-required variable {self.name} must have a default value"
-            raise ValueError(msg)
-
-
-class DSEnvBuilder:
-    """Builder class for creating a DSEnv instance with type-checked environment variables."""
-
-    def __init__(self):
-        self.vars: dict[str, EnvVar] = {}
-        self.attr_names: dict[str, str] = {}
-        self.values: dict[str, Any] = {}
-        self._var_adder = VarAdder(self)
-
-    @property
-    def add_var(self) -> VarAdder:
-        """Helper property for adding environment variables with type hints."""
-        return self._var_adder
-
-    @classmethod
-    def __class_getitem__(cls, item: type[T]) -> type[T]:
-        return item
-
-    def build(self) -> DSEnv:
-        """Create a DSEnv instance with these variables."""
-        env = DSEnv()
-        env.vars = self.vars
-        env.attr_names = self.attr_names
-        env.values = self.values
-
-        # Validate all variables immediately
-        if errors := env.validate():
-            raise ValueError("\n".join(errors))
-
-        return env
-
-
-class VarAdder:
-    """Helper class for adding environment variables to a DSEnvBuilder instance."""
-
-    def __init__(self, builder: DSEnvBuilder):
-        self.builder = builder
-
-    def __getitem__(self, type_hint: type[T]) -> Callable[..., DSEnvBuilder]:
-        def add(
-            name: str,
-            attr_name: str | None = None,
-            required: bool = True,
-            default: T | None = None,
-            description: str = "",
-            secret: bool = False,
-        ) -> DSEnvBuilder:
-            attr = attr_name or name.lower()
-            self.builder.attr_names[attr] = name
-
-            self.builder.vars[name] = EnvVar(
-                name=name,
-                required=required,
-                default=default,
-                var_type=type_hint,
-                description=description,
-                secret=secret,
-            )
-            return self.builder
-
-        return add
-
-
 @dataclass
 class DSEnv:
-    """Manage environment variables in a DS-friendly way.
-
-    This class allows you to add environment variables with type conversion, validation, and secret
-    masking. Variables can be accessed as attributes. Defaults to loading environment variables from
-    .env and ~/.env, but also uses the current environment and allows specifying custom files.
-
-    Usage:
-        # Basic usage with default values of .env and ~/.env
-            env = DSEnv()
-
-        # Custom .env file
-            env = DSEnv(env_file="~/.env.local")
-
-        # Multiple .env files (processed in order, so later files take precedence)
-            env = DSEnv(env_file=["~/.env", "~/.env.local"])
-
-        # Add variables with automatic attribute names
-            env.add_var(
-                "SSH_PASSPHRASE",
-                description="SSH key passphrase",
-                secret=True,
-            )
-        # Access as env.ssh_passphrase
-
-        # Add variables with custom attribute names
-            env.add_var(
-                "MYSQL_PASSWORD",
-                attr_name="db_password",
-                description="MySQL password for upload user",
-                secret=True,
-            )
-        # Access as env.db_password
-
-        # Add boolean variable with smart string conversion
-            env.add_bool("DEBUG_MODE", description="Enable debug mode")
-
-        # Validate all variables
-            if errors := env.validate():
-                for error in errors:
-                    raise ValueError(error)
-
-        # Use variables through attributes
-            ssh_pass = env.ssh_passphrase
-            db_pass = env.db_password
-
-        # Or use traditional get() method (with optional default value)
-            ssh_pass = env.get("DEBUG_MODE", False)
-
-        # Print status (with secrets masked)
-            env.print_status()
-    """
+    """Manage environment variables in a DS-friendly way."""
 
     env_file: str | list[str] | None = field(default_factory=default_env_files)
     log_level: str = "info"
@@ -221,8 +56,8 @@ class DSEnv:
         """Add an environment variable to track.
 
         Args:
-            name: Environment variable name (e.g. "SSH_PASSPHRASE").
-            attr_name: Optional attribute name override (e.g. "ssh_pass").
+            name: Environment variable name (e.g. 'SSH_PASSPHRASE').
+            attr_name: Optional attribute name override (e.g. 'ssh_pass').
             required: Whether this variable is required.
             default: Default value if not required.
             var_type: Type to convert value to (e.g. int, float, str, bool).
@@ -309,16 +144,9 @@ class DSEnv:
     def get(self, name: str, default: Any = None) -> Any:
         """Get the value of an environment variable.
 
-        Args:
-            name: The environment variable's name.
-            default: Default value if not found (overrides variable's default).
-
         Raises:
             KeyError: If the given name is unknown.
             ValueError: If the required variable is missing or has an invalid value.
-
-        Returns:
-            The value of the environment variable.
         """
         if name not in self.vars:
             msg = f"Unknown environment variable: {name}"
@@ -378,14 +206,8 @@ class DSEnv:
             - True values: 'true', '1', 'yes', 'on', 't', 'y'
             - False values: 'false', '0', 'no', 'off', 'f', 'n'
 
-        Args:
-            value: String value to convert to boolean
-
         Raises:
             ValueError: If the string cannot be converted to a boolean.
-
-        Returns:
-            Converted boolean value.
         """
         value = str(value).lower().strip()
 
@@ -408,3 +230,37 @@ class DSEnv:
     def create(cls) -> DSEnvBuilder:
         """Create a new environment configuration."""
         return DSEnvBuilder()
+
+
+class DSEnvBuilder:
+    """Builder class for creating a DSEnv instance with type-checked environment variables."""
+
+    def __init__(self):
+        self.vars: dict[str, EnvVar] = {}
+        self.attr_names: dict[str, str] = {}
+        self.values: dict[str, Any] = {}
+        self._var_adder = VarAdder(self)
+
+    @property
+    def add_var(self) -> VarAdder:
+        """Helper property for adding environment variables with type hints."""
+        return self._var_adder
+
+    @classmethod
+    def __class_getitem__(cls, item: type[T]) -> type[T]:
+        return item
+
+    def build(self) -> DSEnv:
+        """Create a DSEnv instance with these variables."""
+        from dsutil.env.env import DSEnv
+
+        env = DSEnv()
+        env.vars = self.vars
+        env.attr_names = self.attr_names
+        env.values = self.values
+
+        # Validate all variables immediately
+        if errors := env.validate():
+            raise ValueError("\n".join(errors))
+
+        return env
