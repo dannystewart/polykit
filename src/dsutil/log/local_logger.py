@@ -12,7 +12,6 @@ import logging.config
 import os
 from logging import Logger
 from logging.handlers import RotatingFileHandler
-from threading import Lock
 from typing import TYPE_CHECKING, Any
 
 from dsutil.log.log_formatters import CustomFormatter, FileFormatter
@@ -35,10 +34,6 @@ class LocalLogger(metaclass=Singleton):
         logger = LocalLogger().get_logger("MyClassLogger", advanced=True)
     """
 
-    def __init__(self) -> None:
-        self.loggers: dict[str, Logger] = {}
-        self._lock = Lock()
-
     def get_logger(
         self,
         logger_name: str | None = None,
@@ -51,35 +46,30 @@ class LocalLogger(metaclass=Singleton):
         log_file_level: int | str = "debug",
     ) -> Logger:
         """Set up a logger with the given name and log level."""
-        with self._lock:
-            frame = inspect.currentframe().f_back
-            logger_name = LocalLogger().get_logger_name(frame, logger_name)
+        frame = inspect.currentframe().f_back
+        logger_name = LocalLogger().get_logger_name(frame, logger_name)
 
-            if logger_name in self.loggers:
-                return self.loggers[logger_name]
+        logger = logging.getLogger(logger_name)
+        log_level = get_level_name(level)
+        logger.setLevel(log_level)
 
-            logger = logging.getLogger(logger_name)
-            log_level = get_level_name(level)
-            logger.setLevel(log_level)
+        log_formatter = CustomFormatter(
+            message_only=message_only,
+            use_color=use_color,
+            show_class=show_class,
+            show_function=show_function,
+        )
 
-            log_formatter = CustomFormatter(
-                message_only=message_only,
-                use_color=use_color,
-                show_class=show_class,
-                show_function=show_function,
-            )
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(log_formatter)
+        console_handler.setLevel(log_level)
+        logger.addHandler(console_handler)
 
-            console_handler = logging.StreamHandler()
-            console_handler.setFormatter(log_formatter)
-            console_handler.setLevel(log_level)
-            logger.addHandler(console_handler)
+        if log_file:
+            self.add_file_handler(logger, log_file, log_file_level)
 
-            if log_file:
-                self.add_file_handler(logger, log_file, log_file_level)
-
-            logger.propagate = False
-            self.loggers[logger_name] = logger
-            return logger
+        logger.propagate = False
+        return logger
 
     @staticmethod
     def setup_logger(*args: Any, **kwargs: Any) -> Logger:

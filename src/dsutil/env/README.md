@@ -32,20 +32,20 @@ env.add_var(
 )
 
 # Add boolean variable with smart string conversion
-    env.add_bool("DEBUG_MODE", description="Enable debug mode")
+env.add_bool("DEBUG_MODE", description="Enable debug mode")
 
 # Validate all variables
-    if errors := env.validate():
-        for error in errors:
-            raise ValueError(error)
+if errors := env.validate():
+    for error in errors:
+        raise ValueError(error)
 
 # Use variables through attributes
-    ssh_pass = env.ssh_passphrase
-    db_pass = env.db_password
+ssh_pass = env.ssh_passphrase
+db_pass = env.db_password
 
 # Or use traditional get() method (with optional default value)
-    ssh_pass = env.get("DEBUG_MODE", False)
+ssh_pass = env.get("DEBUG_MODE", False)
 
 # Print status (with secrets masked)
-    env.print_status()
+env.print_status()
 ```
