@@ -13,7 +13,7 @@ from dsutil.diff import show_diff
 from dsutil.log import LocalLogger
 from dsutil.shell import confirm_action
 
-logger = LocalLogger.setup_logger(__name__)
+logger = LocalLogger().get_logger(__name__)
 
 
 @dataclass

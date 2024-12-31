@@ -19,7 +19,7 @@ class TelegramAPIHelper:
     """
 
     def __init__(self, token: str, chat_id: str):
-        self.logger = LocalLogger.setup_logger(f"{self.__class__.__name__}")
+        self.logger = LocalLogger().get_logger(f"{self.__class__.__name__}")
         self.token: str = token
         self.chat_id: str = chat_id
         self.url: str = f"https://api.telegram.org/bot{self.token}"

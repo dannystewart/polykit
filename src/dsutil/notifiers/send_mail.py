@@ -33,7 +33,7 @@ class MailSender:
         smtp_password: str,
         timeout: int = 10,
     ):
-        self.logger = LocalLogger.setup_logger(f"{self.__class__.__name__}")
+        self.logger = LocalLogger().get_logger(f"{self.__class__.__name__}")
         self.name = name
         self.email = email
         self.smtp_server = smtp_server

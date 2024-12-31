@@ -20,7 +20,7 @@ class TelegramSender:
     """
 
     def __init__(self, token: str, chat_id: str):
-        self.logger = LocalLogger.setup_logger(f"{self.__class__.__name__}")
+        self.logger = LocalLogger().get_logger(f"{self.__class__.__name__}")
         self.api = TelegramAPIHelper(token, chat_id)
         self.chat_id = chat_id
 

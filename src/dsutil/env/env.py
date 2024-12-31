@@ -34,7 +34,7 @@ class DSEnv:
 
     def __post_init__(self):
         """Initialize with default environment variables."""
-        self.logger = LocalLogger.setup_logger(level=self.log_level)
+        self.logger = LocalLogger().get_logger(level=self.log_level)
         if self.env_file:
             env_files = [self.env_file] if isinstance(self.env_file, str) else self.env_file
             for file in env_files:

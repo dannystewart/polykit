@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from logging import Logger
     from pathlib import Path
 
-logger = LocalLogger.setup_logger(__name__)
+logger = LocalLogger().get_logger(__name__)
 
 DiffStyle = Literal["colored", "simple", "minimal"]
 
@@ -71,7 +71,7 @@ def show_diff(
     Returns:
         DiffResult containing the changes found
     """
-    logger = logger or LocalLogger.setup_logger(__name__)
+    logger = logger or LocalLogger().get_logger(__name__)
     changes: list[str] = []
     additions: list[str] = []
     deletions: list[str] = []

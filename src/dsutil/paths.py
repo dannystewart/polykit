@@ -37,7 +37,7 @@ from platformdirs import PlatformDirs
 
 from dsutil.log import LocalLogger
 
-logger = LocalLogger.setup_logger()
+logger = LocalLogger().get_logger("DSPaths")
 
 
 @dataclass
