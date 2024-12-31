@@ -1,31 +1,16 @@
-"""
-Classes for setting up and formatting loggers. The LocalLogger class provides a method for setting
-up a logger with a console handler. The ConsoleColors class defines console color codes for use in
-the formatter to colorize messages by log level.
-"""
-
 from __future__ import annotations
 
-import logging
-import logging.config
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from enum import StrEnum
+from logging import Formatter, LogRecord
 from zoneinfo import ZoneInfo
 
-from .log_colors import LEVEL_COLORS, LogColors
-
-
-class FormatterLevel(StrEnum):
-    """Available types of log formatting."""
-
-    basic = "basic"
-    advanced = "advanced"
+from dsutil.log.log_metadata import LogColors, LogLevel
 
 
 @dataclass
-class CustomFormatter(logging.Formatter):
+class CustomFormatter(Formatter):
     """Custom log formatter supporting both basic and advanced formats."""
 
     message_only: bool = False
@@ -36,19 +21,20 @@ class CustomFormatter(logging.Formatter):
     def __post_init__(self):
         super().__init__()
 
-    def formatTime(self, record: logging.LogRecord, datefmt: str | None = None) -> str:  # noqa
+    def formatTime(self, record: LogRecord, datefmt: str | None = None) -> str:  # noqa
         """Format the time in a log record."""
         tz = ZoneInfo(os.getenv("TZ", "America/New_York"))
         ct = datetime.fromtimestamp(record.created, tz=tz)
         return ct.strftime(datefmt) if datefmt else ct.isoformat()
 
-    def format(self, record: logging.LogRecord) -> str:
+    def format(self, record: LogRecord) -> str:
         """Format the log record based on the formatter style."""
-        level_color = LEVEL_COLORS.get(record.levelname, LogColors.RESET)
+        level_color = LogLevel.get_color(record.levelname)
         reset = LogColors.RESET
         bold = LogColors.BOLD
         gray = LogColors.GRAY
         blue = LogColors.BLUE
+        cyan = LogColors.CYAN
 
         # Add the timestamp to the record
         record.asctime = self.formatTime(record, "%I:%M:%S %p")
@@ -79,8 +65,9 @@ class CustomFormatter(logging.Formatter):
 
         # Format the function color and name
         class_color = blue if self.use_color else reset
+        function_color = cyan if self.use_color else reset
         class_name = f" {class_color}{record.name}:{reset} " if self.show_class else ""
-        function = f"{reset}{record.funcName}: " if self.show_function else " "
+        function = f"{function_color}{record.funcName}: " if self.show_function else " "
 
         # Format the message color and return the formatted message
         message = f"{line_color}{record.getMessage()}{reset}"
@@ -88,10 +75,10 @@ class CustomFormatter(logging.Formatter):
 
 
 @dataclass
-class FileFormatter(logging.Formatter):
+class FileFormatter(Formatter):
     """Formatter class for file log messages."""
 
-    def format(self, record: logging.LogRecord) -> str:
+    def format(self, record: LogRecord) -> str:
         """Format a log record for file output."""
         record.asctime = self.formatTime(record, "%Y-%m-%d %H:%M:%S")
         return f"[{record.asctime}] [{record.levelname}] {record.name}: {record.funcName}: {record.getMessage()}"
