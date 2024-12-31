@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, TypeVar
 
@@ -69,6 +70,69 @@ class EnvVar:
             raise ValueError(msg)
 
 
+class DSEnvBuilder:
+    """Builder class for creating a DSEnv instance with type-checked environment variables."""
+
+    def __init__(self):
+        self.vars: dict[str, EnvVar] = {}
+        self.attr_names: dict[str, str] = {}
+        self.values: dict[str, Any] = {}
+        self._var_adder = VarAdder(self)
+
+    @property
+    def add_var(self) -> VarAdder:
+        """Helper property for adding environment variables with type hints."""
+        return self._var_adder
+
+    @classmethod
+    def __class_getitem__(cls, item: type[T]) -> type[T]:
+        return item
+
+    def build(self) -> DSEnv:
+        """Create a DSEnv instance with these variables."""
+        env = DSEnv()
+        env.vars = self.vars
+        env.attr_names = self.attr_names
+        env.values = self.values
+
+        # Validate all variables immediately
+        if errors := env.validate():
+            raise ValueError("\n".join(errors))
+
+        return env
+
+
+class VarAdder:
+    """Helper class for adding environment variables to a DSEnvBuilder instance."""
+
+    def __init__(self, builder: DSEnvBuilder):
+        self.builder = builder
+
+    def __getitem__(self, type_hint: type[T]) -> Callable[..., DSEnvBuilder]:
+        def add(
+            name: str,
+            attr_name: str | None = None,
+            required: bool = True,
+            default: T | None = None,
+            description: str = "",
+            secret: bool = False,
+        ) -> DSEnvBuilder:
+            attr = attr_name or name.lower()
+            self.builder.attr_names[attr] = name
+
+            self.builder.vars[name] = EnvVar(
+                name=name,
+                required=required,
+                default=default,
+                var_type=type_hint,
+                description=description,
+                secret=secret,
+            )
+            return self.builder
+
+        return add
+
+
 @dataclass
 class DSEnv:
     """Manage environment variables in a DS-friendly way.
@@ -127,9 +191,9 @@ class DSEnv:
     log_level: str = "info"
     validate_on_add: bool = True
 
-    _vars: dict[str, EnvVar] = field(default_factory=dict)
-    _values: dict[str, Any] = field(default_factory=dict)
-    _attr_names: dict[str, str] = field(default_factory=dict)
+    vars: dict[str, EnvVar] = field(default_factory=dict)
+    values: dict[str, Any] = field(default_factory=dict)
+    attr_names: dict[str, str] = field(default_factory=dict)
 
     logger: Logger = field(init=False)
 
@@ -167,9 +231,9 @@ class DSEnv:
         """
         # Use provided attr_name or convert ENV_VAR_NAME to env_var_name
         attr = attr_name or name.lower()
-        self._attr_names[attr] = name
+        self.attr_names[attr] = name
 
-        self._vars[name] = EnvVar(
+        self.vars[name] = EnvVar(
             name=name,
             required=required,
             default=default,
@@ -235,7 +299,7 @@ class DSEnv:
             List of error messages, empty if all valid
         """
         errors = []
-        for name, _ in self._vars.items():
+        for name, _ in self.vars.items():
             try:
                 self.get(name)
             except Exception as e:
@@ -256,15 +320,15 @@ class DSEnv:
         Returns:
             The value of the environment variable.
         """
-        if name not in self._vars:
+        if name not in self.vars:
             msg = f"Unknown environment variable: {name}"
             raise KeyError(msg)
 
         # Return the cached value first if we have it
-        if name in self._values:
-            return self._values[name]
+        if name in self.values:
+            return self.values[name]
 
-        var = self._vars[name]
+        var = self.vars[name]
 
         # Try to get the value from the current environment
         value = os.environ.get(name) or os.getenv(name)
@@ -284,7 +348,7 @@ class DSEnv:
 
         try:
             converted = var.var_type(value)
-            self._values[name] = converted
+            self.values[name] = converted
             return converted
         except ValueError as e:
             msg = f"Invalid value for {name}: {str(e)}"
@@ -292,8 +356,8 @@ class DSEnv:
 
     def __getattr__(self, name: str) -> Any:
         """Allow accessing variables as attributes."""
-        if name in self._attr_names:
-            return self.get(self._attr_names[name])
+        if name in self.attr_names:
+            return self.get(self.attr_names[name])
         msg = f"'{self.__class__.__name__}' has no attribute '{name}'"
         raise AttributeError(msg)
 
@@ -339,3 +403,8 @@ class DSEnv:
             f"Valid false values: {', '.join(sorted(false_values))}."
         )
         raise ValueError(msg)
+
+    @classmethod
+    def create(cls) -> DSEnvBuilder:
+        """Create a new environment configuration."""
+        return DSEnvBuilder()
