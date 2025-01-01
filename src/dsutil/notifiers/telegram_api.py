@@ -8,10 +8,11 @@ from dsutil.log import LocalLogger
 
 
 class TelegramAPIHelper:
-    """
-    Helper class to interact with the Telegram API. You must supply your own API token as well as
-    your chat ID in order to use the class. It provides a call_api method to make a POST request to
-    the Telegram API using the specified method, payload, and timeout.
+    """Helper class to interact with the Telegram API.
+
+    You must supply your own API token as well as your chat ID in order to use the class. It
+    provides a call_api method to make a POST request to the Telegram API using the specified
+    method, payload, and timeout.
 
     Attributes:
         token: The token to use for the Telegram Bot API.
@@ -33,8 +34,7 @@ class TelegramAPIHelper:
         timeout: int | None = None,
         files: dict | None = None,
     ) -> dict:
-        """
-        Make a POST request to the Telegram API using the specified method, payload, and timeout.
+        """Make a POST request to the Telegram API using the specified method, payload, and timeout.
 
         If timeout is not specified, it's determined dynamically based on the API method if it's a
         commonly used method, or else the default timeout is used.

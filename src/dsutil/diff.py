@@ -30,8 +30,7 @@ def diff_files(
     file2_path: str | Path,
     style: DiffStyle = "colored",
 ) -> DiffResult:
-    """
-    Show diff between two files.
+    """Show diff between two files.
 
     Args:
         file1_path: Path to first file.
@@ -58,8 +57,7 @@ def show_diff(
     style: DiffStyle = "colored",
     logger: Logger | None = None,
 ) -> DiffResult:
-    """
-    Show a unified diff between current and new content.
+    """Show a unified diff between current and new content.
 
     Args:
         current: Current content.
@@ -129,4 +127,4 @@ def _process_diff_line(
 
 def _should_show_line(line: str, style: DiffStyle) -> bool:
     """Determine if a line should be shown based on the diff style."""
-    return style in ("colored", "simple") or (style == "minimal" and line.startswith(("+", "-")))
+    return style in {"colored", "simple"} or (style == "minimal" and line.startswith(("+", "-")))

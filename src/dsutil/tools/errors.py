@@ -60,8 +60,7 @@ def catch_errors(
     default_return: Any | None = None,
     trim_levels: int = 1,
 ) -> Callable:
-    """
-    Enhance functions with advanced error handling and logging.
+    """Enhance functions with advanced error handling and logging.
 
     Args:
         show_tb: When True, additional info will be logged, including stack traces. Helpful in
@@ -112,8 +111,7 @@ def get_logger_for_caller(func: Callable, *args: Any) -> logging.Logger:
 
 
 def get_caller_name(start_index: int = 1) -> str | None:
-    """
-    Traverses the stack to find the name of the caller function along with its class.
+    """Traverses the stack to find the name of the caller function along with its class.
 
     Args:
         start_index: The index in the stack to start from.
@@ -159,8 +157,7 @@ def retry_on_exception(
     backoff: int = 2,
     logger: logging.Logger | None = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
-    """
-    Retry a function if a specified exception occurs.
+    """Retry a function if a specified exception occurs.
 
     Args:
         exception_to_check: The exception to check for retries.
@@ -199,8 +196,7 @@ def async_retry_on_exception(
     backoff: float = 2,
     logger: logging.Logger | None = None,
 ) -> Callable[[Callable[P, Coroutine[Any, Any, T]]], Callable[P, Coroutine[Any, Any, T]]]:
-    """
-    Retry a function if a specified exception occurs.
+    """Retry a function if a specified exception occurs.
 
     Args:
         exception_to_check: The exception to check for retries.

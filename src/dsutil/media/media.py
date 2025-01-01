@@ -17,8 +17,7 @@ from dsutil.text import print_colored
 
 
 def find_bit_depth(input_file: str, show_animation: bool = False) -> int:
-    """
-    Identify the bit depth of an input audio file using ffprobe.
+    """Identify the bit depth of an input audio file using ffprobe.
     Returns the bit depth of the input file, or 0 if the bit depth could not be determined.
 
     Args:
@@ -67,8 +66,7 @@ def ffmpeg_audio(
     show_output: bool = False,
     show_animation: bool = False,
 ) -> None:
-    """
-    Convert an audio file to a different format using ffmpeg with various options.
+    """Convert an audio file to a different format using ffmpeg with various options.
     Automatically prioritizes lossless formats over lossy formats.
 
     Args:
@@ -127,11 +125,10 @@ def ffmpeg_video(
     video_codec: str | None = None,
     video_bitrate: str | None = None,
     audio_codec: str | None = None,
-    additional_args: list[str] = None,
+    additional_args: list[str] | None = None,
     show_output: bool = False,
 ):
-    """
-    Convert a video file to a different format using ffmpeg with various options.
+    """Convert a video file to a different format using ffmpeg with various options.
 
     Args:
         input_files: The path to the input file or a list of paths to input files.

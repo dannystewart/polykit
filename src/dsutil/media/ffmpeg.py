@@ -15,8 +15,7 @@ def run_ffmpeg(
     show_output: bool,
     output_filename: str | None = None,
 ) -> None:
-    """
-    Run a given ffmpeg command and handle progress display and errors.
+    """Run a given ffmpeg command and handle progress display and errors.
 
     Args:
         command: The ffmpeg command to execute.
@@ -24,6 +23,9 @@ def run_ffmpeg(
         show_output: Whether to display output.
         output_filename: The name of the output file to show when converting. Defaults to None, in
             which case the input filename is used instead.
+
+    Raises:
+        RuntimeError: If the ffmpeg command fails.
     """
     spinner_messages = {
         "start": "Converting",
@@ -61,8 +63,7 @@ def construct_filename(
     output_format: str,
     input_files: list[str],
 ) -> str:
-    """
-    Construct the output filename based on the input file and the output format.
+    """Construct the output filename based on the input file and the output format.
 
     Args:
         input_file: The path to the input file.
@@ -83,8 +84,7 @@ def construct_filename(
 
 
 def construct_ffmpeg_command(input_file: str, overwrite: bool) -> list[str]:
-    """
-    Construct the base ffmpeg command.
+    """Construct the base ffmpeg command.
 
     Args:
         input_file: The path to the input file.
@@ -127,8 +127,7 @@ def add_audio_flags(
     preserve_metadata: bool = False,
     input_file: str | None = None,
 ) -> None:
-    """
-    Add the necessary flags for the desired audio codec settings to the ffmpeg command.
+    """Add the necessary flags for the desired audio codec settings to the ffmpeg command.
 
     Args:
         command: The ffmpeg command to which to apply the settings.
@@ -198,8 +197,7 @@ def add_video_flags(
     video_bitrate: str,
     audio_codec: str,
 ) -> None:
-    """
-    Add the necessary flags for the desired video codec settings to the ffmpeg command.
+    """Add the necessary flags for the desired video codec settings to the ffmpeg command.
 
     Args:
         command: The ffmpeg command to which to apply the settings.
@@ -215,8 +213,7 @@ def add_video_flags(
 
 
 def ensure_lossless_first(input_files: list[str]) -> list:
-    """
-    If there are multiple files with the same name, this function will sort the list such that
+    """If there are multiple files with the same name, this function will sort the list such that
     uncompressed and lossless files are prioritized over compressed and lossy files.
 
     Args:

@@ -6,8 +6,7 @@ import subprocess
 
 
 def get_timestamps(file: str) -> tuple[str, str]:
-    """
-    Get file creation and modification timestamps. macOS only, as it relies on GetFileInfo.
+    """Get file creation and modification timestamps. macOS only, as it relies on GetFileInfo.
 
     Args:
         file: The file to get the timestamps of.
@@ -22,18 +21,20 @@ def get_timestamps(file: str) -> tuple[str, str]:
 
 
 def set_timestamps(file: str, ctime: str | None = None, mtime: str | None = None) -> None:
-    """
-    Set file creation and/or modification timestamps. macOS only, as it relies on SetFile.
+    """Set file creation and/or modification timestamps. macOS only, as it relies on SetFile.
 
     Args:
         file: The file to set the timestamps of.
         ctime: The creation timestamp to set. If None, creation time won't be set.
         mtime: The modification timestamp to set. If None, modification time won't be set.
+
+    Raises:
+        ValueError: If both ctime and mtime are None.
     """
     if ctime is None and mtime is None:
         msg = "At least one of ctime or mtime must be set."
         raise ValueError(msg)
     if ctime:
-        subprocess.run(["SetFile", "-d", ctime, file])
+        subprocess.run(["SetFile", "-d", ctime, file], check=False)
     if mtime:
-        subprocess.run(["SetFile", "-m", mtime, file])
+        subprocess.run(["SetFile", "-m", mtime, file], check=False)

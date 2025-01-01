@@ -38,8 +38,7 @@ SMART_QUOTES_TABLE = str.maketrans(
 
 
 def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
-    """
-    Use termcolor to return a string in the specified color if termcolor is available.
+    """Use termcolor to return a string in the specified color if termcolor is available.
     Otherwise, gracefully falls back to returning the text as is.
 
     Args:
@@ -61,8 +60,7 @@ def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> 
 def print_colored(
     text: str, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
 ) -> None:
-    r"""
-    Use termcolor to print text in the specified color if termcolor is available.
+    r"""Use termcolor to print text in the specified color if termcolor is available.
     Otherwise, gracefully falls back to printing the text as is.
 
     Args:

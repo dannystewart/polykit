@@ -1,5 +1,4 @@
-"""
-Utility functions for working with the shell, such as handling keyboard interrupts, errors, and
+"""Utility functions for working with the shell, such as handling keyboard interrupts, errors, and
 colors, as well as reading and writing files.
 """
 
@@ -59,8 +58,7 @@ def handle_keyboard_interrupt(
 def catch_errors(
     additional_errors: dict[type[Exception], str] | None = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
-    """
-    Handle errors. Includes handling for common errors and allows specification of additional,
+    """Handle errors. Includes handling for common errors and allows specification of additional,
     more specific errors.
 
     Args:
@@ -91,8 +89,7 @@ def catch_errors(
 
 
 def read_file_content(filepath: str) -> str:
-    """
-    Read the contents of a file.
+    """Read the contents of a file.
 
     Args:
         filepath: The path to the file.
@@ -105,8 +102,7 @@ def read_file_content(filepath: str) -> str:
 
 
 def write_to_file(filepath: str, content: str) -> None:
-    """
-    Write content to a file.
+    """Write content to a file.
 
     Args:
         filepath: The path to the file.
@@ -117,8 +113,7 @@ def write_to_file(filepath: str, content: str) -> None:
 
 
 def is_root_user() -> bool:
-    """
-    Confirm that the script is running as root.
+    """Confirm that the script is running as root.
 
     Returns:
         Whether the script is running as root.
@@ -127,8 +122,7 @@ def is_root_user() -> bool:
 
 
 def acquire_sudo() -> bool:
-    """
-    Acquire sudo access.
+    """Acquire sudo access.
 
     Returns:
         Whether sudo access was successfully acquired.
@@ -150,8 +144,7 @@ def acquire_sudo() -> bool:
 
 
 def get_single_char_input(prompt: str) -> str:
-    """
-    Read a single character without requiring the Enter key. Mainly for confirmation prompts.
+    """Read a single character without requiring the Enter key. Mainly for confirmation prompts.
     Supports Windows using msvcrt and Unix-like systems using termios.
 
     Args:
@@ -183,8 +176,7 @@ def get_single_char_input(prompt: str) -> str:
 def confirm_action(
     prompt: str, default_to_yes: bool = False, prompt_color: ColorName = "white"
 ) -> bool:
-    """
-    Ask the user to confirm an action before proceeding.
+    """Ask the user to confirm an action before proceeding.
 
     Usage:
         if confirm_action("Do you want to proceed?"):

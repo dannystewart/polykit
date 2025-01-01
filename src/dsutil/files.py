@@ -37,8 +37,7 @@ def list_files(
     sort_key: Callable | None = None,
     reverse_sort: bool = False,
 ) -> list[str]:
-    """
-    List all files in a directory that match the given criteria.
+    """List all files in a directory that match the given criteria.
 
     Args:
         directory: The directory to search.
@@ -107,11 +106,8 @@ def file_matches_criteria(
     """Check if a file matches the given criteria."""
     result = True
     try:
-        if (
-            not include_hidden
-            and file_path.name.startswith(".")
-            or exclude_patterns
-            and any(file_path.match(pattern) for pattern in exclude_patterns)
+        if (not include_hidden and file_path.name.startswith(".")) or (
+            exclude_patterns and any(file_path.match(pattern) for pattern in exclude_patterns)
         ):
             result = False
         else:
@@ -147,8 +143,7 @@ def delete_files(
     show_total: bool = True,
     dry_run: bool = False,
 ) -> tuple[int, int]:
-    """
-    Safely move a list of files to the trash. If that fails, asks for confirmation and
+    """Safely move a list of files to the trash. If that fails, asks for confirmation and
     deletes them directly.
 
     Args:
@@ -197,8 +192,7 @@ def delete_files(
 
 
 def _handle_file_deletion(file_path: Path, dry_run: bool = False, show_output: bool = True) -> bool:
-    """
-    Attempt to delete a single file, sending it to trash or permanently deleting it.
+    """Attempt to delete a single file, sending it to trash or permanently deleting it.
 
     Args:
         file_path: The path of the file to delete.
@@ -246,8 +240,7 @@ def copy_file(
     overwrite: bool = True,
     show_output: bool = True,
 ) -> bool:
-    """
-    Copy a file from source to destination.
+    """Copy a file from source to destination.
 
     Args:
         source: The source file path.
@@ -282,7 +275,11 @@ def copy_file(
 
 
 def _copy_win32_file(source: Path, destination: Path) -> None:
-    """Copy a file on Windows, preserving attributes and permissions."""
+    """Copy a file on Windows, preserving attributes and permissions.
+
+    Raises:
+        ImportError: If pywin32 is not installed.
+    """
     try:
         import win32con  # type: ignore
         import win32file  # type: ignore
@@ -318,8 +315,7 @@ def move_file(
     overwrite: bool = False,
     show_output: bool = True,
 ) -> bool:
-    """
-    Move a file from source to destination.
+    """Move a file from source to destination.
 
     Args:
         source: The source file path.
@@ -354,8 +350,7 @@ def move_file(
 
 
 def sha256_checksum(filename: Path, block_size: int = 65536) -> str:
-    """
-    Generate SHA-256 hash of a file.
+    """Generate SHA-256 hash of a file.
 
     Args:
         filename: The file path.
@@ -372,8 +367,7 @@ def sha256_checksum(filename: Path, block_size: int = 65536) -> str:
 
 
 def compare_files_by_mtime(file1: Path, file2: Path) -> float:
-    """
-    Compare two files based on modification time.
+    """Compare two files based on modification time.
 
     Args:
         file1: The first file path.
@@ -388,8 +382,7 @@ def compare_files_by_mtime(file1: Path, file2: Path) -> float:
 
 
 def find_duplicate_files_by_hash(files: list[Path]) -> None:
-    """
-    Find and print duplicate files by comparing their SHA-256 hashes.
+    """Find and print duplicate files by comparing their SHA-256 hashes.
 
     Args:
         files: A list of file paths.

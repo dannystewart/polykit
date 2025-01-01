@@ -59,8 +59,7 @@ def parse_args() -> Namespace:
 
 
 def update_config_file(config: ConfigFile, content: str, is_package: bool = False) -> bool:
-    """
-    Update a config file if changes are detected.
+    """Update a config file if changes are detected.
 
     Args:
         config: The config file to update.
@@ -121,8 +120,7 @@ def handle_config_update(
 
 
 def update_configs(*, update_only: bool = False, auto_confirm: bool = False) -> None:
-    """
-    Pull down latest configs from GitLab, updating both local and package copies.
+    """Pull down latest configs from GitLab, updating both local and package copies.
 
     Args:
         update_only: Only update existing config files, don't create new ones.

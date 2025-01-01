@@ -1,5 +1,4 @@
-r"""
-DSPaths is a helper class to manage paths (both platform and user) in a DS-friendly way.
+r"""DSPaths is a helper class to manage paths (both platform and user) in a DS-friendly way.
 
 Platform-specific paths:
     Linux:

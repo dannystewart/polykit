@@ -20,8 +20,7 @@ T = TypeVar("T")
 
 
 def with_retries(operation_func: Callable[..., T]) -> Callable[..., T]:
-    """
-    Retry operations with a spinner.
+    """Retry operations with a spinner.
 
     Args:
         operation_func: The operation function to retry.
@@ -63,8 +62,7 @@ def with_spinner(
     success: str | None = None,
     color: ColorName | None = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
-    """
-    Display a spinner while the decorated function is running.
+    """Display a spinner while the decorated function is running.
 
     Args:
         text: The text to display before the spinner. Defaults to "Processing...".
@@ -104,8 +102,7 @@ def halo_progress(
     fail_message: str = "Failed",
     show: bool = True,
 ) -> Generator[Halo | None, None, None]:
-    """
-    Context manager to display a Halo spinner while a block of code is executing, with customized
+    """Context manager to display a Halo spinner while a block of code is executing, with customized
     start and end messages.
 
     Args:
@@ -124,9 +121,6 @@ def halo_progress(
 
     Yields:
         Halo: The Halo spinner.
-
-    Raises:
-        Exception: If an unexpected error occurs.
     """
     fail_color: ColorName = "red"
     success_color: ColorName = "green"
@@ -159,8 +153,7 @@ def halo_progress(
 
 @contextmanager
 def conversion_list_context(file_name: str) -> Generator[None, None, None]:
-    """
-    Context manager to print a converting message at the start and a completion message at the end.
+    """Context manager to print a message at the start and end of an operation.
 
     Args:
         file_name: The name of the file being converted.

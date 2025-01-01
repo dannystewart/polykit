@@ -9,9 +9,7 @@ from dsutil.log import LocalLogger
 
 
 class MailSender:
-    """
-    Send emails over SMTP. SMTP credentials must be provided. It then provides a send_email method
-    to send an email with the given subject and body.
+    """Send emails over SMTP. Credentials must be provided.
 
     Attributes:
         name: The name to use for the sender of the email.
@@ -45,8 +43,7 @@ class MailSender:
     def send_email(
         self, subject: str, body: str, recipients: str | list[str] | None = None
     ) -> bool:
-        """
-        Compose and prepare an email with the given subject and body, then send it using
+        """Compose and prepare an email with the given subject and body, then send it using
         the configured SMTP server.
 
         Args:
@@ -76,8 +73,7 @@ class MailSender:
             return False
 
     def handle_send(self, server: smtplib.SMTP, msg: MIMEText, recipients: list[str]) -> bool:
-        """
-        Send an email message using the provided SMTP server.
+        """Send an email message using the provided SMTP server.
 
         Args:
             server: The SMTP server to use.

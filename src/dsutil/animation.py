@@ -1,3 +1,5 @@
+# ruff: noqa: PLW0603
+
 from __future__ import annotations
 
 import sys
@@ -58,8 +60,7 @@ def walking_animation(
     color: ColorName | None = None,
     width: int = ANIMATION_WIDTH,
 ):
-    """
-    Manage a walking animation as a context manager. All arguments are optional.
+    """Manage a walking animation as a context manager. All arguments are optional.
 
     Args:
         loading_text: Text to print before starting the animation. Defaults to None.
@@ -81,8 +82,7 @@ def conditional_animation(
     color: ColorName | None = None,
     width: int = ANIMATION_WIDTH,
 ) -> AbstractContextManager[None]:
-    """
-    Run the walking animation if the condition is met.
+    """Run the walking animation if the condition is met.
 
     Args:
         condition: The condition that must be met for the animation to display.
@@ -120,7 +120,7 @@ def show_walking_animation(
         print_animation_frame(character, position, color)
         position += direction
 
-        if position in (0, width):
+        if position in {0, width}:
             direction *= -1
             character = character_left if direction == -1 else character_right
 
@@ -131,8 +131,7 @@ def start_animation(
     color: ColorName | None = None,
     width: int = ANIMATION_WIDTH,
 ) -> Thread:
-    """
-    Start the walking animation.
+    """Start the walking animation.
 
     Usage (all arguments optional):
         from dsutil.animation import start_animation, stop_animation

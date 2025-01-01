@@ -29,10 +29,11 @@ class ArgumentsBase:
 
 
 class CustomHelpFormatter(argparse.HelpFormatter):
-    """
-    Format a help message for argparse. It allows for customizing the column width of the arguments
-    and help text. You would use this class by passing it as the formatter_class argument to the
-    ArgumentParser constructor, like the below example.
+    """Format a help message for argparse.
+
+    It allows for customizing the column width of the arguments and help text. You would use this
+    class by passing it as the formatter_class argument to the ArgumentParser constructor, like the
+    below example.
 
         parser = argparse.ArgumentParser(
             description=__doc__,
@@ -62,8 +63,7 @@ class CustomHelpFormatter(argparse.HelpFormatter):
 
 
 class ArgParser(argparse.ArgumentParser):
-    """
-    Custom ArgumentParser that uses the CustomHelpFormatter by default and makes it easier to
+    """Custom ArgumentParser that uses the CustomHelpFormatter by default and makes it easier to
     specify the column widths. After importing it, just use this instead of argparse.ArgumentParser,
     like the example below.
 
@@ -91,8 +91,7 @@ class ArgParser(argparse.ArgumentParser):
         )
 
     def add_argument_from_info(self, name: str, arg_info: ArgInfo) -> None:
-        """
-        Add an argument to the parser based on ArgInfo.
+        """Add an argument to the parser based on ArgInfo.
 
         This method simplifies the process of adding arguments by using an ArgInfo instance, which
         encapsulates all the necessary information for an argument. It automatically sets up the
@@ -112,7 +111,7 @@ class ArgParser(argparse.ArgumentParser):
         """
         kwargs: dict[str, Any] = {"help": arg_info.help}
 
-        if arg_info.action in ["store_true", "store_false"]:
+        if arg_info.action in {"store_true", "store_false"}:
             kwargs["action"] = arg_info.action
         else:
             if arg_info.type is not None:
@@ -137,8 +136,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument(f"--{name.replace('_', '-')}", **kwargs)
 
     def add_args_from_class(self, arg_class: type[ArgumentsBase]) -> None:
-        """
-        Automatically add arguments to the parser based on a class of ArgInfo instances.
+        """Automatically add arguments to the parser based on a class of ArgInfo instances.
 
         This method simplifies the process of adding multiple arguments by using a class that
         contains ArgInfo instances as class attributes. It iterates through all ArgInfo instances in

@@ -18,8 +18,7 @@ def get_pretty_time(
     capitalize: bool = False,
     time_only: bool = False,
 ) -> str:
-    """
-    Given a timestamp, return a pretty string representation of the time.
+    """Given a timestamp, return a pretty string representation of the time.
 
     Args:
         time: The timestamp to convert.
@@ -55,8 +54,7 @@ def get_pretty_time(
 
 
 def convert_to_12h(hour: int, minutes: int = 0) -> str:
-    """
-    Convert 24-hour time to 12-hour time format with AM/PM, including minutes.
+    """Convert 24-hour time to 12-hour time format with AM/PM, including minutes.
 
     Args:
         hour: The hour in 24-hour format.
@@ -88,8 +86,7 @@ def convert_min_to_interval(interval: int) -> str:
 
 
 def convert_sec_to_interval(interval: int, omit_one: bool = False) -> str:
-    """
-    Convert a time interval in seconds to a human-readable interval string.
+    """Convert a time interval in seconds to a human-readable interval string.
 
     Args:
         interval: The time interval in seconds.
@@ -124,8 +121,7 @@ def add_time_to_datetime(
     minutes: int = 0,
     seconds: int = 0,
 ) -> datetime:
-    """
-    Add hours, minutes, and seconds to a datetime object.
+    """Add hours, minutes, and seconds to a datetime object.
 
     Args:
         original_datetime: The original datetime object to be adjusted.

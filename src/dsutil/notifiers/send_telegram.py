@@ -10,9 +10,10 @@ from dsutil.log import LocalLogger
 
 
 class TelegramSender:
-    """
-    Send messages to a Telegram chat. You must supply your own API token as well as your chat ID in
-    order to use the class. It provides a send_message method to send a message to the chat.
+    """Send messages to a Telegram chat.
+
+    You must supply your own API token as well as your chat ID in order to use the class. It
+    provides a send_message method to send a message to the chat.
 
     Attributes:
         token: The token to use for the Telegram Bot API.
@@ -70,10 +71,10 @@ class TelegramSender:
         title: str | None = None,
         performer: str | None = None,
     ) -> bool:
-        """
-        Send a local audio file to a specified chat. Supports optional message modification and
-        deletion by providing a message ID and new text. Optionally remove an attached keyboard
-        after modification.
+        """Send a local audio file to a specified chat.
+
+        Supports optional message modification and deletion by providing a message ID and new text.
+        Optionally remove an attached keyboard after modification.
 
         Args:
             audio_path: The path of the local audio file to send.
