@@ -9,9 +9,9 @@ from __future__ import annotations
 import inspect
 import logging
 import logging.config
-import os
 from logging import Logger
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 from typing import Any
 
 from dsutil.log.log_formatters import CustomFormatter, FileFormatter
@@ -108,15 +108,14 @@ class LocalLogger(metaclass=Singleton):
             backup_count: The number of backup files to keep.
         """
         formatter = FileFormatter()
-        log_dir = os.path.dirname(log_file)
-        log_file_path = log_file
+        log_dir = Path(log_file).parent
+        log_file_path = Path(log_file)
 
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
+        if not log_dir.exists():
+            log_dir.mkdir(parents=True, exist_ok=True)
 
-        if not os.path.isfile(log_file_path):
-            with open(log_file_path, "a", encoding="utf-8"):
-                os.utime(log_file_path, None)
+        if not log_file_path.is_file():
+            log_file_path.touch()
 
         file_handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
         file_handler.setFormatter(formatter)

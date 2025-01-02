@@ -40,7 +40,7 @@ class CustomFormatter(Formatter):
         record.asctime = self.formatTime(record, "%I:%M:%S %p")
 
         if self.message_only:  # Messages above INFO show in bold
-            bold = "" if record.levelname in ["DEBUG", "INFO"] else bold
+            bold = "" if record.levelname in {"DEBUG", "INFO"} else bold
             return f"{reset}{bold}{level_color}{record.getMessage()}{reset}"
 
         # Format the timestamp
@@ -60,7 +60,7 @@ class CustomFormatter(Formatter):
         log_level = f"{bold}{line_color}{level_text}{reset}"
 
         # Note whether we've above INFO level and use level color if so
-        above_info = record.levelname not in ["DEBUG", "INFO"]
+        above_info = record.levelname not in {"DEBUG", "INFO"}
         reset = f"{line_color}{reset}" if above_info else f"{reset}"
 
         # Format the function color and name
