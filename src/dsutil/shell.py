@@ -4,17 +4,19 @@ colors, as well as reading and writing files.
 
 from __future__ import annotations
 
-import logging
 import os
 import subprocess
 import sys
 from functools import wraps
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from dsutil.text import ColorName, color
 
 if TYPE_CHECKING:
+    import logging
     from collections.abc import Awaitable, Callable
+
 T = TypeVar("T")
 
 
@@ -42,10 +44,12 @@ def handle_keyboard_interrupt(
                 if callback:
                     callback()
                 log_message = color(message, "red")
-                if logger:  # Use root logger
+                if logger:  # Use supplied logger
                     logger.info(log_message)
-                elif use_logging:  # Use supplied logger
-                    logging.info(log_message)
+                elif use_logging:  # Create new logger
+                    from dsutil.log import LocalLogger
+
+                    LocalLogger().get_logger().info(log_message)
                 else:  # Just print the message
                     print(log_message)
                 sys.exit(exit_code)
@@ -97,7 +101,7 @@ def read_file_content(filepath: str) -> str:
     Returns:
         The contents of the file.
     """
-    with open(filepath, encoding="utf-8") as file:
+    with Path.open(filepath, encoding="utf-8") as file:
         return file.read()
 
 
@@ -108,7 +112,7 @@ def write_to_file(filepath: str, content: str) -> None:
         filepath: The path to the file.
         content: The content to write.
     """
-    with open(filepath, "w", encoding="utf-8") as file:
+    with Path.open(filepath, "w", encoding="utf-8") as file:
         file.write(content)
 
 
@@ -143,7 +147,7 @@ def acquire_sudo() -> bool:
             return False
 
 
-def get_single_char_input(prompt: str) -> str:
+def get_single_char_input(prompt: str = "") -> str:
     """Read a single character without requiring the Enter key. Mainly for confirmation prompts.
     Supports Windows using msvcrt and Unix-like systems using termios.
 
@@ -235,7 +239,9 @@ def async_handle_keyboard_interrupt(
                 if logger:
                     logger.info(log_message)
                 elif use_logging:
-                    logging.info(log_message)
+                    from dsutil.log import LocalLogger
+
+                    LocalLogger().get_logger().info(log_message)
                 else:
                     print(log_message)
                 sys.exit(exit_code)
