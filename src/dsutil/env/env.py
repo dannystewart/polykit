@@ -25,7 +25,6 @@ class DSEnv:
 
     env_file: list[Path] | Path | str | None = field(default_factory=default_env_files)
     log_level: str = "info"
-    validate_on_add: bool = True
 
     vars: dict[str, EnvVar] = field(default_factory=dict)
     values: dict[str, Any] = field(default_factory=dict)
@@ -81,12 +80,11 @@ class DSEnv:
             secret=secret,
         )
 
-        # Validate immediately if enabled
-        if self.validate_on_add:
-            try:
-                self.get(name)
-            except Exception as e:
-                raise ValueError(str(e)) from e
+        # Validate the variable as soon as it's added
+        try:
+            self.get(name)
+        except Exception as e:
+            raise ValueError(str(e)) from e
 
     def add_bool(
         self,
@@ -130,20 +128,6 @@ class DSEnv:
     ) -> None:
         """Simple shortcut to add a consistent boolean DEBUG environment variable."""
         self.add_bool(name=name, required=False, default=default, description=description)
-
-    def validate(self) -> list[str]:
-        """Validate all environment variables.
-
-        Returns:
-            List of error messages, empty if all valid
-        """
-        errors = []
-        for name in self.vars:
-            try:
-                self.get(name)
-            except Exception as e:
-                errors.append(str(e))
-        return errors
 
     def get(self, name: str, default: Any = None) -> Any:
         """Get the value of an environment variable.
@@ -259,20 +243,12 @@ class DSEnvBuilder:
         return item
 
     def build(self) -> DSEnv:
-        """Create a DSEnv instance with these variables.
-
-        Raises:
-            ValueError: If any variables are invalid.
-        """
+        """Create a DSEnv instance with these variables."""
         from dsutil.env.env import DSEnv
 
         env = DSEnv()
         env.vars = self.vars
         env.attr_names = self.attr_names
         env.values = self.values
-
-        # Validate all variables immediately
-        if errors := env.validate():
-            raise ValueError("\n".join(errors))
 
         return env
