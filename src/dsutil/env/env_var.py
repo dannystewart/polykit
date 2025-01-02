@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
 if TYPE_CHECKING:
@@ -12,9 +13,9 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 
 
-def default_env_files() -> list[str]:
+def default_env_files() -> list[Path]:
     """Default .env files to load."""
-    return [".env", "~/.env"]
+    return [Path(".env"), Path("~/.env").expanduser()]
 
 
 @dataclass

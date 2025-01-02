@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from dotenv import load_dotenv
@@ -22,7 +23,7 @@ T = TypeVar("T")
 class DSEnv:
     """Manage environment variables in a DS-friendly way."""
 
-    env_file: str | list[str] | None = field(default_factory=default_env_files)
+    env_file: list[Path] | Path | str | None = field(default_factory=default_env_files)
     log_level: str = "info"
     validate_on_add: bool = True
 
@@ -36,12 +37,12 @@ class DSEnv:
         """Initialize with default environment variables."""
         self.logger = LocalLogger().get_logger(level=self.log_level)
         if self.env_file:
-            env_files = [self.env_file] if isinstance(self.env_file, str) else self.env_file
+            env_files = [self.env_file] if isinstance(self.env_file, str | Path) else self.env_file
             for file in env_files:
-                expanded_path = os.path.expanduser(file)
-                if os.path.exists(expanded_path):
-                    self.logger.debug("Loading environment from: %s", expanded_path)
-                    load_dotenv(expanded_path, override=False)
+                full_path = Path(file).expanduser() if isinstance(file, str) else file.expanduser()
+                if full_path.exists():
+                    self.logger.debug("Loading environment from: %s", full_path)
+                    load_dotenv(str(full_path), override=False)
 
     def add_var(
         self,
@@ -63,13 +64,16 @@ class DSEnv:
             var_type: Type to convert value to (e.g. int, float, str, bool).
             description: Human-readable description.
             secret: Whether to mask the value in logs.
+
+        Raises:
+            ValueError: If the variable is required and not set.
         """
         # Use provided attr_name or convert ENV_VAR_NAME to env_var_name
         attr = attr_name or name.lower()
         self.attr_names[attr] = name
 
         self.vars[name] = EnvVar(
-            name=name,
+            name=name.upper(),
             required=required,
             default=default,
             var_type=var_type,
@@ -134,7 +138,7 @@ class DSEnv:
             List of error messages, empty if all valid
         """
         errors = []
-        for name, _ in self.vars.items():
+        for name in self.vars:
             try:
                 self.get(name)
             except Exception as e:
@@ -179,11 +183,15 @@ class DSEnv:
             self.values[name] = converted
             return converted
         except ValueError as e:
-            msg = f"Invalid value for {name}: {str(e)}"
+            msg = f"Invalid value for {name}: {e!s}"
             raise ValueError(msg) from e
 
     def __getattr__(self, name: str) -> Any:
-        """Allow accessing variables as attributes."""
+        """Allow accessing variables as attributes.
+
+        Raises:
+            AttributeError: If the given name is unknown.
+        """
         if name in self.attr_names:
             return self.get(self.attr_names[name])
         msg = f"'{self.__class__.__name__}' has no attribute '{name}'"
@@ -191,7 +199,7 @@ class DSEnv:
 
     def _load_env_file(self) -> None:
         """Load variables from .env file."""
-        with open(self.env_file) as f:
+        with Path(self.env_file).open(encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith("#"):
@@ -251,7 +259,11 @@ class DSEnvBuilder:
         return item
 
     def build(self) -> DSEnv:
-        """Create a DSEnv instance with these variables."""
+        """Create a DSEnv instance with these variables.
+
+        Raises:
+            ValueError: If any variables are invalid.
+        """
         from dsutil.env.env import DSEnv
 
         env = DSEnv()
