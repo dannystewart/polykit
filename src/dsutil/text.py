@@ -390,18 +390,32 @@ class Text(StrEnum):
         return space_index if space_index != -1 else limit  # Use limit if no space is found
 
     @staticmethod
-    def pluralize(word: str, count: int) -> str:
+    def plural(word: str, count: int, with_count: bool = False) -> str:
         """Pluralize a word based on the count of items."""
         if count == 1:
-            return word
+            return f"1 {word}" if with_count else word
+        if with_count:
+            if word.endswith("s"):
+                return f"{count} {word}es"
+            return f"{count} {word}s"
         return f"{word}es" if word.endswith("s") else f"{word}s"
+
+    @staticmethod
+    def pluralize(*args, **kwargs: Any) -> str:
+        """Pluralize (for backward compatibility; use `Text.plural` now)."""
+        import warnings
+
+        warnings.warn(
+            "'pluralize' is deprecated, use 'plural' instead", DeprecationWarning, stacklevel=2
+        )
+        return Text.plural(*args, **kwargs)
 
     @staticmethod
     def format_duration(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
         """Print a formatted time duration."""
-        sec_str = f"{seconds} {Text.pluralize("second", seconds)}"
-        min_str = f"{minutes} {Text.pluralize("minute", minutes)}"
-        hour_str = f"{hours} {Text.pluralize("hour", hours)}"
+        sec_str = Text.plural("second", seconds, with_count=True)
+        min_str = Text.plural("minute", minutes, with_count=True)
+        hour_str = Text.plural("hour", hours, with_count=True)
 
         if hours == 0:
             if minutes == 0 and seconds == 0:
@@ -444,7 +458,7 @@ class Text(StrEnum):
 
         word = number_words.get(number, str(number))
         if word_to_pluralize:
-            word_to_pluralize = Text.pluralize(word_to_pluralize, number)
+            word_to_pluralize = Text.plural(word_to_pluralize, number)
             result = f"{word} {word_to_pluralize}"
         else:
             result = word
@@ -463,6 +477,66 @@ class Text(StrEnum):
         """
         suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
         return f"{n}{suffix}"
+
+    @staticmethod
+    def format_number(
+        number: int,
+        word: str | None = None,
+        *,
+        as_word: bool = False,
+        as_ordinal: bool = False,
+        with_count: bool = False,
+        capitalize: bool = False,
+    ) -> str:
+        """Format a number with various options for text representation.
+
+        Args:
+            number: The number to format.
+            word: Optional word to append (will be pluralized if needed).
+            as_word: Convert numbers 0-9 to words ('one', 'two', etc.).
+            as_ordinal: Convert to ordinal form ('1st', '2nd', etc.).
+            with_count: Include the number with the word.
+            capitalize: Capitalize the result.
+
+        Examples:
+            format_number(2) -> "2"
+            format_number(2, "cat") -> "cats"
+            format_number(2, "cat", with_count=True) -> "2 cats"
+            format_number(2, as_word=True) -> "two"
+            format_number(2, "cat", as_word=True) -> "two cats"
+            format_number(2, as_ordinal=True) -> "2nd"
+            format_number(2, "cat", as_ordinal=True) -> "2nd cat"
+        """
+        number_words = {
+            0: "zero",
+            1: "one",
+            2: "two",
+            3: "three",
+            4: "four",
+            5: "five",
+            6: "six",
+            7: "seven",
+            8: "eight",
+            9: "nine",
+        }
+
+        if as_ordinal:  # Convert number to appropriate form
+            num_str = Text.ordinal_num(number)
+        elif as_word and number in number_words:
+            num_str = number_words[number]
+        else:
+            num_str = str(number)
+
+        if word:  # Handle word if provided
+            if as_ordinal:
+                result = f"{num_str} {word}"
+            else:
+                pluralized = Text.plural(word, number)
+                result = f"{num_str} {pluralized}" if with_count else pluralized
+        else:
+            result = num_str
+
+        return result.capitalize() if capitalize else result
 
     @staticmethod
     def straighten_quotes(text: str) -> str:
