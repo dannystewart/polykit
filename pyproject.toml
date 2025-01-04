@@ -11,23 +11,23 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-halo = "^0.0.31"
-natsort = "^8.4.0"
-pygments = "^2.18.0"
-python-dotenv = "^1.0.1"
-requests = "^2.32.3"
-send2trash = "^1.8.3"
-soundfile = "^0.12.1"
-termcolor = "^2.5.0"
-textual = "^1.0.0"
-types-requests = "^2.32.0.20241016"
-types-send2trash = "^1.8.2.7"
-tzdata = "^2024.2"
+python = ">=3.12"
+halo = ">=0.0.31"
+natsort = ">=8.4.0"
+pygments = ">=2.18.0"
+python-dotenv = ">=1.0.1"
+requests = ">=2.32.3"
+send2trash = ">=1.8.3"
+soundfile = ">=0.13.0"
+termcolor = ">=2.5.0"
+textual = ">=1.0.0"
+types-requests = ">=2.32.0.20241016"
+types-send2trash = ">=1.8.2.7"
+tzdata = ">=2024.2"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.14.1"
-ruff = "^0.8.4"
+mypy = ">=1.14.1"
+ruff = ">=0.8.5"
 
 [tool.poetry.scripts]
 code-configs = "dsutil.configs.code_configs:main"
