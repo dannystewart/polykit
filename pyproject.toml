@@ -18,12 +18,10 @@ pygments = ">=2.18.0"
 python-dotenv = ">=1.0.1"
 requests = ">=2.32.3"
 send2trash = ">=1.8.3"
-soundfile = ">=0.13.0"
 termcolor = ">=2.5.0"
-textual = ">=1.0.0"
 types-requests = ">=2.32.0.20241016"
 types-send2trash = ">=1.8.2.7"
-tzdata = ">=2024.2"
+tzdata = { version = ">=2024.2", markers = "sys_platform == 'win32'" }
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.14.1"
