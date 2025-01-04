@@ -1,49 +1,49 @@
 from __future__ import annotations
 
 from threading import Lock
-from typing import Any
+from typing import Any, ClassVar, TypeVar
+
+T = TypeVar("T")
 
 
 class Singleton(type):
     """Thread-safe metaclass for creating singleton classes.
 
-    This metaclass ensures only one instance of a class is created even when accessed from multiple
-    threads. Use it by setting it as the metaclass in the class definition.
+    A metaclass that ensures classes have only one instance throughout the program's lifetime.
+    Implements thread-safe instance creation using class-level locks, preventing race conditions
+    during instantiation. Instance tracking is handled through private class variables.
 
-    Example:
+    This implementation uses a class-level dictionary to track instances by class and maintains
+    separate locks for each class to ensure thread safety. The first instantiation creates and
+    stores the instance, and subsequent instantiations return the stored instance.
+
+    # Basic usage is as simple as this:
+
         class MyService(metaclass=Singleton):
-            def __init__(self, config: str = "default"):
-                self.config = config
+            def __init__(self):
+                pass
+
+    # If additional class-specific initialization is needed:
+
+            def __init__(self):
                 self._initialized = False
 
             def initialize(self) -> None:
                 if not self._initialized:
-                    # Perform one-time initialization
+                    self.do_thing()
                     self._initialized = True
-
-        # Usage:
-        service1 = MyService(config="custom")  # Creates new instance
-        service2 = MyService(config="other")   # Returns existing instance
-        assert service1 is service2            # True
-        assert service1.config == "custom"     # True
-
-    Notes:
-        - The first call to the class constructor creates the singleton instance.
-        - Subsequent calls return the same instance regardless of arguments.
-        - Constructor arguments are only used for the first instantiation.
-        - Thread-safe implementation prevents race conditions during instantiation.
     """
 
-    __instances = {}
-    __locks: dict[type, Lock] = {}
+    __instances: ClassVar[dict[type, Any]] = {}
+    __locks: ClassVar[dict[type, Lock]] = {}
 
-    def __call__(cls, *args: Any, **kwargs: Any) -> Any:
+    def __call__(cls: type[T], *args: Any, **kwargs: Any) -> T:
         """Create a new instance of the class if one does not already exist."""
-        if cls not in cls.__locks:
-            cls.__locks[cls] = Lock()
+        if cls not in Singleton.__locks:
+            Singleton.__locks[cls] = Lock()
 
-        with cls.__locks[cls]:
-            if cls not in cls.__instances:
+        with Singleton.__locks[cls]:
+            if cls not in Singleton.__instances:
                 instance = super().__call__(*args, **kwargs)
-                cls.__instances[cls] = instance
-        return cls.__instances[cls]
+                Singleton.__instances[cls] = instance
+            return Singleton.__instances[cls]
