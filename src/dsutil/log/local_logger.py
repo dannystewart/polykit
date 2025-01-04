@@ -119,5 +119,6 @@ class LocalLogger(metaclass=Singleton):
 
         file_handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
         file_handler.setFormatter(formatter)
-        file_handler.setLevel(LocalLogger().get_level_name(level))
+        log_level = LogLevel.get_level(level)
+        logger.setLevel(log_level)
         logger.addHandler(file_handler)
