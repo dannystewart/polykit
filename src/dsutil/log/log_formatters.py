@@ -13,10 +13,9 @@ from dsutil.log.log_metadata import LogColors, LogLevel
 class CustomFormatter(Formatter):
     """Custom log formatter supporting both basic and advanced formats."""
 
-    message_only: bool = False
-    use_color: bool = True
-    show_class: bool = False
-    show_function: bool = False
+    simple: bool = False
+    show_context: bool = False
+    color: bool = True
 
     def __post_init__(self):
         super().__init__()
@@ -39,12 +38,12 @@ class CustomFormatter(Formatter):
         # Add the timestamp to the record
         record.asctime = self.formatTime(record, "%I:%M:%S %p")
 
-        if self.message_only:  # Messages above INFO show in bold
+        if self.simple:  # Messages above INFO show in bold
             bold = "" if record.levelname in {"DEBUG", "INFO"} else bold
             return f"{reset}{bold}{level_color}{record.getMessage()}{reset}"
 
         # Format the timestamp
-        timestamp_color = gray if self.use_color else reset
+        timestamp_color = gray if self.color else reset
         timestamp = f"{reset}{timestamp_color}{record.asctime}{reset} "
 
         # Format the log level text
@@ -56,7 +55,7 @@ class CustomFormatter(Formatter):
             "DEBUG": "[DEBUG]",
         }
         level_text = level_texts.get(record.levelname, "")
-        line_color = level_color if self.use_color else reset
+        line_color = level_color if self.color else reset
         log_level = f"{bold}{line_color}{level_text}{reset}"
 
         # Note whether we've above INFO level and use level color if so
@@ -64,10 +63,10 @@ class CustomFormatter(Formatter):
         reset = f"{line_color}{reset}" if above_info else f"{reset}"
 
         # Format the function color and name
-        class_color = blue if self.use_color else reset
-        function_color = cyan if self.use_color else reset
-        class_name = f" {class_color}{record.name}:{reset} " if self.show_class else ""
-        function = f"{function_color}{record.funcName}: " if self.show_function else " "
+        class_color = blue if self.color else reset
+        function_color = cyan if self.color else reset
+        class_name = f" {class_color}{record.name}:{reset} " if self.show_context else ""
+        function = f"{function_color}{record.funcName}: " if self.show_context else " "
 
         # Format the message color and return the formatted message
         message = f"{line_color}{record.getMessage()}{reset}"

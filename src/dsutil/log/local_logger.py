@@ -12,7 +12,6 @@ import logging.config
 from logging import Logger
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Any
 
 from dsutil.common import Singleton
 from dsutil.log.log_formatters import CustomFormatter, FileFormatter
@@ -35,14 +34,21 @@ class LocalLogger(metaclass=Singleton):
         self,
         logger_name: str | None = None,
         level: int | str = "debug",
-        message_only: bool = False,
-        use_color: bool = True,
-        show_class: bool = False,
-        show_function: bool = False,
+        simple: bool = False,
+        show_context: bool = False,
+        color: bool = True,
         log_file: str | None = None,
-        log_file_level: int | str = "debug",
     ) -> Logger:
-        """Set up a logger with the given name and log level."""
+        """Set up a logger with the given name and log level.
+
+        Args:
+            logger_name: The name of the logger. If None, the class or module name is used.
+            level: The log level. Defaults to 'debug'.
+            simple: Use simple format that displays only the log message itself. Defaults to False.
+            show_context: Show the class and function name in the log message. Defaults to False.
+            color: Use color in the log output. Defaults to True.
+            log_file: Path to a desired log file. Defaults to None, which means no file logging.
+        """
         logger_name = LocalLogger().get_logger_name(logger_name)
         logger = logging.getLogger(logger_name)
 
@@ -50,12 +56,7 @@ class LocalLogger(metaclass=Singleton):
             log_level = LogLevel.get_level(level)
             logger.setLevel(log_level)
 
-            log_formatter = CustomFormatter(
-                message_only=message_only,
-                use_color=use_color,
-                show_class=show_class,
-                show_function=show_function,
-            )
+            log_formatter = CustomFormatter(simple=simple, color=color, show_context=show_context)
 
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(log_formatter)
@@ -63,16 +64,11 @@ class LocalLogger(metaclass=Singleton):
             logger.addHandler(console_handler)
 
             if log_file:
-                self.add_file_handler(logger, log_file, log_file_level)
+                self.add_file_handler(logger, log_file)
 
             logger.propagate = False
 
         return logger
-
-    @staticmethod
-    def setup_logger(*args: Any, **kwargs: Any) -> Logger:
-        """Static method that calls get_logger for backward compatibility."""
-        return LocalLogger().get_logger(*args, **kwargs)
 
     @staticmethod
     def get_logger_name(logger_name: str | None = None) -> str:
@@ -90,22 +86,12 @@ class LocalLogger(metaclass=Singleton):
         # If no identifier is given, use the class name if provided
         return get_class_name() if logger_name is None else logger_name
 
-    def add_file_handler(
-        self,
-        logger: Logger,
-        log_file: str,
-        level: int | str = logging.DEBUG,
-        max_bytes: int = 512 * 1024,  # 500 KB
-        backup_count: int = 2,
-    ) -> None:
+    def add_file_handler(self, logger: Logger, log_file: str) -> None:
         """Add a file handler to the given logger.
 
         Args:
             logger: The logger to add the file handler to.
             log_file: The path to the log file.
-            level: The logging level for the file handler.
-            max_bytes: The maximum size of the log file before it rolls over.
-            backup_count: The number of backup files to keep.
         """
         formatter = FileFormatter()
         log_dir = Path(log_file).parent
@@ -117,8 +103,7 @@ class LocalLogger(metaclass=Singleton):
         if not log_file_path.is_file():
             log_file_path.touch()
 
-        file_handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
+        file_handler = RotatingFileHandler(log_file, maxBytes=512 * 1024)
         file_handler.setFormatter(formatter)
-        log_level = LogLevel.get_level(level)
-        logger.setLevel(log_level)
+        logger.setLevel(logging.DEBUG)
         logger.addHandler(file_handler)
