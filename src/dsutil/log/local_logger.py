@@ -14,9 +14,9 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Any
 
+from dsutil.common import Singleton
 from dsutil.log.log_formatters import CustomFormatter, FileFormatter
 from dsutil.log.log_metadata import LogLevel
-from dsutil.tools import Singleton
 
 
 class LocalLogger(metaclass=Singleton):
