@@ -4,37 +4,9 @@ import re
 import sys
 from collections.abc import Iterable
 from enum import StrEnum
-from typing import Any, Literal
+from typing import Any
 
-ColorName = Literal[
-    "black",
-    "grey",
-    "red",
-    "green",
-    "yellow",
-    "blue",
-    "magenta",
-    "cyan",
-    "light_grey",
-    "dark_grey",
-    "light_red",
-    "light_green",
-    "light_yellow",
-    "light_blue",
-    "light_magenta",
-    "light_cyan",
-    "white",
-]
-ColorAttrs = Iterable[Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]]
-
-SMART_QUOTES_TABLE = str.maketrans(
-    {
-        "“": '"',
-        "”": '"',
-        "‘": "'",
-        "’": "'",
-    }
-)
+from dsutil.common.text_attrs import SMART_QUOTES_TABLE, ColorAttrs, ColorName
 
 
 def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
