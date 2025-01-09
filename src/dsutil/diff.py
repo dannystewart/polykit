@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from difflib import unified_diff
+from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 from dsutil.log import LocalLogger
 
 if TYPE_CHECKING:
     from logging import Logger
-    from pathlib import Path
 
 logger = LocalLogger().get_logger(__name__)
 
@@ -40,13 +40,9 @@ def diff_files(
     Returns:
         DiffResult containing the changes found.
     """
-    with open(file1_path) as f1, open(file2_path) as f2:
-        return show_diff(
-            f1.read(),
-            f2.read(),
-            filename=str(file2_path),
-            style=style,
-        )
+    file1 = Path(file1_path)
+    file2 = Path(file2_path)
+    return show_diff(file1.read_text(), file2.read_text(), filename=str(file2), style=style)
 
 
 def show_diff(
