@@ -28,9 +28,9 @@ Platform-specific paths:
 
 from __future__ import annotations
 
-import os
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 
 from platformdirs import PlatformDirs
 
@@ -83,7 +83,7 @@ class DSPaths:
     @property
     def home_dir(self) -> str:
         """Get user's home directory."""
-        return os.path.expanduser("~")
+        return str(Path.home())
 
     def get_home_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's home directory.
@@ -92,79 +92,79 @@ class DSPaths:
             *paths: Path components to join (e.g. 'subfolder', 'file.txt').
             no_create: Whether to avoid creating directories that don't exist.
         """
-        path = os.path.join(self.home_dir, *paths)
+        path = str(Path(self.home_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
     def documents_dir(self) -> str:
         """Get user's Documents directory."""
-        return os.path.join(self.home_dir, "Documents")
+        return str(Path(self.home_dir, "Documents"))
 
     def get_documents_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Documents directory."""
-        path = os.path.join(self.documents_dir, *paths)
+        path = str(Path(self.documents_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
     def downloads_dir(self) -> str:
         """Get user's Downloads directory."""
-        return os.path.join(self.home_dir, "Downloads")
+        return str(Path(self.home_dir, "Downloads"))
 
     def get_downloads_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Downloads directory."""
-        path = os.path.join(self.downloads_dir, *paths)
+        path = str(Path(self.downloads_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
     def music_dir(self) -> str:
         """Get user's Music directory."""
-        return os.path.join(self.home_dir, "Music")
+        return str(Path(self.home_dir, "Music"))
 
     def get_music_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Music directory."""
-        path = os.path.join(self.music_dir, *paths)
+        path = str(Path(self.music_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
     def pictures_dir(self) -> str:
         """Get user's Pictures directory."""
-        return os.path.join(self.home_dir, "Pictures")
+        return str(Path(self.home_dir, "Pictures"))
 
     def get_pictures_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the user's Pictures directory."""
-        path = os.path.join(self.pictures_dir, *paths)
+        path = str(Path(self.pictures_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
     def onedrive_dir(self) -> str:
         """Get the platform-specific OneDrive base directory."""
         if sys.platform == "darwin":
-            return os.path.join(self.home_dir, "Library/CloudStorage/OneDrive-Personal")
+            return str(Path(self.home_dir) / "Library/CloudStorage/OneDrive-Personal")
         if sys.platform == "win32":
-            return os.path.join(self.home_dir, "OneDrive")
+            return str(Path(self.home_dir) / "OneDrive")
         msg = "OneDrive path not supported on this platform."
         raise NotImplementedError(msg)
 
     def get_onedrive_path(self, *paths: str, ensure_exists: bool = True) -> str:
         """Get a path in the user's OneDrive directory."""
-        path = os.path.join(self.onedrive_dir, *paths)
+        path = str(Path(self.onedrive_dir).joinpath(*paths))
         if ensure_exists and self.create_dirs:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     def get_ssh_key(self, *paths: str) -> str:
         """Get an SSH key from the user's .ssh directory."""
-        return os.path.join(self.home_dir, ".ssh", *paths)
+        return str(Path(self.home_dir, ".ssh").joinpath(*paths))
 
     @property
     def data_dir(self) -> str:
@@ -173,9 +173,9 @@ class DSPaths:
 
     def get_data_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the data directory."""
-        path = os.path.join(self.data_dir, *paths)
+        path = str(Path(self.data_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
@@ -185,9 +185,9 @@ class DSPaths:
 
     def get_cache_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the cache directory."""
-        path = os.path.join(self.cache_dir, *paths)
+        path = str(Path(self.cache_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
@@ -204,13 +204,13 @@ class DSPaths:
             legacy: If True, use ~/.config instead of platform-specific location.
         """
         if legacy:
-            base = os.path.expanduser(f"~/.config/{self.app_name}")
-            path = os.path.join(base, *paths)
+            base = str(Path.home() / ".config" / self.app_name)
+            path = str(Path(base).joinpath(*paths))
         else:
-            path = os.path.join(self.config_dir, *paths)
+            path = str(Path(self.config_dir).joinpath(*paths))
 
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
@@ -220,9 +220,9 @@ class DSPaths:
 
     def get_log_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the log directory."""
-        path = os.path.join(self.log_dir, *paths)
+        path = str(Path(self.log_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
@@ -232,9 +232,9 @@ class DSPaths:
 
     def get_state_path(self, *paths: str, no_create: bool = False) -> str:
         """Get a path in the state directory."""
-        path = os.path.join(self.state_dir, *paths)
+        path = str(Path(self.state_dir).joinpath(*paths))
         if self.create_dirs and not no_create:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         return path
 
     def _ensure_base_dirs(self) -> None:
@@ -246,4 +246,4 @@ class DSPaths:
             self.log_dir,
             self.state_dir,
         ]:
-            os.makedirs(dir_path, exist_ok=True)
+            Path(dir_path).parent.mkdir(parents=True, exist_ok=True)
