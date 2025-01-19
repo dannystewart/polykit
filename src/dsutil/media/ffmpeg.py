@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 from collections import defaultdict
+from pathlib import Path
 
 from dsutil.progress import halo_progress
 from dsutil.text import color, print_colored
@@ -34,7 +34,7 @@ def run_ffmpeg(
     }
 
     with halo_progress(
-        filename=output_filename or os.path.basename(input_file),
+        filename=output_filename or Path(input_file).name,
         start_message=spinner_messages["start"],
         end_message=spinner_messages["end"],
         fail_message=spinner_messages["fail"],
@@ -74,12 +74,15 @@ def construct_filename(
     Returns:
         The output filename.
     """
+    input_path = Path(input_file)
     if not output_file:
-        return f"{os.path.splitext(input_file)[0]}.{output_format}"
+        return f"{input_path.stem}.{output_format}"
+
+    output_path = Path(output_file)
     return (
         output_file
         if len(input_files) == 1
-        else f"{os.path.splitext(output_file)[0]}_{os.path.basename(input_file)}{os.path.splitext(output_file)[1]}"
+        else f"{output_path.stem}_{input_path.name}{output_path.suffix}"
     )
 
 
@@ -104,10 +107,10 @@ def construct_ffmpeg_command(input_file: str, overwrite: bool) -> list[str]:
     return command
 
 
-def get_stream_info(file_path: str) -> dict:
+def get_stream_info(file_path: str) -> dict[str, dict[dict[str, str], str]]:
     """Get stream information from the input file."""
     command = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", file_path]
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
     return json.loads(result.stdout)
 
 
@@ -170,7 +173,7 @@ def add_audio_flags(
     command.extend(_get_arguments_for_codec(output_format, bit_depth))
 
 
-def _get_arguments_for_codec(output_format: str, bit_depth: int) -> list[str]:
+def _get_arguments_for_codec(output_format: str, bit_depth: int | None) -> list[str]:
     """Get the additional arguments needed specifically for the output format and bit depth."""
     command = []
     if output_format == "flac":
@@ -212,7 +215,7 @@ def add_video_flags(
     command += ["-c:a", audio_codec] if audio_codec else ["-c:a", "copy"]
 
 
-def ensure_lossless_first(input_files: list[str]) -> list:
+def ensure_lossless_first(input_files: list[str]) -> list[str]:
     """If there are multiple files with the same name, this function will sort the list such that
     uncompressed and lossless files are prioritized over compressed and lossy files.
 
@@ -222,14 +225,14 @@ def ensure_lossless_first(input_files: list[str]) -> list:
     file_groups = defaultdict(list)
 
     for file in input_files:
-        file_str = str(file)
-        base_name = os.path.splitext(os.path.basename(file_str))[0]
-        file_groups[base_name].append(file_str)
+        file_path = Path(file)
+        base_name = file_path.stem
+        file_groups[base_name].append(str(file_path))
 
     prioritized_extensions = [".wav", ".aiff", ".aif", ".flac", ".m4a"]
 
     prioritized_files = []
-    for _, files in file_groups.items():
+    for files in file_groups.values():
         selected_file = None
         for ext in prioritized_extensions:
             for file in files:

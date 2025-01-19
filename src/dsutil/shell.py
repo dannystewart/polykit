@@ -23,7 +23,7 @@ T = TypeVar("T")
 def handle_keyboard_interrupt(
     message: str = "Interrupted by user. Exiting...",
     exit_code: int = 1,
-    callback: Callable | None = None,
+    callback: Callable[[Any], Any] | None = None,
     use_newline: bool = False,
     use_logging: bool = False,
     logger: logging.Logger | None = None,
@@ -42,7 +42,7 @@ def handle_keyboard_interrupt(
                     sys.stdout.write("\r\033[K")
                 sys.stdout.flush()
                 if callback:
-                    callback()
+                    callback(*args, **kwargs)
                 log_message = color(message, "red")
                 if logger:  # Use supplied logger
                     logger.info(log_message)
@@ -101,7 +101,7 @@ def read_file_content(filepath: str) -> str:
     Returns:
         The contents of the file.
     """
-    with Path.open(filepath, encoding="utf-8") as file:
+    with Path(filepath).open(encoding="utf-8") as file:
         return file.read()
 
 
@@ -112,7 +112,7 @@ def write_to_file(filepath: str, content: str) -> None:
         filepath: The path to the file.
         content: The content to write.
     """
-    with Path.open(filepath, "w", encoding="utf-8") as file:
+    with Path(filepath).open("w", encoding="utf-8") as file:
         file.write(content)
 
 
@@ -208,7 +208,7 @@ def confirm_action(
 def async_handle_keyboard_interrupt(
     message: str = "Interrupted by user. Exiting...",
     exit_code: int = 1,
-    callback: Callable | None = None,
+    callback: Callable[[Any], Any] | None = None,
     use_newline: bool = False,
     use_logging: bool = False,
     logger: logging.Logger | None = None,
@@ -231,9 +231,9 @@ def async_handle_keyboard_interrupt(
                     import asyncio
 
                     if asyncio.iscoroutinefunction(callback):
-                        await callback()
+                        await callback(*args, **kwargs)
                     else:
-                        callback()
+                        callback(*args, **kwargs)
 
                 log_message = message  # Assuming color() was imported
                 if logger:
