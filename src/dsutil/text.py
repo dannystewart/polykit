@@ -6,7 +6,7 @@ from collections.abc import Iterable
 from enum import StrEnum
 from typing import Any
 
-from dsutil.common.text_attrs import SMART_QUOTES_TABLE, ColorAttrs, ColorName
+from dsutil.common.types import SMART_QUOTES_TABLE, ColorAttrs, ColorName
 
 
 def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
@@ -203,7 +203,7 @@ class Text(StrEnum):
         return [part1, *Text.split_message(part2, max_length)]
 
     @staticmethod
-    def _find_split_point(text: str, pattern: re.Pattern, max_len: int) -> int | None:
+    def _find_split_point(text: str, pattern: re.Pattern[Any], max_len: int) -> int | None:
         matches = list(pattern.finditer(text[:max_len]))
         if not matches:
             return None
@@ -373,7 +373,7 @@ class Text(StrEnum):
         return f"{word}es" if word.endswith("s") else f"{word}s"
 
     @staticmethod
-    def pluralize(*args, **kwargs: Any) -> str:
+    def pluralize(*args: Any, **kwargs: Any) -> str:
         """Pluralize (for backward compatibility; use `Text.plural` now)."""
         import warnings
 
