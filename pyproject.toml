@@ -8,6 +8,7 @@ requires-python = ">=3.12"
 dependencies = [
     "halo>=0.0.31",
     "natsort>=8.4.0",
+    "platformdirs (>=4.3.6)",
     "pygments>=2.18.0",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
