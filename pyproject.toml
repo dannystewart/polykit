@@ -10,6 +10,7 @@ dependencies = [
     "natsort>=8.4.0",
     "platformdirs (>=4.3.6)",
     "pygments>=2.18.0",
+    "python-dateutil (>=2.9.0.post0)",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
     "send2trash>=1.8.3",
