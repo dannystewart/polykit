@@ -2,40 +2,28 @@ from __future__ import annotations
 
 import sqlite3
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-from dsutil import LocalLogger, Singleton
+from dsutil import LocalLogger
 from dsutil.db import DatabaseError, QueryResult
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+    from logging import Logger
 
 
 @dataclass
-class SQLiteConfig:
-    """Configuration for a SQLite database."""
+class SQLiteHelper:
+    """Helper class for interacting with SQLite databases."""
 
     database: str
-    pragmas: dict[str, str | int] | None = None
+    _connection: sqlite3.Connection | None = None
+
+    logger: Logger = field(init=False)
 
     def __post_init__(self):
-        if self.pragmas is None:
-            self.pragmas = {
-                "journal_mode": "WAL",
-                "synchronous": 1,
-                "foreign_keys": 1,
-                "cache_size": -64000,
-            }
-
-
-class SQLiteHelper(metaclass=Singleton):
-    """Singleton helper class for interacting with SQLite databases."""
-
-    def __init__(self, config: SQLiteConfig | None = None):
-        self.config = config
         self.logger = LocalLogger().get_logger()
-        self._connection: sqlite3.Connection | None = None
 
     @property
     def connection(self) -> sqlite3.Connection:
@@ -44,24 +32,19 @@ class SQLiteHelper(metaclass=Singleton):
         Raises:
             DatabaseError: If the database connection fails.
         """
-        if self._connection is None:
-            try:
-                self._connection = sqlite3.connect(
-                    self.config.database,
-                    isolation_level=None,
-                    check_same_thread=False,
-                )
-                self._connection.row_factory = sqlite3.Row
+        try:
+            self._connection = sqlite3.connect(
+                self.database,
+                isolation_level=None,
+                check_same_thread=False,
+            )
+            self._connection.row_factory = sqlite3.Row
+            return self._connection
 
-                with self._connection as conn:
-                    for pragma, value in self.config.pragmas.items():
-                        conn.execute(f"PRAGMA {pragma} = {value}")
-
-            except sqlite3.Error as e:
-                self.logger.critical("Failed to initialize database connection: %s", str(e))
-                msg = "Failed to initialize SQLite connection."
-                raise DatabaseError(msg) from e
-        return self._connection
+        except sqlite3.Error as e:
+            self.logger.critical("Failed to initialize database connection: %s", str(e))
+            msg = "Failed to initialize SQLite connection."
+            raise DatabaseError(msg) from e
 
     def fetch_one(self, query: str, params: tuple[Any, ...] = ()) -> QueryResult[dict[str, Any]]:
         """Fetch a single row from the database.

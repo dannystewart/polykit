@@ -2,28 +2,29 @@ from __future__ import annotations
 
 import os
 from contextlib import contextmanager
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, TypeVar
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
 import mysql.connector
 from mysql.connector import Error as MySQLError
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import MySQLConnectionPool, PooledMySQLConnection
 
-from dsutil import LocalLogger, Singleton
+from dsutil import LocalLogger
 from dsutil.db import DatabaseError, QueryResult
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+    from logging import Logger
 
 T = TypeVar("T")
 
 
 @dataclass
-class MySQLConfig:
-    """Configuration for a MySQL database."""
+class MySQLHelper:
+    """Helper class for interacting with MySQL databases."""
 
-    POOL_SIZE = max(os.cpu_count() or 4 * 4, 32)
+    POOL_SIZE: ClassVar[int] = max(os.cpu_count() or 4 * 4, 32)
 
     host: str
     user: str
@@ -31,16 +32,12 @@ class MySQLConfig:
     database: str
     charset: str = "utf8mb4"
     collation: str = "utf8mb4_general_ci"
-    pool_size: int = POOL_SIZE
+    _pool: MySQLConnectionPool | None = None
 
+    logger: Logger = field(init=False)
 
-class MySQLHelper(metaclass=Singleton):
-    """Singleton helper class for interacting with MySQL databases."""
-
-    def __init__(self, config: MySQLConfig | None = None):
-        self.config = config
+    def __post_init__(self):
         self.logger = LocalLogger().get_logger()
-        self._pool: MySQLConnectionPool | None = None
 
     @property
     def pool(self) -> MySQLConnectionPool:
@@ -52,13 +49,13 @@ class MySQLHelper(metaclass=Singleton):
         if self._pool is None:
             try:
                 self._pool = MySQLConnectionPool(
-                    pool_size=self.config.pool_size,
-                    host=self.config.host,
-                    user=self.config.user,
-                    password=self.config.password,
-                    database=self.config.database,
-                    charset=self.config.charset,
-                    collation=self.config.collation,
+                    pool_size=self.POOL_SIZE,
+                    host=self.host,
+                    user=self.user,
+                    password=self.password,
+                    database=self.database,
+                    charset=self.charset,
+                    collation=self.collation,
                 )
             except MySQLError as e:
                 self.logger.critical("Failed to initialize database pool: %s", str(e))
