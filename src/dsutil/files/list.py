@@ -1,9 +1,8 @@
-# pylint: disable=too-many-branches
 from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from natsort import natsorted
 
@@ -24,7 +23,7 @@ def list_files(
     include_hidden: bool = False,
     modified_after: datetime | None = None,
     modified_before: datetime | None = None,
-    sort_key: Callable | None = None,
+    sort_key: Callable[..., Any] | None = None,
     reverse_sort: bool = False,
 ) -> list[str]:
     """List all files in a directory that match the given criteria.
@@ -43,7 +42,7 @@ def list_files(
         reverse_sort: Whether to reverse the sort order.
 
     Returns:
-        A list of file paths.
+        A list of file paths as strings. TODO: Return Path objects (requires refactors elsewhere).
 
     Example usage with custom sort (alphabetical sorting by file name):
         `file_list = list_files(directory, sort_key=os.path.basename)`
@@ -63,7 +62,7 @@ def list_files(
         extensions = [f"*.{ext}" for ext in extensions]
     else:
         extensions = ["*"]
-    files_filtered: list = []
+    files_filtered: list[Path] = []
     for extension in extensions:
         files = directory_path.rglob(extension) if recursive else directory_path.glob(extension)
         files_filtered.extend(
@@ -81,7 +80,8 @@ def list_files(
             )
         )
     sort_function = sort_key or (lambda x: x.stat().st_mtime)
-    return natsorted(files_filtered, key=sort_function, reverse=reverse_sort)
+    sorted_files = natsorted(files_filtered, key=sort_function, reverse=reverse_sort)
+    return [str(f) for f in sorted_files]
 
 
 def file_matches_criteria(
