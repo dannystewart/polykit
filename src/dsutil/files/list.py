@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 def list_files(
-    directory: str,
+    directory: str | Path,
     extensions: str | list[str] | None = None,
     recursive: bool = False,
     min_size: int | None = None,
