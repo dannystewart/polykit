@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from difflib import unified_diff
+from enum import StrEnum
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
 from dsutil.log import LocalLogger
 
@@ -12,7 +13,13 @@ if TYPE_CHECKING:
 
 logger = LocalLogger().get_logger(__name__)
 
-DiffStyle = Literal["colored", "simple", "minimal"]
+
+class DiffStyle(StrEnum):
+    """Style of diff output."""
+
+    COLORED = "colored"
+    SIMPLE = "simple"
+    MINIMAL = "minimal"
 
 
 @dataclass
@@ -28,42 +35,45 @@ class DiffResult:
 def diff_files(
     file1_path: str | Path,
     file2_path: str | Path,
-    style: DiffStyle = "colored",
+    style: DiffStyle = DiffStyle.COLORED,
 ) -> DiffResult:
     """Show diff between two files.
 
     Args:
         file1_path: Path to first file.
         file2_path: Path to second file.
-        style: How to display the diff ("colored", "simple", or "minimal").
+        style: Styling to use for displaying the diff output. Defaults to colored.
 
     Returns:
         DiffResult containing the changes found.
     """
-    file1 = Path(file1_path)
-    file2 = Path(file2_path)
-    return show_diff(file1.read_text(), file2.read_text(), filename=str(file2), style=style)
+    return show_diff(
+        old=Path(file1_path).read_text(encoding="utf-8"),
+        new=Path(file2_path).read_text(encoding="utf-8"),
+        filename=str(file2_path),
+        style=style,
+    )
 
 
 def show_diff(
-    current: str,
+    old: str,
     new: str,
     filename: str | None = None,
     *,
-    style: DiffStyle = "colored",
+    style: DiffStyle = DiffStyle.COLORED,
     logger: Logger | None = None,
 ) -> DiffResult:
     """Show a unified diff between current and new content.
 
     Args:
-        current: Current content.
+        old: Old content.
         new: New content.
         filename: Optional filename for context.
-        style: How to display the diff ("colored", "simple", or "minimal").
-        logger: Optional logging function (defaults to internal logger).
+        style: Styling to use for displaying the diff output. Defaults to colored.
+        logger: Optional external logger to use. Defaults to internal logger.
 
     Returns:
-        DiffResult containing the changes found
+        DiffResult containing the changes found.
     """
     logger = logger or LocalLogger().get_logger(__name__)
     changes: list[str] = []
@@ -72,7 +82,7 @@ def show_diff(
 
     diff = list(
         unified_diff(
-            current.splitlines(keepends=True),
+            old.splitlines(keepends=True),
             new.splitlines(keepends=True),
             fromfile=f"current {filename}" if filename else "current",
             tofile=f"new {filename}" if filename else "new",
@@ -105,7 +115,7 @@ def _process_diff_line(
     if not _should_show_line(line, style):
         return
 
-    if style == "colored":
+    if style == DiffStyle.COLORED:
         if line.startswith("+"):
             log_func.info("  %s", line.rstrip())
         elif line.startswith("-"):
@@ -123,4 +133,6 @@ def _process_diff_line(
 
 def _should_show_line(line: str, style: DiffStyle) -> bool:
     """Determine if a line should be shown based on the diff style."""
-    return style in {"colored", "simple"} or (style == "minimal" and line.startswith(("+", "-")))
+    return style in {DiffStyle.COLORED, DiffStyle.SIMPLE} or (
+        style == DiffStyle.MINIMAL and line.startswith(("+", "-"))
+    )
