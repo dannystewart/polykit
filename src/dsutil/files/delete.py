@@ -10,7 +10,7 @@ from dsutil.text import ColorName, print_colored
 
 
 def delete_files(
-    file_paths: str | Path | list[str | Path],
+    file_paths: str | Path | list[str] | list[Path] | list[str | Path],
     show_output: bool = True,
     show_individual: bool = True,
     show_total: bool = True,
