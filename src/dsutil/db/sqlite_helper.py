@@ -11,13 +11,14 @@ from dsutil.db import DatabaseError, QueryResult
 if TYPE_CHECKING:
     from collections.abc import Generator
     from logging import Logger
+    from pathlib import Path
 
 
 @dataclass
 class SQLiteHelper:
     """Helper class for interacting with SQLite databases."""
 
-    database: str
+    database: str | Path
     _connection: sqlite3.Connection | None = None
 
     logger: Logger = field(init=False)
@@ -34,7 +35,7 @@ class SQLiteHelper:
         """
         try:
             self._connection = sqlite3.connect(
-                self.database,
+                str(self.database),
                 isolation_level=None,
                 check_same_thread=False,
             )
