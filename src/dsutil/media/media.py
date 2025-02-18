@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import subprocess
+from typing import TYPE_CHECKING
 
 from dsutil.animation import conditional_animation
 from dsutil.media.ffmpeg import (
@@ -15,8 +16,11 @@ from dsutil.media.ffmpeg import (
 )
 from dsutil.text import print_colored
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
-def find_bit_depth(input_file: str, show_animation: bool = False) -> int:
+
+def find_bit_depth(input_file: str | Path, show_animation: bool = False) -> int:
     """Identify the bit depth of an input audio file using ffprobe.
     Returns the bit depth of the input file, or 0 if the bit depth could not be determined.
 
@@ -62,7 +66,7 @@ def ffmpeg_audio(
     audio_bitrate: str | None = None,
     sample_rate: str | None = None,
     preserve_metadata: bool = False,
-    additional_args: list | None = None,
+    additional_args: list[str] | None = None,
     show_output: bool = False,
     show_animation: bool = False,
 ) -> None:

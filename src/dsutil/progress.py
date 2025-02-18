@@ -15,25 +15,19 @@ from dsutil.text import ColorName, print_colored
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
+    from pathlib import Path
 
 T = TypeVar("T")
 
 
 def with_retries(operation_func: Callable[..., T]) -> Callable[..., T]:
-    """Retry operations with a spinner.
-
-    Args:
-        operation_func: The operation function to retry.
-
-    Returns:
-        callable: The decorated function with retry handling.
-    """
+    """Retry operations with a spinner."""
 
     def wrapper(
         *args: Any,
         retries: int = 3,
         wait_time: float = 3,
-        spinner: Halo = None,
+        spinner: Halo | None = None,
         **kwargs: Any,
     ) -> T:
         last_exception = None
@@ -60,14 +54,14 @@ def with_retries(operation_func: Callable[..., T]) -> Callable[..., T]:
 def with_spinner(
     text: str = "Processing...",
     success: str | None = None,
-    color: ColorName | None = None,
+    color: ColorName = "cyan",
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Display a spinner while the decorated function is running.
 
     Args:
         text: The text to display before the spinner. Defaults to "Processing...".
         success: The text to display when the function completes successfully. Defaults to "Done!".
-        color: The color of the text. Defaults to "cyan".
+        color: The color of the text. Defaults to 'cyan'.
     """
 
     def spinner_decorator(func: Callable[..., T]) -> Callable[..., T]:
@@ -96,7 +90,7 @@ def with_spinner(
 
 @contextmanager
 def halo_progress(
-    filename: str | None = None,
+    filename: str | Path | None = None,
     start_message: str = "Processing",
     end_message: str = "Processed",
     fail_message: str = "Failed",

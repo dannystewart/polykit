@@ -58,9 +58,9 @@ def run_ffmpeg(
 
 
 def construct_filename(
-    input_file: str,
-    output_file: str,
-    output_format: str,
+    input_file: str | Path,
+    output_file: str | Path,
+    output_format: str | Path,
     input_files: list[str],
 ) -> str:
     """Construct the output filename based on the input file and the output format.
@@ -79,11 +79,12 @@ def construct_filename(
         return f"{input_path.stem}.{output_format}"
 
     output_path = Path(output_file)
-    return (
+    final_output = (
         output_file
         if len(input_files) == 1
         else f"{output_path.stem}_{input_path.name}{output_path.suffix}"
     )
+    return str(final_output)
 
 
 def construct_ffmpeg_command(input_file: str, overwrite: bool) -> list[str]:
