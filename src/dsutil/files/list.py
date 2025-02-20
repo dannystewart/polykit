@@ -14,27 +14,27 @@ if TYPE_CHECKING:
 
 
 def list_files(
-    directory: str | Path,
-    extensions: str | list[str] | None = None,
+    dir: str | Path,  # noqa: A002
+    exts: str | list[str] | None = None,
     recursive: bool = False,
     min_size: int | None = None,
     max_size: int | None = None,
-    exclude_patterns: str | list[str] | None = None,
+    exclude: str | list[str] | None = None,
     include_hidden: bool = False,
     modified_after: datetime | None = None,
     modified_before: datetime | None = None,
     sort_key: Callable[..., Any] | None = None,
     reverse_sort: bool = False,
-) -> list[str]:
+) -> list[Path]:
     """List all files in a directory that match the given criteria.
 
     Args:
-        directory: The directory to search.
-        extensions: The file extensions to include. If None, all files will be included.
+        dir: The directory to search.
+        exts: The file extensions to include. If None, all files will be included.
         recursive: Whether to search recursively.
         min_size: The minimum file size in bytes.
         max_size: The maximum file size in bytes.
-        exclude_patterns: Glob patterns to exclude.
+        exclude: Glob patterns to exclude.
         include_hidden: Whether to include hidden files.
         modified_after: Only include files modified after this date.
         modified_before: Only include files modified before this date.
@@ -42,46 +42,36 @@ def list_files(
         reverse_sort: Whether to reverse the sort order.
 
     Returns:
-        A list of file paths as strings. TODO: Return Path objects (requires refactors elsewhere).
+        A list of file paths as Path objects.
 
     Example usage with custom sort (alphabetical sorting by file name):
-        `file_list = list_files(directory, sort_key=os.path.basename)`
+        `file_list = list_files(dir, sort_key=lambda x: x.stat().st_mtime)`
 
     Notes:
-        - The `extensions` parameter should not include the dot prefix (e.g. 'txt' not '.txt').
+        - The `exts` parameter should not include the dot prefix (e.g. 'txt' not '.txt').
         - The `modified_after` and `modified_before` expect datetime.datetime objects.
         - Sorting is performed by modification time in ascending order by default. Customize sorting
             with the 'sort_key' and 'reverse' parameters.
     """
-    directory_path = Path(directory)
-    if extensions:
-        extensions = [
-            ext.lstrip(".")
-            for ext in (extensions if isinstance(extensions, list) else [extensions])
-        ]
-        extensions = [f"*.{ext}" for ext in extensions]
+    dir_path = Path(dir)
+    if exts:
+        exts = [ex.lstrip(".") for ex in (exts if isinstance(exts, list) else [exts])]
+        exts = [f"*.{ext}" for ext in exts]
     else:
-        extensions = ["*"]
+        exts = ["*"]
     files_filtered: list[Path] = []
-    for extension in extensions:
-        files = directory_path.rglob(extension) if recursive else directory_path.glob(extension)
+    for ext in exts:
+        files = dir_path.rglob(ext) if recursive else dir_path.glob(ext)
         files_filtered.extend(
             file
             for file in files
             if file.is_file()
             and file_matches_criteria(
-                file,
-                min_size,
-                max_size,
-                exclude_patterns,
-                include_hidden,
-                modified_after,
-                modified_before,
+                file, min_size, max_size, exclude, include_hidden, modified_after, modified_before
             )
         )
     sort_function = sort_key or (lambda x: x.stat().st_mtime)
-    sorted_files = natsorted(files_filtered, key=sort_function, reverse=reverse_sort)
-    return [str(f) for f in sorted_files]
+    return natsorted(files_filtered, key=sort_function, reverse=reverse_sort)
 
 
 def file_matches_criteria(
