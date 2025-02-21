@@ -17,10 +17,15 @@ if TYPE_CHECKING:
 
 
 class FileManager:
-    """A class for managing files."""
+    """A utility class with a comprehensive set of methods for common file operations.
 
-    def __init__(self):
-        self.logger = LocalLogger().get_logger()
+    It supports listing files with filtering and sorting options, safe file deletion with trash bin
+    support, and file copying and moving with overwrite protection. It also includes a method for
+    detecting duplicate files using SHA-256 hashing.
+    """
+
+    def __init__(self, log_level: str = "info", simple_log: bool = False):
+        self.logger = LocalLogger().get_logger(level=log_level, simple=simple_log)
 
     def list_files(
         self,
