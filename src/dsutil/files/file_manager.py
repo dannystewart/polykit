@@ -27,7 +27,7 @@ class FileManager:
     def __init__(self, log_level: str = "info", simple_log: bool = False):
         self.logger = LocalLogger().get_logger(level=log_level, simple=simple_log)
 
-    def list_files(
+    def list(
         self,
         dir: Path,  # noqa: A002
         exts: str | list[str] | None = None,
@@ -85,7 +85,7 @@ class FileManager:
         sort_function = sort_key or (lambda x: x.stat().st_mtime)
         return natsorted(files_filtered, key=sort_function, reverse=reverse_sort)
 
-    def delete_files(
+    def delete(
         self,
         file_paths: Path | list[Path],
         show_output: bool = True,
@@ -138,7 +138,7 @@ class FileManager:
 
         return successful_deletions, failed_deletions
 
-    def copy_file(
+    def copy(
         self,
         source: Path,
         destination: Path,
@@ -175,7 +175,7 @@ class FileManager:
                 self.logger.error("Error copying file: %s", str(e))
             return False
 
-    def move_file(
+    def move(
         self,
         source: Path,
         destination: Path,
@@ -207,7 +207,7 @@ class FileManager:
             self.logger.error("Error moving file: %s", str(e))
             return False
 
-    def find_duplicate_files_by_hash(self, files: list[Path]) -> None:
+    def find_dupes_by_hash(self, files: list[Path]) -> None:
         """Find and print duplicate files by comparing their SHA-256 hashes.
 
         Args:
@@ -278,7 +278,7 @@ class FileManager:
         return False
 
     @staticmethod
-    def compare_files_by_mtime(file1: Path, file2: Path) -> float:
+    def compare_mtime(file1: Path, file2: Path) -> float:
         """Compare two files based on modification time.
 
         Args:
