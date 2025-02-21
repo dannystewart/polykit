@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 from natsort import natsorted
 from send2trash import send2trash
 
-from dsutil import LocalLogger
+from dsutil.log.local_logger import LocalLogger
 from dsutil.shell import confirm_action
 
 if TYPE_CHECKING:
