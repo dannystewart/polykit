@@ -13,8 +13,8 @@ from dsutil.progress import halo_progress
 class MediaManager:
     """A utility class with a comprehensive set of methods for common media operations."""
 
-    def __init__(self, log_level: str = "info", simple_log: bool = False):
-        self.logger = LocalLogger().get_logger(level=log_level, simple=simple_log)
+    def __init__(self, log_level: str = "info", detailed_log: bool = False):
+        self.logger = LocalLogger().get_logger(level=log_level, simple=not detailed_log)
         self.video = VideoHelper(self)
 
     def run_ffmpeg(

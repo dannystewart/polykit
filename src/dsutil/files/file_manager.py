@@ -25,8 +25,8 @@ class FileManager:
     detecting duplicate files using SHA-256 hashing.
     """
 
-    def __init__(self, log_level: str = "info", simple_log: bool = False):
-        self.logger = LocalLogger().get_logger(level=log_level, simple=simple_log)
+    def __init__(self, log_level: str = "info", detailed_log: bool = False):
+        self.logger = LocalLogger().get_logger(level=log_level, simple=not detailed_log)
 
     def list(
         self,
