@@ -15,17 +15,17 @@ dependencies = [
     "requests>=2.32.3",
     "send2trash>=1.8.3",
     "termcolor>=2.5.0",
-    "types-requests>=2.32.0.20241016",
+    "types-requests (>=2.32.0.20250301)",
     "types-send2trash>=1.8.2.7",
     "tzdata (>=2025.1)",
 ]
 
 [project.optional-dependencies]
-dev = ["mypy (>=1.15.0)", "ruff (>=0.9.7)"]
+dev = ["mypy (>=1.15.0)", "ruff (>=0.9.9)"]
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.15.0"
-ruff = ">=0.9.7"
+ruff = ">=0.9.9"
 
 [build-system]
 requires = ["poetry-core>=2.0"]
