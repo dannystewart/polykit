@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 
 
-def with_retries(operation_func: Callable[..., T]) -> Callable[..., T]:
+def with_retries[T](operation_func: Callable[..., T]) -> Callable[..., T]:
     """Retry operations with a spinner."""
 
     def wrapper(

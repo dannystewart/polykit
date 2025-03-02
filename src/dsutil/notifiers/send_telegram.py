@@ -67,7 +67,7 @@ class TelegramSender:
         audio_path: str,
         chat_id: str | None = None,
         caption: str | None = None,
-        duration: int = None,
+        duration: int | None = None,
         title: str | None = None,
         performer: str | None = None,
     ) -> bool:

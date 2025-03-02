@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -14,7 +14,7 @@ class DatabaseError(Exception):
 
 
 @dataclass
-class QueryResult(Generic[T]):
+class QueryResult[T]:
     """Represent the result of a database operation."""
 
     data: T | None
