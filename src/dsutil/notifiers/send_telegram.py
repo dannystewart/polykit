@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import requests
 
-from .telegram_api import TelegramAPIHelper
-
 from dsutil.log import LocalLogger
+
+from .telegram_api import TelegramAPIHelper
 
 
 class TelegramSender:
@@ -86,7 +88,7 @@ class TelegramSender:
             performer: Name of the performer (displayed under the title).
         """
         try:
-            with open(audio_path, "rb") as audio_file:
+            with Path(audio_path).open(encoding="utf-8") as audio_file:
                 payload = {
                     "chat_id": chat_id or self.chat_id,
                     "duration": duration,
