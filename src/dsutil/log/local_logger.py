@@ -37,7 +37,7 @@ class LocalLogger(metaclass=Singleton):
         simple: bool = False,
         show_context: bool = False,
         color: bool = True,
-        log_file: str | None = None,
+        log_file: Path | None = None,
     ) -> Logger:
         """Set up a logger with the given name and log level.
 
