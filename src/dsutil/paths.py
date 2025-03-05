@@ -142,7 +142,7 @@ class DSPaths:
     def state_dir(self) -> Path:
         return self._state_dir
 
-    def get_home_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_home_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the user's home directory.
 
         Args:
@@ -154,28 +154,28 @@ class DSPaths:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_documents_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_documents_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the user's Documents directory."""
         path = Path(self.documents_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_downloads_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_downloads_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the user's Downloads directory."""
         path = Path(self.downloads_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_music_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_music_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the user's Music directory."""
         path = Path(self.music_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_pictures_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_pictures_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the user's Pictures directory."""
         path = Path(self.pictures_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
@@ -192,14 +192,14 @@ class DSPaths:
         msg = "OneDrive not supported on this platform"
         raise NotImplementedError(msg)
 
-    def get_onedrive_path(self, *paths: str, ensure_exists: bool = True) -> Path:
+    def get_onedrive_path(self, *paths: str | Path, ensure_exists: bool = True) -> Path:
         """Get a path in the user's OneDrive directory."""
         path = Path(self.onedrive_dir).joinpath(*paths)
         if ensure_exists and self.create_dirs:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_ssh_key(self, *paths: str) -> Path:
+    def get_ssh_key(self, *paths: str | Path) -> Path:
         """Get a file or path from under the user's .ssh directory."""
         return Path(self.home_dir, ".ssh").joinpath(*paths)
 
@@ -207,21 +207,23 @@ class DSPaths:
         """Get a specific SSH key file from the user's .ssh directory."""
         return self.get_ssh_key() / key_name
 
-    def get_data_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_data_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the data directory."""
         path = Path(self.data_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_cache_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_cache_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the cache directory."""
         path = Path(self.cache_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_config_path(self, *paths: str, no_create: bool = False, legacy: bool = False) -> Path:
+    def get_config_path(
+        self, *paths: str | Path, no_create: bool = False, legacy: bool = False
+    ) -> Path:
         """Get a path in the config directory.
 
         Args:
@@ -239,14 +241,14 @@ class DSPaths:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_log_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_log_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the log directory."""
         path = Path(self.log_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
             path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
-    def get_state_path(self, *paths: str, no_create: bool = False) -> Path:
+    def get_state_path(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the state directory."""
         path = Path(self.state_dir).joinpath(*paths)
         if self.create_dirs and not no_create:
