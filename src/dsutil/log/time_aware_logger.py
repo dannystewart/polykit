@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from dsutil.tools import TimeParser
+from dsutil.time import TimeParser
 
 if TYPE_CHECKING:
     from logging import Logger
