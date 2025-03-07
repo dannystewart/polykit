@@ -1,6 +1,6 @@
 [project]
 name = "dsutil"
-version = "1.9.6"
+version = "1.10.0"
 description = "Personal Python utility library"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
 readme = "README.md"
