@@ -23,7 +23,7 @@ T = TypeVar("T")
 def handle_keyboard_interrupt(
     message: str = "Interrupted by user. Exiting...",
     exit_code: int = 1,
-    callback: Callable[[Any], Any] | None = None,
+    callback: Callable[..., Any] | None = None,
     use_newline: bool = False,
     use_logging: bool = False,
     logger: logging.Logger | None = None,
@@ -208,7 +208,7 @@ def confirm_action(
 def async_handle_keyboard_interrupt(
     message: str = "Interrupted by user. Exiting...",
     exit_code: int = 1,
-    callback: Callable[[Any], Any] | None = None,
+    callback: Callable[..., Any] | None = None,
     use_newline: bool = False,
     use_logging: bool = False,
     logger: logging.Logger | None = None,
