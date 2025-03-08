@@ -25,10 +25,17 @@ def handle_keyboard_interrupt(
     exit_code: int = 1,
     callback: Callable[..., Any] | None = None,
     use_newline: bool = False,
-    use_logging: bool = False,
     logger: logging.Logger | None = None,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
-    """Handle KeyboardInterrupt exceptions."""
+    """Handle KeyboardInterrupt exceptions.
+
+    Args:
+        message: The message to display when interrupted.
+        exit_code: The exit code to use when terminating.
+        callback: An optional function to call before exiting.
+        use_newline: Whether to print a newline before the message.
+        logger: An optional logger to use rather than creating a new one.
+    """
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
@@ -41,17 +48,34 @@ def handle_keyboard_interrupt(
                 else:  # Clear the current line
                     sys.stdout.write("\r\033[K")
                 sys.stdout.flush()
-                if callback:
-                    callback(*args, **kwargs)
-                log_message = color(message, "red")
+
+                if callback:  # Check the signature of the callback function
+                    import inspect
+                    import signal
+
+                    sig = inspect.signature(callback)
+                    param_count = len([
+                        p
+                        for p in sig.parameters.values()
+                        if p.default == inspect.Parameter.empty
+                        and p.kind
+                        not in {inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD}
+                    ])
+
+                    # Call the callback with appropriate arguments
+                    if param_count == 0:
+                        callback()
+                    elif "signum" in sig.parameters and "frame" in sig.parameters:
+                        callback(signal.SIGINT, None)  # Signal handler style callback
+                    else:
+                        callback(*args, **kwargs)  # Pass the original arguments
+
                 if logger:  # Use supplied logger
-                    logger.info(log_message)
-                elif use_logging:  # Create new logger
+                    logger.error(message)
+                else:  # Create new logger
                     from dsutil.log import LocalLogger
 
-                    LocalLogger().get_logger().info(log_message)
-                else:  # Just print the message
-                    print(log_message)
+                    LocalLogger().get_logger(simple=True).error(message)
                 sys.exit(exit_code)
 
         return wrapper
