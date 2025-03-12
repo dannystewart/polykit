@@ -17,6 +17,11 @@ class ArgInfo:
     nargs: str | None = None
     dest: str | None = None
     required: bool = False
+    keep_cap: bool = False
+
+    def __post_init__(self):
+        if self.help and len(self.help) > 0 and not self.keep_cap:
+            self.help = self.help[0].lower() + self.help[1:]
 
 
 class ArgumentsBase:
@@ -99,7 +104,7 @@ class ArgParser(argparse.ArgumentParser):
 
         Args:
             name: The name of the argument. For positional arguments, this is used as is. For
-                optional arguments, it's converted to the appropriate format (e.g. --name).
+                  optional arguments, it's converted to the appropriate format (e.g. --name).
             arg_info: An instance of ArgInfo containing the argument's properties.
 
         The method handles different cases:
@@ -144,12 +149,12 @@ class ArgParser(argparse.ArgumentParser):
 
         Args:
             arg_class: A class that inherits from ArgumentsBase and contains ArgInfo instances as
-                class attributes.
+                       class attributes.
 
         Example usage:
             class MyArguments(ArgumentsBase):
-                file = ArgInfo(help="Input file path", type=str, required=True)
-                verbose = ArgInfo(help="Increase output verbosity", action="store_true")
+                file: ClassVar[ArgInfo] = ArgInfo(help="input file path", type=str, required=True)
+                verbose: ClassVar[ArgInfo] = ArgInfo(help="verbose output", action="store_true")
 
             parser = ArgParser(description="My program description")
             parser.add_args_from_class(MyArguments)
