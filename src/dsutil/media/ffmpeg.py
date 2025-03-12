@@ -34,7 +34,7 @@ def run_ffmpeg(
     }
 
     with halo_progress(
-        filename=output_filename or Path(input_file).name,
+        output_filename or Path(input_file).name,
         start_message=spinner_messages["start"],
         end_message=spinner_messages["end"],
         fail_message=spinner_messages["fail"],

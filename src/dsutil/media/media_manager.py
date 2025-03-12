@@ -37,7 +37,7 @@ class MediaManager:
             RuntimeError: If the ffmpeg command fails.
         """
         with halo_progress(
-            filename=output_filename or input_file.name,
+            output_filename or input_file.name,
             start_message="Converting",
             end_message="Converted",
             fail_message="Failed to convert",

@@ -90,25 +90,31 @@ def with_spinner(
 
 @contextmanager
 def halo_progress(
-    filename: str | Path | None = None,
+    item: str | Path | None = None,
     start_message: str = "Processing",
     end_message: str = "Processed",
     fail_message: str = "Failed",
+    text_color: ColorName = "cyan",
+    success_color: ColorName = "green",
+    fail_color: ColorName = "red",
     show: bool = True,
 ) -> Generator[Halo | None, None, None]:
     """Context manager to display a Halo spinner while a block of code is executing, with customized
     start and end messages.
 
     Args:
-        filename: The name of the file being processed.
+        item: The name of the item being processed. Accepts string or Path.
         start_message: The start message to display.
         end_message: The end message to display.
         fail_message: The fail message to display.
+        text_color: The color of the spinner text. Defaults to 'cyan'.
+        success_color: The color of the success message. Defaults to 'green'.
+        fail_color: The color of the fail message. Defaults to 'red'.
         show: Whether to show the Halo spinner output. Defaults to True.
 
     Usage:
         file_path = "example.txt"
-        with halo_progress(filename=file_path) as spinner:
+        with halo_progress(file_path) as spinner:
             process_file(file_path)
 
         You can use spinner.succeed() or spinner.fail() to update the spinner status.
@@ -116,17 +122,13 @@ def halo_progress(
     Yields:
         Halo: The Halo spinner.
     """
-    fail_color: ColorName = "red"
-    success_color: ColorName = "green"
-
-    if filename:
-        start_message = f"{start_message} {filename}"
-        end_message = f"{end_message} {filename}"
-        fail_message = f"{fail_message} {filename}"
+    if item:
+        start_message = f"{start_message} {item}"
+        end_message = f"{end_message} {item}"
+        fail_message = f"{fail_message} {item}"
 
     if show:
-        start_color: ColorName = "cyan"
-        spinner = Halo(text=colorize(start_message, start_color), spinner="dots")
+        spinner = Halo(text=colorize(start_message, text_color), spinner="dots")
         spinner.start()
     else:
         spinner = None
@@ -137,12 +139,12 @@ def halo_progress(
         if spinner is not None and show:
             spinner.fail(colorize(f"{fail_message}: {e}", fail_color))
         else:
-            print(colorize(f"{fail_message}: {e}", fail_color))
+            print_colored(f"{fail_message}: {e}", fail_color)
         raise
     if spinner and show:
         spinner.succeed(colorize(end_message, success_color))
     elif show:
-        print(colorize(end_message, success_color))
+        print_colored(end_message, success_color)
 
 
 @contextmanager
