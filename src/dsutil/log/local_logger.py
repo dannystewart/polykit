@@ -6,7 +6,6 @@ defining console color codes for use in the formatter to colorize messages by lo
 
 from __future__ import annotations
 
-import inspect
 import logging
 import logging.config
 from logging import Logger
@@ -73,20 +72,41 @@ class LocalLogger(metaclass=Singleton):
     @staticmethod
     def get_logger_name(logger_name: str | None = None) -> str:
         """Generate a logger identifier based on the provided parameters and calling context."""
-        frame = inspect.currentframe().f_back.f_back  # get_logger's caller
+        if logger_name is not None:
+            return logger_name
 
-        def get_class_name() -> str:
+        import inspect
+
+        # Try to get the calling frame
+        frame = inspect.currentframe()
+        if frame is not None:
+            frame = frame.f_back  # get_logger's frame
+            if frame is not None:
+                frame = frame.f_back  # get_logger's caller's frame
+
+        # If we have a valid frame, try to identify it
+        if frame is not None:
+            # Try to get class name first
             if "self" in frame.f_locals:
                 return frame.f_locals["self"].__class__.__name__
             if "cls" in frame.f_locals:
                 return frame.f_locals["cls"].__name__
+
+            # Get the module name if we can't get the class name
             module = inspect.getmodule(frame)
-            return module.__name__.split(".")[-1]
+            if module is not None and hasattr(module, "__name__"):
+                return module.__name__.split(".")[-1]
 
-        # If no identifier is given, use the class name if provided
-        return get_class_name() if logger_name is None else logger_name
+            # Get the filename if we can't get the module name
+            filename = frame.f_code.co_filename
+            if filename:
+                base_filename = Path(filename).name
+                return Path(base_filename).stem
 
-    def add_file_handler(self, logger: Logger, log_file: str) -> None:
+        # If we really can't find our place in the universe
+        return "unknown"
+
+    def add_file_handler(self, logger: Logger, log_file: Path) -> None:
         """Add a file handler to the given logger.
 
         Args:
@@ -95,13 +115,12 @@ class LocalLogger(metaclass=Singleton):
         """
         formatter = FileFormatter()
         log_dir = Path(log_file).parent
-        log_file_path = Path(log_file)
 
         if not log_dir.exists():
             log_dir.mkdir(parents=True, exist_ok=True)
 
-        if not log_file_path.is_file():
-            log_file_path.touch()
+        if not log_file.is_file():
+            log_file.touch()
 
         file_handler = RotatingFileHandler(log_file, maxBytes=512 * 1024)
         file_handler.setFormatter(formatter)
