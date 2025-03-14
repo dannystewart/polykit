@@ -21,11 +21,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["mypy (>=1.15.0)", "ruff (>=0.9.10)"]
+dev = ["mypy (>=1.15.0)", "ruff (>=0.10.0)"]
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.15.0"
-ruff = ">=0.9.10"
+ruff = ">=0.10.0"
 
 [build-system]
 requires = ["poetry-core>=2.0"]
