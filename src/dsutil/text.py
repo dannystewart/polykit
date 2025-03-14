@@ -7,20 +7,23 @@ from enum import StrEnum
 from typing import Any
 
 from dsutil.common.types import SMART_QUOTES_TABLE, ColorAttrs, ColorName
+from dsutil.tools import deprecated
 
 
-def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
+def color(text: Any, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
     """Use termcolor to return a string in the specified color if termcolor is available.
     Otherwise, gracefully falls back to returning the text as is.
 
     Args:
-        text: The text to colorize.
+        text: The text to colorize. Can accept non-strings, and will attempt to convert them.
         color_name: The name of the color.
         attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
 
     Returns:
         The colorized text.
     """
+    text = str(text)  # Ensure text is a string
+
     try:
         from termcolor import colored
     except ImportError:
@@ -30,17 +33,19 @@ def color(text: str, color_name: ColorName, attrs: ColorAttrs | None = None) -> 
 
 
 def print_colored(
-    text: str, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
+    text: Any, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
 ) -> None:
     r"""Use termcolor to print text in the specified color if termcolor is available.
     Otherwise, gracefully falls back to printing the text as is.
 
     Args:
-        text: The text to print in color.
+        text: The text to print in color. Can accept non-strings, and will attempt to convert them.
         color_name: The name of the color.
         end: The string to append after the last value. Defaults to "\n".
         attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
     """
+    text = str(text)  # Ensure text is a string
+
     try:
         from termcolor import colored
     except ImportError:
