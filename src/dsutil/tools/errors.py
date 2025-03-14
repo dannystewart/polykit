@@ -10,8 +10,6 @@ import types
 from functools import wraps
 from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
-from dsutil.text import print_colored
-
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
 
@@ -178,6 +176,8 @@ def retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
+                        from dsutil.text import print_colored
+
                         print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
                     tries -= 1
@@ -220,6 +220,8 @@ def async_retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
+                        from dsutil.text import print_colored
+
                         print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
                     tries -= 1

@@ -7,7 +7,7 @@ from enum import StrEnum
 from typing import Any
 
 from dsutil.common.types import SMART_QUOTES_TABLE, ColorAttrs, ColorName
-from dsutil.tools import deprecated
+from dsutil.tools.decorators import deprecated
 
 
 def color(text: Any, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
@@ -65,11 +65,13 @@ def progress(message: str) -> None:
     print_colored(f"✔ {message}", "green")
 
 
+@deprecated("Use LocalLogger instead.")
 def warning(message: str) -> None:
     """Print a warning message."""
     print_colored(message, "yellow")
 
 
+@deprecated("Use LocalLogger instead.")
 def error(message: str, skip_exit: bool = False) -> None:
     """Print an error message and exit the program."""
     print_colored(f"\n{message}", "red")
