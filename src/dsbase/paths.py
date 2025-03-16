@@ -1,8 +1,6 @@
 # ruff: noqa: D102
 
-r"""DSPaths is a helper class to manage paths (both platform and user) in a DS-friendly way.
-
-NOTE: As of dsbase 1.8.0, all paths now return Path objects. If you need a string, use `str(path)`.
+r"""DSPaths is a helper class to manage paths (both platform and user) in a friendly way.
 
 Platform-specific paths:
     Linux:
@@ -38,14 +36,12 @@ from pathlib import Path
 
 from platformdirs import PlatformDirs
 
-from dsbase.log import LocalLogger
-
-logger = LocalLogger().get_logger("DSPaths")
+from dsbase.env.env import DSEnv
 
 
 @dataclass
 class DSPaths:
-    """Manage paths in a DS-friendly way.
+    """Manage paths in a friendly way.
 
     Args:
         app_name: Name of the application. Required due to the need for a base directory.
@@ -62,13 +58,24 @@ class DSPaths:
     """
 
     app_name: str
-    app_author: str | None = "Danny Stewart"
-    app_domain_prefix: str | None = "com.dannystewart"
+    app_author: str | None = None
+    app_domain_prefix: str | None = None
     version: str | None = None
     create_dirs: bool = True
 
     def __post_init__(self) -> None:
         """Initialize platform directories."""
+        # Get app author and domain prefix from environment variables if available
+        env = DSEnv()
+        env.add_var("DSPATHS_APP_AUTHOR", attr_name="app_author", required=False)
+        env.add_var("DSPATHS_APP_DOMAIN_PREFIX", attr_name="app_domain", required=False)
+
+        # Set these if they exist in the environment and weren't otherwise supplied
+        if self.app_author is None and env.app_author:
+            self.app_author = env.app_author
+        if self.app_domain_prefix is None and env.app_domain:
+            self.app_domain_prefix = env.app_domain
+
         if sys.platform == "darwin" and self.app_domain_prefix:
             # For macOS, use domain-based path if provided
             normalized_name = self.app_name.lower().replace(" ", "")
