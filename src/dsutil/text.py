@@ -6,8 +6,8 @@ from collections.abc import Iterable
 from enum import StrEnum
 from typing import Any
 
-from dsutil.common.types import SMART_QUOTES_TABLE, ColorAttrs, ColorName
 from dsutil.tools.decorators import deprecated
+from dsutil.types import SMART_QUOTES_TABLE, ColorAttrs, ColorName
 
 
 def color(text: Any, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
