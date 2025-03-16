@@ -33,13 +33,13 @@ class ConfigFile:
 CONFIGS: Final[list[ConfigFile]] = [
     ConfigFile(
         name="ruff",
-        url="https://gitlab.dannystewart.com/danny/dsbase/raw/main/src/dsbase/configs/configs/ruff.toml",
+        url="https://raw.githubusercontent.com/dannystewart/dsbase/refs/heads/main/src/dsbase/configs/configs/ruff.toml",
         local_path=Path("ruff.toml"),
         package_path=Path(),
     ),
     ConfigFile(
         name="mypy",
-        url="https://gitlab.dannystewart.com/danny/dsbase/raw/main/src/dsbase/configs/configs/mypy.ini",
+        url="https://raw.githubusercontent.com/dannystewart/dsbase/refs/heads/main/src/dsbase/configs/configs/mypy.ini",
         local_path=Path("mypy.ini"),
         package_path=Path(),
     ),
