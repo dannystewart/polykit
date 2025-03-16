@@ -1,7 +1,7 @@
 [project]
 name = "dsbase"
 version = "0.1.1"
-description = "Personal Python utility library"
+description = "Python utilities and helpers for logging, environment management, file operations, and more"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
 readme = "README.md"
 license = "GPL-3.0-or-later"
