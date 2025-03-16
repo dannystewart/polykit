@@ -1,17 +1,23 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
-SMART_QUOTES_TABLE = str.maketrans(
-    {
-        "“": '"',
-        "”": '"',
-        "‘": "'",
-        "’": "'",
-    }
-)
+if TYPE_CHECKING:
+    import types
 
+# Type alias for exception info tuple
+type ExcInfo = tuple[type[BaseException], BaseException, types.TracebackType | None]
+
+# Translation table for smart quotes replacement
+SMART_QUOTES_TABLE = str.maketrans({
+    "“": '"',
+    "”": '"',
+    "‘": "'",
+    "’": "'",
+})
+
+# Color names for termcolor
 ColorName = Literal[
     "black",
     "grey",
@@ -32,9 +38,20 @@ ColorName = Literal[
     "white",
 ]
 
-ColorAttrs = Iterable[Literal["bold", "dark", "underline", "blink", "reverse", "concealed"]]
+# Color attributes for termcolor
+ColorAttrs = Iterable[
+    Literal[
+        "bold",
+        "dark",
+        "underline",
+        "blink",
+        "reverse",
+        "concealed",
+    ]
+]
 
-rich_attrs = {
+# Mapping of text attributes for Rich
+rich_attrs: dict[str, str] = {
     "bold": "bold",
     "dark": "dim",
     "underline": "underline",

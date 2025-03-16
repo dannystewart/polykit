@@ -13,6 +13,8 @@ from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
 
+    from dsutil.types import ExcInfo
+
 try:
     from pygments import highlight
     from pygments.formatters import TerminalFormatter
@@ -26,7 +28,7 @@ T = TypeVar("T")
 P = ParamSpec("P")
 
 
-def log_traceback(exc_info: tuple | None = None, trim_levels: int = 0) -> None:
+def log_traceback(exc_info: ExcInfo | None = None, trim_levels: int = 0) -> None:
     """Log a traceback, optionally trimming unwanted levels."""
     # Unpack traceback info
     exc_type, exc_value, exc_traceback = exc_info or sys.exc_info()
