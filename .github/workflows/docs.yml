@@ -19,7 +19,7 @@ jobs:
 
       - run: pip install -e .
       - run: pip install pdoc
-      - run: pdoc -o docs -t .pdoc -d google dsbase
+      - run: pdoc -o docs -d google dsbase
 
       - uses: actions/upload-pages-artifact@v3
         with:
