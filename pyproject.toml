@@ -25,6 +25,7 @@ dependencies = [
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.15.0"
+pdoc = "^15.0.1"
 ruff = ">=0.10.0"
 
 [build-system]
