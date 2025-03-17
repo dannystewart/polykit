@@ -5,7 +5,6 @@ This is a comprehensive utility library containing tools and helpers refined thr
 Some of the features include:
 
 - An elegant and sophisticated [`LocalLogger`](https://github.com/dannystewart/dsbase/blob/main/src/dsbase/log/local_logger.py) logging system
-- A tool for [comparing and updating code configs](https://github.com/dannystewart/dsbase/blob/main/src/dsbase/configs/code_configs.py) like `ruff.toml` and `mypy.ini`
 - Database [helper interfaces](https://github.com/dannystewart/dsbase/blob/main/src/dsbase/db/db_common.py) for [MySQL](https://github.com/dannystewart/dsbase/blob/main/src/dsbase/db/mysql_helper.py) and [SQLite](https://github.com/dannystewart/dsbase/blob/main/src/dsbase/db/sqlite_helper.py)
 - A custom [`DSEnv`](https://github.com/dannystewart/dsbase/blob/main/src/dsbase/env/env.py) environment variable manager
 - A custom [`DSPaths`](https://github.com/dannystewart/dsbase/blob/main/src/dsbase/paths.py) path manager
