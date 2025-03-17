@@ -21,7 +21,7 @@ T = TypeVar("T")
 
 @dataclass
 class DSEnv:
-    """Manage environment variables in a DS-friendly way."""
+    """Manage environment variables in a friendly way."""
 
     env_file: list[Path] | Path | str | None = field(default_factory=default_env_files)
     log_level: str = "info"
