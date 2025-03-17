@@ -1,10 +1,8 @@
 from __future__ import annotations
 
+import types
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Literal
-
-if TYPE_CHECKING:
-    import types
+from typing import Literal
 
 # Type alias for exception info tuple
 type ExcInfo = tuple[type[BaseException], BaseException, types.TracebackType | None]
