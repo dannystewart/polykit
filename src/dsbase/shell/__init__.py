@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .progress import halo_progress, with_spinner
+from .progress import conversion_list_context, halo_progress, with_spinner
 from .shell import (
     acquire_sudo,
     confirm_action,
