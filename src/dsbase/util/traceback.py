@@ -36,8 +36,3 @@ def log_traceback(exc_info: ExcInfo | None = None, trim_levels: int = 0) -> None
         else:
             print("Can't colorize traceback because Pygments is not installed.")
         sys.stderr.write(tb)
-
-
-def configure_traceback() -> None:
-    """Configure the system to log tracebacks for unhandled exceptions."""
-    sys.excepthook = lambda exctype, value, tb: log_traceback((exctype, value, tb))

@@ -5,6 +5,6 @@ import sys
 from dsbase.util.traceback import log_traceback
 
 
-def setup_system() -> None:
+def dsbase_setup() -> None:
     """Configure the system to log tracebacks for unhandled exceptions."""
     sys.excepthook = lambda exctype, value, tb: log_traceback((exctype, value, tb))
