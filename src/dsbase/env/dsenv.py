@@ -35,6 +35,9 @@ class DSEnv:
     def __post_init__(self):
         """Initialize with default environment variables."""
         self.logger = LocalLogger().get_logger(level=self.log_level)
+        self._load_env_files()
+
+    def _load_env_files(self) -> None:
         if self.env_file:
             env_files = [self.env_file] if isinstance(self.env_file, str | Path) else self.env_file
             for file in env_files:
@@ -180,15 +183,6 @@ class DSEnv:
             return self.get(self.attr_names[name])
         msg = f"'{self.__class__.__name__}' has no attribute '{name}'"
         raise AttributeError(msg)
-
-    def _load_env_file(self) -> None:
-        """Load variables from .env file."""
-        with Path(self.env_file).open(encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#"):
-                    key, value = line.split("=", 1)
-                    os.environ[key.strip()] = value.strip()
 
     @staticmethod
     def bool_converter(value: str) -> bool:
