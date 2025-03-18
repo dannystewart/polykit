@@ -59,7 +59,7 @@ def run_ffmpeg(
 
 def construct_filename(
     input_file: str | Path,
-    output_file: str | Path,
+    output_file: str | Path | None,
     output_format: str | Path,
     input_files: list[str],
 ) -> str:
