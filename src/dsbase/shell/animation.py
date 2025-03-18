@@ -8,9 +8,9 @@ from contextlib import AbstractContextManager, contextmanager, nullcontext
 from threading import Thread
 from typing import TYPE_CHECKING
 
-from dsbase.shell import handle_keyboard_interrupt
 from dsbase.text import ColorName
 from dsbase.text import color as colorize
+from dsbase.util import handle_interrupt
 
 if TYPE_CHECKING:
     from types import TracebackType
@@ -97,7 +97,7 @@ def conditional_animation(
     return walking_animation(message, color, width) if condition else nullcontext()
 
 
-@handle_keyboard_interrupt()
+@handle_interrupt()
 def show_walking_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
@@ -125,7 +125,7 @@ def show_walking_animation(
             character = character_left if direction == -1 else character_right
 
 
-@handle_keyboard_interrupt()
+@handle_interrupt()
 def start_animation(
     loading_text: str | None = None,
     color: ColorName | None = None,
@@ -157,7 +157,7 @@ def start_animation(
     return animation_thread
 
 
-@handle_keyboard_interrupt()
+@handle_interrupt()
 def stop_animation(animation_thread: Thread) -> None:
     """Stop the walking animation."""
     global animation_running
@@ -167,7 +167,7 @@ def stop_animation(animation_thread: Thread) -> None:
     animation_thread.join()
 
 
-@handle_keyboard_interrupt()
+@handle_interrupt()
 def print_animation_frame(character: str, position: int, color: ColorName | None = None) -> None:
     """Print a single frame of the walking animation."""
     colored_character = colorize(character, color) if color else character
