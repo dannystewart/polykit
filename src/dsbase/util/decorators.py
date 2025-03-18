@@ -3,11 +3,15 @@ from __future__ import annotations
 import functools
 import inspect
 import logging
+import subprocess
 import time
 import types
 from functools import wraps
 from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
+from halo import Halo
+
+from dsbase.text import print_colored
 from dsbase.util.traceback import log_traceback
 
 if TYPE_CHECKING:
@@ -111,6 +115,37 @@ def get_formatted_error(func: Callable[..., Any], e: Exception, trim_levels: int
         caller=get_caller_name(start_index=2 + trim_levels),
         error=str(e) + query_details,
     )
+
+
+def with_retries[T](operation_func: Callable[..., T]) -> Callable[..., T]:
+    """Retry operations with a spinner."""
+
+    def wrapper(
+        *args: Any,
+        retries: int = 3,
+        wait_time: float = 3,
+        spinner: str | None = None,
+        **kwargs: Any,
+    ) -> T:
+        last_exception = None
+        for attempt in range(retries):
+            try:
+                if spinner:
+                    with Halo(spinner, color="blue"):
+                        return operation_func(*args, **kwargs)
+                else:
+                    return operation_func(*args, **kwargs)
+            except subprocess.CalledProcessError as e:
+                last_exception = e
+                print_colored(
+                    f"Failed to complete: {operation_func.__name__}, retrying... ({attempt + 1} out of {retries})",
+                    "yellow",
+                )
+                time.sleep(wait_time)
+        msg = f"Operation failed after {retries} attempts: {operation_func.__name__}"
+        raise RuntimeError(msg) from last_exception
+
+    return wrapper
 
 
 def retry_on_exception(
