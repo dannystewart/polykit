@@ -18,11 +18,15 @@ if TYPE_CHECKING:
 # Animation character width
 ANIMATION_WIDTH = 30
 
-animation_running = False
+is_walking = False
 
 
-class AnimationManager:
-    """Manage a cute and entertaining walking animation for actions that take time to complete."""
+class WalkingMan:
+    """A cute and entertaining Walking Man <('-'<) animation for tasks that take time.
+
+    Walking Man is the unsung hero who brings a bit of joy to operations that would otherwise be
+    frustrating or tedious. He's a simple character, but he's always there when you need him.
+    """
 
     def __init__(
         self,
@@ -36,8 +40,8 @@ class AnimationManager:
         self.animation_thread = None
 
     def __enter__(self):
-        """Start the walking animation when entering the context manager."""
-        self.animation_thread = start_animation(self.loading_text, self.color, self.width)
+        """Start Walking Man when entering the context manager."""
+        self.animation_thread = start_walking(self.loading_text, self.color, self.width)
         return self
 
     def __exit__(
@@ -46,8 +50,8 @@ class AnimationManager:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        """Stop the walking animation when exiting the context manager."""
-        stop_animation(self.animation_thread)
+        """Stop Walking Man when exiting the context manager."""
+        stop_walking(self.animation_thread)
         if self.loading_text:
             sys.stdout.write("\033[F")  # Move cursor up one line
             sys.stdout.write("\033[K")  # Clear the line
@@ -55,12 +59,12 @@ class AnimationManager:
 
 
 @contextmanager
-def walking_animation(
+def walking_man(
     loading_text: str | None = None,
     color: ColorName | None = None,
     width: int = ANIMATION_WIDTH,
 ):
-    """Manage a walking animation as a context manager. All arguments are optional.
+    """Manage a Walking Man animation as a context manager. All arguments are optional.
 
     Args:
         loading_text: Text to print before starting the animation. Defaults to None.
@@ -71,39 +75,18 @@ def walking_animation(
         with walking_animation("Loading...", "yellow", 30):
             long_running_function()
     """
-    manager = AnimationManager(loading_text, color, width)
+    manager = WalkingMan(loading_text, color, width)
     with manager:
         yield
 
 
-def conditional_animation(
-    condition: bool,
-    message: str | None = None,
-    color: ColorName | None = None,
-    width: int = ANIMATION_WIDTH,
-) -> AbstractContextManager[None]:
-    """Run the walking animation if the condition is met.
-
-    Args:
-        condition: The condition that must be met for the animation to display.
-        message: The message to display during the animation. Defaults to None.
-        color: The color of the animation. Defaults to None.
-        width: The width of the screen for the animation. Defaults to ANIMATION_WIDTH.
-
-    Usage:
-        with conditional_animation(condition, "Loading..."):
-            long_running_function()
-    """
-    return walking_animation(message, color, width) if condition else nullcontext()
-
-
 @handle_interrupt()
-def show_walking_animation(
+def show_walking_man(
     loading_text: str | None = None,
     color: ColorName | None = None,
     width: int = ANIMATION_WIDTH,
 ) -> None:
-    """Print a walking animation until the animation_running flag is set to False."""
+    """Print a Walking Man animation until the is_running flag is set to False."""
     character_right = " (>'-')>"
     character_left = "<('-'<) "
     character = character_right
@@ -116,8 +99,8 @@ def show_walking_animation(
         else:
             print(loading_text)
 
-    while animation_running:
-        print_animation_frame(character, position, color)
+    while is_walking:
+        print_frame(character, position, color)
         position += direction
 
         if position in {0, width}:
@@ -125,13 +108,34 @@ def show_walking_animation(
             character = character_left if direction == -1 else character_right
 
 
+def conditional_walking(
+    condition: bool,
+    message: str | None = None,
+    color: ColorName | None = None,
+    width: int = ANIMATION_WIDTH,
+) -> AbstractContextManager[None]:
+    """Run the Walking Man animation if the condition is met.
+
+    Args:
+        condition: The condition that must be met for the animation to display.
+        message: The message to display during the animation. Defaults to None.
+        color: The color of the animation. Defaults to None.
+        width: The width of the screen for the animation. Defaults to ANIMATION_WIDTH.
+
+    Usage:
+        with conditional_animation(condition, "Loading..."):
+            long_running_function()
+    """
+    return walking_man(message, color, width) if condition else nullcontext()
+
+
 @handle_interrupt()
-def start_animation(
+def start_walking(
     loading_text: str | None = None,
     color: ColorName | None = None,
     width: int = ANIMATION_WIDTH,
 ) -> Thread:
-    """Start the walking animation.
+    """Start the Walking Man animation.
 
     Usage (all arguments optional):
         from dsbase.animation import start_animation, stop_animation
@@ -147,10 +151,10 @@ def start_animation(
     Returns:
         The thread running the animation.
     """
-    global animation_running
-    animation_running = True
+    global is_walking
+    is_walking = True
 
-    animation_thread = Thread(target=show_walking_animation, args=(loading_text, color, width))
+    animation_thread = Thread(target=show_walking_man, args=(loading_text, color, width))
     animation_thread.daemon = True  # This makes it killable with Ctrl-C
     animation_thread.start()
 
@@ -158,18 +162,17 @@ def start_animation(
 
 
 @handle_interrupt()
-def stop_animation(animation_thread: Thread) -> None:
-    """Stop the walking animation."""
-    global animation_running
-
-    animation_running = False
+def stop_walking(animation_thread: Thread) -> None:
+    """Stop the Walking Man animation."""
+    global is_walking
+    is_walking = False
 
     animation_thread.join()
 
 
 @handle_interrupt()
-def print_animation_frame(character: str, position: int, color: ColorName | None = None) -> None:
-    """Print a single frame of the walking animation."""
+def print_frame(character: str, position: int, color: ColorName | None = None) -> None:
+    """Print a single frame of the Walking Man animation."""
     colored_character = colorize(character, color) if color else character
     print(" " * position + colored_character, end="\r")
     time.sleep(0.2)

@@ -5,6 +5,7 @@ from __future__ import annotations
 import subprocess
 from typing import TYPE_CHECKING
 
+from dsbase.animate import conditional_walking
 from dsbase.media.ffmpeg import (
     add_audio_flags,
     add_video_flags,
@@ -13,7 +14,6 @@ from dsbase.media.ffmpeg import (
     ensure_lossless_first,
     run_ffmpeg,
 )
-from dsbase.shell.animation import conditional_animation
 from dsbase.text import print_colored
 
 if TYPE_CHECKING:
@@ -28,7 +28,7 @@ def find_bit_depth(input_file: str | Path, show_animation: bool = False) -> int:
         input_file: The path to the input file.
         show_animation: Whether to show the loading animation. Defaults to False.
     """
-    with conditional_animation(show_animation):
+    with conditional_walking(show_animation):
         bit_depth_command = (  # First, try to get the bit depth in the usual way
             f"ffprobe -v error -select_streams a:0 -show_entries stream=bits_per_raw_sample "
             f'-of default=noprint_wrappers=1:nokey=1 "{input_file}"'
