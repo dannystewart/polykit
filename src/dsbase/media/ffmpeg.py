@@ -5,7 +5,7 @@ import subprocess
 from collections import defaultdict
 from pathlib import Path
 
-from dsbase.progress import halo_progress
+from dsbase.shell.progress import halo_progress
 from dsbase.text import color, print_colored
 
 

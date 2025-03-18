@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Any
 
 from natsort import natsorted
 
-from dsbase import TZ
 from dsbase.text import print_colored
+from dsbase.time import TZ
 
 if TYPE_CHECKING:
     from collections.abc import Callable

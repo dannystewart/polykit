@@ -225,7 +225,10 @@ class DSEnv:
 
 
 class DSEnvBuilder:
-    """Builder class for creating a DSEnv instance with type-checked environment variables."""
+    """Builder class for creating a DSEnv instance with type-checked environment variables.
+
+    NOTE: This is unsupported. It's recommended to use the DSEnv class directly.
+    """
 
     def __init__(self):
         self.vars: dict[str, EnvVar] = {}
@@ -244,7 +247,7 @@ class DSEnvBuilder:
 
     def build(self) -> DSEnv:
         """Create a DSEnv instance with these variables."""
-        from dsbase.env.env import DSEnv
+        from dsbase.env.dsenv import DSEnv
 
         env = DSEnv()
         env.vars = self.vars

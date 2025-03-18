@@ -5,8 +5,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-from dsbase import LocalLogger
-from dsbase.db import DatabaseError, QueryResult
+from dsbase.log import LocalLogger
+from dsbase.util.db import DatabaseError, QueryResult
 
 if TYPE_CHECKING:
     from collections.abc import Generator

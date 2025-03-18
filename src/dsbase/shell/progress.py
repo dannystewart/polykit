@@ -10,8 +10,8 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from halo import Halo
 
-from dsbase.shell import color as colorize
 from dsbase.text import ColorName, print_colored
+from dsbase.text import color as colorize
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
@@ -27,7 +27,7 @@ def with_retries[T](operation_func: Callable[..., T]) -> Callable[..., T]:
         *args: Any,
         retries: int = 3,
         wait_time: float = 3,
-        spinner: Halo | None = None,
+        spinner: str | None = None,
         **kwargs: Any,
     ) -> T:
         last_exception = None

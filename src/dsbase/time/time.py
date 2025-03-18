@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from datetime import datetime, timedelta
 from functools import partial
 from typing import Any, ClassVar
@@ -9,14 +8,8 @@ from zoneinfo import ZoneInfo
 TZ = ZoneInfo("America/New_York")
 
 
-def get_timezone() -> ZoneInfo:
-    """Get the timezone and return it as a ZoneInfo object."""
-    timezone_str = os.getenv("TZ", "America/New_York")
-    return ZoneInfo(timezone_str)
-
-
-class TimeParser:
-    """Time string parser and formatter for various formats and relative time interpretations."""
+class Time:
+    """Time parser and formatter for various formats and relative time interpretations."""
 
     # Days of the week, for converting name to number
     DAYS: ClassVar[list[str]] = [
@@ -51,15 +44,15 @@ class TimeParser:
         # Handle special cases and try custom parser first
         if normalized == "now":
             return now
-        if parsed := TimeParser._parse_simple(normalized, now):
+        if parsed := Time._parse_simple(normalized, now):
             return parsed
 
         try:  # Fall back to dateutil parser if available
             from dateutil import parser
 
             parsed = parser.parse(time_str, fuzzy=True, default=now)
-            return TimeParser.ensure_future(
-                TimeParser.ensure_tz(parsed), now, force_future="today" not in normalized
+            return Time.ensure_future(
+                Time.ensure_tz(parsed), now, force_future="today" not in normalized
             )
         except (ValueError, ImportError):
             return None
@@ -90,7 +83,7 @@ class TimeParser:
                             hour == current_hour - 12 and minute > now.minute
                         ):  # Time is still upcoming today
                             hour += 12
-                return TimeParser.adjust_for_tomorrow_if_needed(now, hour, minute)
+                return Time.adjust_for_tomorrow_if_needed(now, hour, minute)
 
         return None
 
@@ -102,13 +95,13 @@ class TimeParser:
                 hour = int(parts[0])
                 minute = int(parts[1])
                 if 0 <= hour < 24 and 0 <= minute < 60:
-                    return TimeParser.adjust_for_tomorrow_if_needed(now, hour, minute)
+                    return Time.adjust_for_tomorrow_if_needed(now, hour, minute)
 
         if time_str.isdigit() and len(time_str) == 4:  # Otherwise, try without colon
             hour = int(time_str[:2])
             minute = int(time_str[2:])
             if 0 <= hour < 24 and 0 <= minute < 60:
-                return TimeParser.adjust_for_tomorrow_if_needed(now, hour, minute)
+                return Time.adjust_for_tomorrow_if_needed(now, hour, minute)
 
         return None
 
@@ -130,7 +123,7 @@ class TimeParser:
 
         # Use the current time if no time was provided, and ensure timezone
         time = time or now
-        time = TimeParser.ensure_tz(time)
+        time = Time.ensure_tz(time)
 
         if time <= now:  # If the time is in the past, move it to tomorrow
             time += timedelta(days=1)
@@ -150,15 +143,15 @@ class TimeParser:
                 - compact: If True, use a more compact format for dates within 7 days.
         """
         if isinstance(time, datetime):
-            return TimeParser._format_datetime(time, **kwargs)
-        return TimeParser._format_timedelta(time)
+            return Time._format_datetime(time, **kwargs)
+        return Time._format_timedelta(time)
 
     @staticmethod
     def _parse_simple(time_str: str, ref_time: datetime) -> datetime | None:
         """Parse common time formats using simple string manipulation."""
-        if time := TimeParser._parse_12_hour(ref_time, time_str):
+        if time := Time._parse_12_hour(ref_time, time_str):
             return time
-        if time := TimeParser._parse_24_hour(ref_time, time_str):
+        if time := Time._parse_24_hour(ref_time, time_str):
             return time
         return None
 
@@ -297,11 +290,11 @@ class TimeParser:
     @staticmethod
     def get_day_number(day: str) -> int:
         """Convert day name to day number (0-6, where Monday is 0)."""
-        return TimeParser.DAYS.index(day)
+        return Time.DAYS.index(day)
 
 
 # Partial functions for common use cases
-get_pretty_time = partial(TimeParser.get_pretty_time)
-get_capitalized_time = partial(TimeParser.get_pretty_time, capitalize=True)
-get_time_only = partial(TimeParser.get_pretty_time, time_only=True)
-get_weekday_time = partial(TimeParser.get_pretty_time, weekday=True)
+get_pretty_time = partial(Time.get_pretty_time)
+get_capitalized_time = partial(Time.get_pretty_time, capitalize=True)
+get_time_only = partial(Time.get_pretty_time, time_only=True)
+get_weekday_time = partial(Time.get_pretty_time, weekday=True)

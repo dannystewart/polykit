@@ -36,7 +36,7 @@ from pathlib import Path
 
 from platformdirs import PlatformDirs
 
-from dsbase.env.env import DSEnv
+from dsbase.env import DSEnv
 
 
 @dataclass

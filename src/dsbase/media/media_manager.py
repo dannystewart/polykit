@@ -4,10 +4,10 @@ import subprocess
 from collections import defaultdict
 from pathlib import Path
 
-from dsbase import LocalLogger
-from dsbase.animation import conditional_animation
+from dsbase.log import LocalLogger
 from dsbase.media.video_helper import VideoHelper
-from dsbase.progress import halo_progress
+from dsbase.shell.animation import conditional_animation
+from dsbase.shell.progress import halo_progress
 
 
 class MediaManager:

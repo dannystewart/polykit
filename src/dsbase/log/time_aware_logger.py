@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from dsbase.time import TimeParser
+from dsbase.time.time import Time
 
 if TYPE_CHECKING:
     from logging import Logger
@@ -25,9 +25,7 @@ class TimeAwareLogger:
 
     @staticmethod
     def _format_args(*args: Any) -> list[Any]:
-        return [
-            TimeParser.get_pretty_time(arg) if isinstance(arg, datetime) else arg for arg in args
-        ]
+        return [Time.get_pretty_time(arg) if isinstance(arg, datetime) else arg for arg in args]
 
     def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
         """Log a debug message with time formatted arguments."""

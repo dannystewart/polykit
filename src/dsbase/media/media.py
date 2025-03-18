@@ -5,7 +5,6 @@ from __future__ import annotations
 import subprocess
 from typing import TYPE_CHECKING
 
-from dsbase.animation import conditional_animation
 from dsbase.media.ffmpeg import (
     add_audio_flags,
     add_video_flags,
@@ -14,6 +13,7 @@ from dsbase.media.ffmpeg import (
     ensure_lossless_first,
     run_ffmpeg,
 )
+from dsbase.shell.animation import conditional_animation
 from dsbase.text import print_colored
 
 if TYPE_CHECKING:

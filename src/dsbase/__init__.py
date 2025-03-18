@@ -1,7 +1,9 @@
+# ruff: noqa: D212, D415
 """
-# dsbase: Danny Stewart's Python Utility Library
+# DSBase
 
-dsbase provides a collection of utility functions and classes to simplify common programming tasks.
+Danny Stewart's Python Utility Library, or **DSBase**, provides a collection of utility functions
+and classes to simplify common Python programming tasks.
 
 ## Installation
 
@@ -17,12 +19,4 @@ pip install dsbase
 - **Version Management**: Tools for checking and comparing package versions
 
 See the individual module documentation for more detailed API information.
-"""  # noqa: D212, D415
-
-from __future__ import annotations
-
-from dsbase.common import Singleton
-from dsbase.log import LocalLogger, TimeAwareLogger
-from dsbase.text import Text
-from dsbase.time import TZ, TimeParser
-from dsbase.tools import configure_traceback
+"""

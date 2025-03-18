@@ -3,63 +3,26 @@ from __future__ import annotations
 import functools
 import inspect
 import logging
-import sys
 import time
-import traceback
 import types
 from functools import wraps
 from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
+from dsbase.util.traceback import log_traceback
+
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
-
-    from dsbase.types import ExcInfo
-
-try:
-    from pygments import highlight
-    from pygments.formatters import TerminalFormatter
-    from pygments.lexers import PythonTracebackLexer
-
-    pygments_available = True
-except ImportError:
-    pygments_available = False
 
 T = TypeVar("T")
 P = ParamSpec("P")
 
 
-def log_traceback(exc_info: ExcInfo | None = None, trim_levels: int = 0) -> None:
-    """Log a traceback, optionally trimming unwanted levels."""
-    # Unpack traceback info
-    exc_type, exc_value, exc_traceback = exc_info or sys.exc_info()
-
-    # Trim traceback to set number of levels
-    for _ in range(trim_levels):
-        if exc_traceback is not None:
-            exc_traceback = exc_traceback.tb_next
-
-    # Log traceback and exception details
-    if exc_value is not None and exc_traceback is not None:
-        tb_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
-        tb = "".join(tb_list)
-        if pygments_available:
-            tb = highlight(tb, PythonTracebackLexer(), TerminalFormatter())
-        else:
-            print("Can't colorize traceback because Pygments is not installed.")
-        sys.stderr.write(tb)
-
-
-def configure_traceback() -> None:
-    """Configure the system to log tracebacks for unhandled exceptions."""
-    sys.excepthook = lambda exctype, value, tb: log_traceback((exctype, value, tb))
-
-
 def catch_errors(
     show_tb: bool = True,
-    on_error: Callable | None = None,
+    on_error: Callable[..., Any] | None = None,
     default_return: Any | None = None,
     trim_levels: int = 1,
-) -> Callable:
+) -> Callable[..., Any]:
     """Enhance functions with advanced error handling and logging.
 
     Args:
@@ -74,7 +37,7 @@ def catch_errors(
             removing wrapper functions from the traceback. Defaults to 1.
     """
 
-    def error_decorator(func: Callable) -> Callable:
+    def error_decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
         def error_catcher(*args: Any, **kwargs: Any) -> Any:
             logger = get_logger_for_caller(func, *args)
@@ -104,7 +67,7 @@ def catch_errors(
     return error_decorator
 
 
-def get_logger_for_caller(func: Callable, *args: Any) -> logging.Logger:
+def get_logger_for_caller(func: Callable[..., Any], *args: Any) -> logging.Logger:
     """Get the logger from the instance or module, or use the default logger."""
     instance = args[0] if args and not isinstance(args[0], types.ModuleType) else None
     return getattr(instance, "logger", None) or logging.getLogger(func.__module__)
@@ -131,7 +94,7 @@ def get_caller_name(start_index: int = 1) -> str | None:
     return None  # If no suitable function is found, return None
 
 
-def get_formatted_error(func: Callable, e: Exception, trim_levels: int = 0) -> str:
+def get_formatted_error(func: Callable[..., Any], e: Exception, trim_levels: int = 0) -> str:
     """Format error message with caller name and exception type."""
     error_msg = "{exception_type} in '{func_name}': {error} (called by '{caller}')"
 

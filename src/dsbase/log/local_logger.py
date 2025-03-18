@@ -12,9 +12,9 @@ from logging import Logger
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-from dsbase.common import Singleton
 from dsbase.log.log_formatters import CustomFormatter, FileFormatter
 from dsbase.log.log_metadata import LogLevel
+from dsbase.util import Singleton
 
 
 class LocalLogger(metaclass=Singleton):

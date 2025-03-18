@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from .env import DSEnvBuilder
+    from .dsenv import DSEnvBuilder
 
 T = TypeVar("T")
 
