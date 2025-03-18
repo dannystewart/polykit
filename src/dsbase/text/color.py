@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, Any
 
-from dsbase.util.decorators import deprecated
+from dsbase.util.deprecate import deprecated
 
 if TYPE_CHECKING:
     from dsbase.text.types import ColorAttrs, ColorName
