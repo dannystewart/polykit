@@ -8,6 +8,8 @@ from typing import Any, Literal
 
 from packaging import version
 
+type PackageSource = Literal["pypi", "github", "gitlab", "git", "auto"]
+
 
 @dataclass
 class VersionInfo:
@@ -183,7 +185,7 @@ class VersionChecker:
     def check_package(
         self,
         package: str,
-        source: Literal["pypi", "github", "gitlab", "git", "auto"] = "auto",
+        source: PackageSource = "auto",
         **kwargs: Any,
     ) -> VersionInfo:
         """Check a package's installed and latest versions.
