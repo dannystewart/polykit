@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
 from halo import Halo
 
-from dsbase.text import print_colored
 from dsbase.util.traceback import log_traceback
 
 if TYPE_CHECKING:
@@ -137,6 +136,8 @@ def with_retries[T](operation_func: Callable[..., T]) -> Callable[..., T]:
                     return operation_func(*args, **kwargs)
             except subprocess.CalledProcessError as e:
                 last_exception = e
+                from dsbase.text import print_colored
+
                 print_colored(
                     f"Failed to complete: {operation_func.__name__}, retrying... ({attempt + 1} out of {retries})",
                     "yellow",
