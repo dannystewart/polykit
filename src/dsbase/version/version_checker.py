@@ -43,7 +43,7 @@ class VersionChecker:
 
         Args:
             import_requests: Whether to import the requests library. Set to False to avoid the
-                dependency if you won't be checking PyPI versions. Defaults to True.
+                             dependency if you won't be checking PyPI versions. Defaults to True.
         """
         self._requests = None
         if import_requests:
