@@ -1,4 +1,4 @@
-# Ruff config version: 13
+# Ruff config version: 14
 # -----------------------
 
 # Files and directories to exclude
@@ -38,7 +38,7 @@ quote-style = "double"
 indent-style = "space"
 
 # Respect magic trailing commas
-skip-magic-trailing-comma = false
+skip-magic-trailing-comma = true
 
 # Enable auto-formatting of code examples in docstrings
 docstring-code-format = true
@@ -176,7 +176,7 @@ suppress-none-returning = true
 allow-multiline = false
 
 [lint.flake8-quotes]
-docstring-quotes = "single"
+docstring-quotes = "double"
 
 [lint.isort]
 required-imports = ["from __future__ import annotations"]
