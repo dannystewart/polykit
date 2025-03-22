@@ -1,4 +1,4 @@
-# Ruff config version: 14
+# Ruff config version: 15
 # -----------------------
 
 # Files and directories to exclude
@@ -38,7 +38,7 @@ quote-style = "double"
 indent-style = "space"
 
 # Respect magic trailing commas
-skip-magic-trailing-comma = true
+skip-magic-trailing-comma = false
 
 # Enable auto-formatting of code examples in docstrings
 docstring-code-format = true
@@ -158,8 +158,8 @@ ignore = [
 # Allow fix for all enabled rules (when `--fix`) is provided
 fixable = ["ALL"]
 
-# Prevent removal of unused variables (to avoid removing while working)
-unfixable = ["F841"]
+# Prevent removing unused variables and auto-adding self to classes
+unfixable = ["F841", "N805"]
 
 # Allow unused variables when underscore-prefixed
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
