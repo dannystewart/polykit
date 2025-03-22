@@ -63,7 +63,7 @@ class DSPaths:
     version: str | None = None
     create_dirs: bool = True
 
-    def __post_init__(self) -> None:
+    def __post_init__(self):
         """Initialize platform directories."""
         # Get app author and domain prefix from environment variables if available
         env = DSEnv()
