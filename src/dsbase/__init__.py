@@ -24,5 +24,7 @@ See the individual module documentation for more detailed API information.
 from __future__ import annotations
 
 from dsbase.env import EnvManager
+from dsbase.files import FileManager
 from dsbase.log import LocalLogger
+from dsbase.media import MediaManager
 from dsbase.paths import PathKeeper
