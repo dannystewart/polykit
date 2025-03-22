@@ -4,11 +4,21 @@ from __future__ import annotations
 
 import subprocess
 from dataclasses import dataclass
-from typing import Any, Literal
+from enum import StrEnum
+from typing import Any
 
+import requests
 from packaging import version
 
-type PackageSource = Literal["pypi", "github", "gitlab", "git", "auto"]
+
+class PackageSource(StrEnum):
+    """Source for package version information."""
+
+    PYPI = "pypi"
+    GITHUB = "github"
+    GITLAB = "gitlab"
+    GIT = "git"
+    AUTO = "auto"
 
 
 @dataclass
@@ -38,22 +48,6 @@ class VersionInfo:
 class VersionChecker:
     """Check for package versions from various sources."""
 
-    def __init__(self, import_requests: bool = True):
-        """Initialize the version checker.
-
-        Args:
-            import_requests: Whether to import the requests library. Set to False to avoid the
-                             dependency if you won't be checking PyPI versions. Defaults to True.
-        """
-        self._requests = None
-        if import_requests:
-            try:
-                import requests
-
-                self._requests = requests
-            except ImportError:
-                pass
-
     def get_installed_version(self, package: str) -> str | None:
         """Get the currently installed version of a package.
 
@@ -79,16 +73,8 @@ class VersionChecker:
         Returns:
             The latest version string or None if not found.
         """
-        if not self._requests:
-            try:
-                import requests
-
-                self._requests = requests
-            except ImportError:
-                return None
-
         try:
-            response = self._requests.get(f"https://pypi.org/pypi/{package}/json", timeout=5)
+            response = requests.get(f"https://pypi.org/pypi/{package}/json", timeout=5)
             if response.status_code == 200:
                 return response.json()["info"]["version"]
             return None
@@ -185,7 +171,7 @@ class VersionChecker:
     def check_package(
         self,
         package: str,
-        source: PackageSource = "auto",
+        source: PackageSource = PackageSource.AUTO,
         **kwargs: Any,
     ) -> VersionInfo:
         """Check a package's installed and latest versions.
@@ -207,16 +193,15 @@ class VersionChecker:
         current = self.get_installed_version(package)
         latest = None
 
-        if source == "auto":
+        if source == PackageSource.AUTO:
             # Try PyPI first, then fallback
-            latest = self.get_pypi_version(package)
-            if latest:
-                source = "pypi"
+            if latest := self.get_pypi_version(package):
+                source = PackageSource.PYPI
 
-        elif source == "pypi":
+        elif source == PackageSource.PYPI:
             latest = self.get_pypi_version(package)
 
-        elif source == "github":
+        elif source == PackageSource.GITHUB:
             owner = kwargs.get("owner")
             repo = kwargs.get("repo", package)
             use_ssh = kwargs.get("use_ssh", False)
@@ -228,7 +213,7 @@ class VersionChecker:
 
             latest = self.get_github_version(owner, repo, use_ssh, tag_prefix)
 
-        elif source == "gitlab":
+        elif source == PackageSource.GITLAB:
             host = kwargs.get("host", "gitlab.com")
             owner = kwargs.get("owner")
             repo = kwargs.get("repo", package)
@@ -241,7 +226,7 @@ class VersionChecker:
 
             latest = self.get_gitlab_version(host, owner, repo, use_ssh, tag_prefix)
 
-        elif source == "git":
+        elif source == PackageSource.GIT:
             repo_url = kwargs.get("repo_url")
             tag_prefix = kwargs.get("tag_prefix", "v")
 
