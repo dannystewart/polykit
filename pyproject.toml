@@ -1,6 +1,6 @@
 [project]
 name = "dsbase"
-version = "0.2.2"
+version = "0.3.0"
 description = "Python utilities and helpers for logging, environment management, file operations, and more"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
 readme = "README.md"
@@ -21,6 +21,7 @@ dependencies = [
     "requests (>=2.32.3,<3.0.0)",
     "send2trash (>=1.8.3,<2.0.0)",
     "termcolor (>=2.5.0,<3.0.0)",
+    "tomlkit (>=0.13.2,<0.14.0)",
     "types-requests (>=2.32.0.20250306,<3.0.0.0)",
     "types-send2trash (>=1.8.2.7,<2.0.0.0)",
     "tzdata (>=2025.1)",

@@ -651,6 +651,18 @@ files = [
 tests = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "tomlkit"
+version = "0.13.2"
+description = "Style preserving TOML library"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "tomlkit-0.13.2-py3-none-any.whl", hash = "sha256:7a974427f6e119197f670fbbbeae7bef749a6c14e793db934baefc1b5f03efde"},
+    {file = "tomlkit-0.13.2.tar.gz", hash = "sha256:fff5fe59a87295b278abd31bec92c15d9bc4a06885ab12bcea52c71119392e79"},
+]
+
+[[package]]
 name = "types-requests"
 version = "2.32.0.20250306"
 description = "Typing stubs for requests"
@@ -765,4 +777,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "aecccb9b6bd788b2a8df2656e64edeb1d3e4cb3795cad52a4030221e4daa39d1"
+content-hash = "cbb22ad1310169426c322e419b149aa19d2c20d00aa27e34c02ed3e8d34798ba"
