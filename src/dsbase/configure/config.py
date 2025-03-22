@@ -12,7 +12,7 @@ from tomlkit import TOMLDocument
 from dsbase.configure.attr_dict import AttrDict
 from dsbase.configure.watchers import ConfigWatcher
 from dsbase.log import LocalLogger
-from dsbase.paths import DSPaths
+from dsbase.paths import PathKeeper
 from dsbase.text import Text
 
 if TYPE_CHECKING:
@@ -67,14 +67,15 @@ class Config:
         if auto_reload:
             self.start_file_watching()
 
-    def get_config_path(self) -> Path:
+    @property
+    def config_path(self) -> Path:
         """Get the path to the configuration directory."""
-        return DSPaths(self.config_name).get_config_path()
+        return PathKeeper(self.config_name).config_dir
 
     def load_config_files(self) -> SettingsDict:
         """Load all configuration files from the config directory."""
         settings = AttrDict()
-        config_dir = self.get_config_path()
+        config_dir = self.config_path
 
         # Get all config files and load them in order
         config_files = sorted(
@@ -100,7 +101,7 @@ class Config:
 
     def start_file_watching(self) -> None:
         """Set up file watching for the config directory and existing config files."""
-        config_dir = self.get_config_path()
+        config_dir = self.config_path
 
         # Watch the config directory
         ConfigWatcher().watch_directory(str(config_dir), self.reload_on_file_change)
