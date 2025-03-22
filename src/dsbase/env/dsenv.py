@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 from dsbase.log import LocalLogger
 
-from .env_var import EnvVar, VarAdder, default_env_files
+from .env_var import EnvVar, default_env_files
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -211,41 +211,3 @@ class DSEnv:
             f"Valid false values: {', '.join(sorted(false_values))}."
         )
         raise ValueError(msg)
-
-    @classmethod
-    def create(cls) -> DSEnvBuilder:
-        """Create a new environment configuration."""
-        return DSEnvBuilder()
-
-
-class DSEnvBuilder:
-    """Builder class for creating a DSEnv instance with type-checked environment variables.
-
-    NOTE: This is unsupported. It's recommended to use the DSEnv class directly.
-    """
-
-    def __init__(self):
-        self.vars: dict[str, EnvVar] = {}
-        self.attr_names: dict[str, str] = {}
-        self.values: dict[str, Any] = {}
-        self._var_adder = VarAdder(self)
-
-    @property
-    def add_var(self) -> VarAdder:
-        """Helper property for adding environment variables with type hints."""
-        return self._var_adder
-
-    @classmethod
-    def __class_getitem__(cls, item: type[T]) -> type[T]:
-        return item
-
-    def build(self) -> DSEnv:
-        """Create a DSEnv instance with these variables."""
-        from dsbase.env.dsenv import DSEnv
-
-        env = DSEnv()
-        env.vars = self.vars
-        env.attr_names = self.attr_names
-        env.values = self.values
-
-        return env
