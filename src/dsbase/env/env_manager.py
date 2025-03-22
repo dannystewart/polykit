@@ -68,15 +68,23 @@ class EnvManager:
         """Load environment variables from specified files."""
         if self.env_file is None:
             self.env_file = self.DEFAULT_ENV_FILES
+            self.logger.debug("Using default env files: %s", self.DEFAULT_ENV_FILES)
 
         env_files = [self.env_file] if isinstance(self.env_file, (str, Path)) else self.env_file
         for file in env_files:
             full_path = Path(file).expanduser() if isinstance(file, str) else file.expanduser()
+            self.logger.debug("Checking for env file: %s", full_path)
             if full_path.exists():
                 self.logger.debug("Loading environment from: %s", full_path)
-                load_dotenv(str(full_path), override=False)
+                load_dotenv(str(full_path), override=True)
             else:
                 self.logger.debug("Environment file not found: %s", full_path)
+
+        # Final check
+        self.logger.debug(
+            "Environment variables after loading: %s",
+            [k for k in os.environ if k.startswith("ADMIN")],
+        )
 
     def validate_all(self) -> None:
         """Validate all registered environment variables at once.
