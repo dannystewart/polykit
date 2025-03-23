@@ -79,7 +79,6 @@ def async_handle_interrupt(
     exit_code: int = 1,
     callback: Callable[..., Any] | None = None,
     use_newline: bool = False,
-    use_logging: bool = False,
     logger: logging.Logger | None = None,
 ) -> Callable[[Callable[..., Awaitable[T]]], Callable[..., Awaitable[T]]]:
     """Handle KeyboardInterrupt exceptions in async functions."""
@@ -104,17 +103,28 @@ def async_handle_interrupt(
                     else:
                         callback(*args, **kwargs)
 
-                log_message = message  # Assuming color() was imported
-                if logger:
-                    logger.info(log_message)
-                elif use_logging:
+                if logger:  # Use supplied logger
+                    logger.error(message)
+                else:  # Create new logger
                     from dsbase.log import LocalLogger
 
-                    LocalLogger().get_logger().info(log_message)
-                else:
-                    print(log_message)
+                    LocalLogger().get_logger(simple=True).error(message)
                 sys.exit(exit_code)
 
         return wrapper
 
     return decorator
+
+
+def async_with_handle_interrupt[T](
+    func: Callable[..., Awaitable[T]],
+    *args: Any,
+    message: str = "Interrupted by user. Exiting...",
+    logger: logging.Logger | None = None,
+    **kwargs: Any,
+) -> T:
+    """Run an async function with interrupt handling."""
+    import asyncio
+
+    decorated = async_handle_interrupt(message=message, logger=logger)(func)
+    return asyncio.run(decorated(*args, **kwargs))  # type: ignore
