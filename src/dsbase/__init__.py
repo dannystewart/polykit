@@ -28,3 +28,4 @@ from dsbase.files import FileManager
 from dsbase.log import LocalLogger
 from dsbase.media import MediaManager
 from dsbase.paths import PathKeeper
+from dsbase.text import Text
