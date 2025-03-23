@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from enum import StrEnum
 from typing import Any
 
-from dsbase.text.types import SMART_QUOTES_TABLE
+from dsbase.text.types import SMART_QUOTES_TABLE, ColorAttrs, ColorName
 
 
 class Text(StrEnum):
@@ -14,6 +14,48 @@ class Text(StrEnum):
     MARKDOWN = "Markdown"
     MARKDOWN_V2 = "MarkdownV2"
     HTML = "HTML"
+
+    @staticmethod
+    def color(text: Any, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
+        """Use termcolor to return a string in the specified color if termcolor is available.
+        Otherwise, gracefully falls back to returning the text as is.
+
+        Args:
+            text: The text to colorize. If it's not a string, it'll try to convert to one.
+            color_name: The name of the color. Has to be a color from ColorName.
+            attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
+        """
+        text = str(text)  # Ensure text is a string
+
+        try:
+            from termcolor import colored
+        except ImportError:
+            return text
+
+        return colored(text, color_name, attrs=attrs)
+
+    @staticmethod
+    def print_colored(
+        text: Any, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
+    ) -> None:
+        r"""Use termcolor to print text in the specified color if termcolor is available.
+        Otherwise, gracefully falls back to printing the text as is.
+
+        Args:
+            text: The text to print in color. If it's not a string, it'll try to convert to one.
+            color_name: The name of the color. Has to be a color from ColorName.
+            end: The string to append after the last value. Defaults to "\n".
+            attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
+        """
+        text = str(text)  # Ensure text is a string
+
+        try:
+            from termcolor import colored
+        except ImportError:
+            print(text, end=end)
+            return
+
+        print(colored(text, color_name, attrs=attrs), end=end)
 
     def escape(self, text: str) -> str:
         """Escape special characters based on the current text type."""
