@@ -11,10 +11,14 @@ import logging.config
 from logging import Logger
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dsbase.log.log_formatters import CustomFormatter, FileFormatter
 from dsbase.log.log_metadata import LogLevel
 from dsbase.util import Singleton
+
+if TYPE_CHECKING:
+    from dsbase.env import EnvManager
 
 
 class LocalLogger(metaclass=Singleton):
@@ -32,24 +36,30 @@ class LocalLogger(metaclass=Singleton):
     def get_logger(
         self,
         logger_name: str | None = None,
-        level: int | str = "debug",
+        level: int | str = "INFO",
         simple: bool = False,
         show_context: bool = False,
         color: bool = True,
         log_file: Path | None = None,
+        env: EnvManager | None = None,
     ) -> Logger:
         """Set up a logger with the given name and log level.
 
         Args:
             logger_name: The name of the logger. If None, the class or module name is used.
-            level: The log level. Defaults to 'debug'.
+            level: The log level. Defaults to 'INFO'.
             simple: Use simple format that displays only the log message itself. Defaults to False.
             show_context: Show the class and function name in the log message. Defaults to False.
             color: Use color in the log output. Defaults to True.
             log_file: Path to a desired log file. Defaults to None, which means no file logging.
+            env: An optional EnvManager instance to get the log level from.
         """
         logger_name = LocalLogger().get_logger_name(logger_name)
         logger = logging.getLogger(logger_name)
+
+        # Use the log level from EnvManager if we have it, unless we're already at DEBUG level
+        if env is not None and level != "DEBUG":
+            level = env.log_level
 
         if not logger.handlers:
             log_level = LogLevel.get_level(level)
