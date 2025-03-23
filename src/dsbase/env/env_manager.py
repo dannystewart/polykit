@@ -124,9 +124,6 @@ class EnvManager:
             var_type: Type to convert value to (e.g. int, float, str, bool).
             description: Human-readable description.
             secret: Whether to mask the value in logs.
-
-        Raises:
-            ValueError: If the variable is required and not set.
         """
         # If a default is provided or variable is not required, ensure consistency
         if not required:
@@ -153,11 +150,6 @@ class EnvManager:
             description=description,
             secret=secret,
         )
-
-        try:  # Validate the variable as soon as it's added
-            self.get(name)
-        except Exception as e:
-            raise ValueError(str(e)) from e
 
     def add_vars(self, *vars: EnvVar) -> None:  # noqa: A002
         """Add multiple environment variables at once.
