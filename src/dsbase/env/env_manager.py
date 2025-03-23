@@ -109,7 +109,7 @@ class EnvManager:
         name: str,
         attr_name: str | None = None,
         required: bool = True,
-        default: Any = None,
+        default: Any = "",
         var_type: Callable[[str], Any] = str,
         description: str = "",
         secret: bool = False,
@@ -128,10 +128,18 @@ class EnvManager:
         Raises:
             ValueError: If the variable is required and not set.
         """
-        # If a default is provided, the variable can't be required
-        if default is not None and required:
+        # If a default is provided or variable is not required, ensure consistency
+        if not required:
+            # Ensure non-required vars have a default (empty string is fine)
+            if default is None:
+                default = ""
+        elif default not in {None, ""}:
+            # If required=True but a non-empty default is provided, that's a logical conflict
+            self.logger.warning(
+                "Variable %s marked as required but has default value. Setting required=False.",
+                name,
+            )
             required = False
-            self.logger.debug("Variable %s has default value, setting required=False.", name)
 
         # Use provided attr_name or convert ENV_VAR_NAME to env_var_name
         attr = attr_name or name.lower()
