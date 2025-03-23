@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 from dotenv import load_dotenv
 
 from dsbase.log import LocalLogger
+from dsbase.util import Singleton
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -47,7 +48,7 @@ class EnvVar:
 
 
 @dataclass
-class EnvManager:
+class EnvManager(metaclass=Singleton):
     """Manage environment variables in a friendly way."""
 
     DEFAULT_ENV_FILES: ClassVar[list[Path]] = [Path(".env"), Path("~/.env").expanduser()]
