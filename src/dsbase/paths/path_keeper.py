@@ -82,8 +82,8 @@ class PathKeeper:
     def __post_init__(self):
         # Get app author and domain prefix from environment variables if available
         env_man = EnvManager()
-        env_man.add_var("PathKeeper_APP_AUTHOR", attr_name="app_author", required=False)
-        env_man.add_var("PathKeeper_APP_DOMAIN_PREFIX", attr_name="app_domain", required=False)
+        env_man.add_var("PATHKEEPER_APP_AUTHOR", attr_name="app_author", required=False)
+        env_man.add_var("PATHKEEPER_APP_DOMAIN_PREFIX", attr_name="app_domain", required=False)
 
         # Set these if they exist in the environment and weren't otherwise supplied
         if self.app_author is None and hasattr(env_man, "app_author") and env_man.app_author:
@@ -130,7 +130,8 @@ class PathKeeper:
         """Join paths and create parent directory if needed."""
         path = base_dir.joinpath(*paths)
         if self.create_dirs and not no_create:
-            path.parent.mkdir(parents=True, exist_ok=True)
+            if not path.exists() or not path.is_file():
+                path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
@@ -256,24 +257,17 @@ class PathKeeper:
         return self._join_path(self.cache_dir, paths, no_create)
 
     def from_config(
-        self, *paths: str | Path, no_create: bool = False, legacy: bool = False
+        self, *paths: str | Path, no_create: bool = False, home_root: bool = False
     ) -> Path:
         """Get a path in the config directory.
 
         Args:
             *paths: Path components to join (e.g. 'subfolder', 'file.txt').
             no_create: Whether to avoid creating directories that don't exist.
-            legacy: If True, use ~/.config instead of platform-specific location.
+            home_root: If True, use ~/.config instead of platform-specific location.
         """
-        if legacy:
-            base = Path.home() / ".config" / self.app_name
-            path = Path(base).joinpath(*paths)
-        else:
-            path = Path(self.config_dir).joinpath(*paths)
-
-        if self.create_dirs and not no_create:
-            path.parent.mkdir(parents=True, exist_ok=True)
-        return path
+        base = Path.home() / ".config" / self.app_name if home_root else self.config_dir
+        return self._join_path(base, paths, no_create)
 
     def from_log(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the log directory.
