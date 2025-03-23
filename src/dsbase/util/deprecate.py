@@ -76,7 +76,11 @@ def _log_and_warn(
     instance: Any | None, func: Callable[..., Any], message: str, category: type[Warning]
 ) -> None:
     """Log a message and emit a warning."""
-    logger = getattr(instance, "logger", None) or logging.getLogger(func.__module__)
+    logger = getattr(instance, "logger", None)
+    if logger is None:
+        from dsbase.log import LocalLogger
+
+        logger = LocalLogger().get_logger(func.__module__, simple=True)
 
     # Temporarily enable the specified warning category for our own code
     with warnings.catch_warnings():
