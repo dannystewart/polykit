@@ -16,7 +16,11 @@ class Text(StrEnum):
     HTML = "HTML"
 
     @staticmethod
-    def color(text: Any, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
+    def color(
+        text: Any,
+        color_name: ColorName | None = None,
+        attrs: ColorAttrs | None = None,
+    ) -> str:
         """Use termcolor to return a string in the specified color if termcolor is available.
         Otherwise, gracefully falls back to returning the text as is.
 
@@ -26,17 +30,19 @@ class Text(StrEnum):
             attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
         """
         text = str(text)  # Ensure text is a string
-
         try:
             from termcolor import colored
         except ImportError:
             return text
 
-        return colored(text, color_name, attrs=attrs)
+        return colored(text, color_name, attrs=attrs) if color_name else text
 
     @staticmethod
     def color_print(
-        text: Any, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
+        text: Any,
+        color_name: ColorName | None = None,
+        end: str = "\n",
+        attrs: ColorAttrs | None = None,
     ) -> None:
         r"""Use termcolor to print text in the specified color if termcolor is available.
         Otherwise, gracefully falls back to printing the text as is.
@@ -48,14 +54,16 @@ class Text(StrEnum):
             attrs: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
         """
         text = str(text)  # Ensure text is a string
-
         try:
             from termcolor import colored
         except ImportError:
             print(text, end=end)
             return
 
-        print(colored(text, color_name, attrs=attrs), end=end)
+        if color_name:
+            print(colored(text, color_name, attrs=attrs), end=end)
+        else:
+            print(text, end=end)
 
     def escape(self, text: str) -> str:
         """Escape special characters based on the current text type."""
