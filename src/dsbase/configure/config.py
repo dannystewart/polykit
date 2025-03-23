@@ -14,6 +14,7 @@ from dsbase.configure.watchers import ConfigWatcher
 from dsbase.log import LocalLogger
 from dsbase.paths import PathKeeper
 from dsbase.text import Text
+from dsbase.util.deprecate import not_yet_implemented
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -25,6 +26,7 @@ T = TypeVar("T")
 type SettingsDict = AttrDict[str, Any]
 
 
+@not_yet_implemented("Configuration system is not yet implemented.")
 class Config:
     """Configuration management with support for multiple file formats and automatic reloading."""
 

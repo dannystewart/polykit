@@ -6,6 +6,7 @@ from threading import Lock
 from typing import TYPE_CHECKING, Any
 
 from dsbase.log import LocalLogger
+from dsbase.util.deprecate import not_yet_implemented
 from dsbase.util.singleton import Singleton
 
 if TYPE_CHECKING:
@@ -15,6 +16,7 @@ if TYPE_CHECKING:
     from watchdog.events import FileSystemEvent
 
 
+@not_yet_implemented("Configuration system is not yet implemented.")
 class ConfigFileHandler:
     """Handler for configuration file system events."""
 
@@ -76,6 +78,7 @@ class ConfigFileHandler:
                 self.logger.error("Error in callback: %s", str(e))
 
 
+@not_yet_implemented("Configuration system is not yet implemented.")
 class ConfigWatcher(metaclass=Singleton):
     """Watches configuration files for changes and triggers reloads."""
 
