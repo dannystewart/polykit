@@ -18,4 +18,4 @@ Some of the features include:
 - Simple helpers for progress indication, shell handling, and text manipulation
 - Various time parsers and utilities
 
-The library continues to evolve and expand on a regular basis, so more will come over time.
+**NOTE:** This library is constantly evolving, and I would love for you to use it but I recommend pinning specific versions for now. I try to be careful about breaking changes in patch releases but there is still a lot of active development.
