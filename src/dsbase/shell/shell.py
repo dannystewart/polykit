@@ -101,7 +101,7 @@ def get_single_char_input(prompt: str = "") -> str:
 
 
 def confirm_action(
-    prompt: str, default_to_yes: bool = False, prompt_color: ColorName = "white"
+    prompt: str, default_to_yes: bool = False, prompt_color: ColorName | None = None
 ) -> bool:
     """Ask the user to confirm an action before proceeding.
 
