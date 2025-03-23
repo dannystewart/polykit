@@ -101,27 +101,3 @@ def _log_and_warn(
     logger = LocalLogger().get_logger(simple=True)
     log_level = logging.WARNING if warn_type is DeprecationWarning else logging.ERROR
     logger.log(log_level, "%s (%s)", message, location)
-
-
-def _log_extra_details(filename: str | None, line_num: int | None, function: str | None) -> None:  # type: ignore
-    """Log the extra details of the deprecated function. This function is not used."""
-    if filename and line_num:
-        with Path(filename).open("r", encoding="utf-8") as f:
-            lines = f.readlines()
-            if 0 <= line_num - 1 < len(lines):
-                _format_details(lines, filename, line_num, function)
-
-
-def _format_details(lines: list[str], filename: str, line_num: int, function: str | None) -> None:
-    """Print the details of the deprecated function. This function is not used."""
-    from dsbase.text import Text
-
-    name = Text.color(Path(filename).name, "blue") if filename else "unknown"
-    line = Text.color(str(line_num), "cyan")
-    function = Text.color(function, "blue")
-
-    location = f"{name}:{line} in {function}" if filename and line else ""
-    print(f"  {location}")
-
-    code_line = Text.color(lines[line_num - 1].strip(), "light_grey")
-    print(f"  {Text.color('->', 'blue')} {code_line}\n")
