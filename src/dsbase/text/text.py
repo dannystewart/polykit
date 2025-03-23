@@ -35,7 +35,7 @@ class Text(StrEnum):
         return colored(text, color_name, attrs=attrs)
 
     @staticmethod
-    def print_colored(
+    def color_print(
         text: Any, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
     ) -> None:
         r"""Use termcolor to print text in the specified color if termcolor is available.

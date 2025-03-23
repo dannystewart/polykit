@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from dsbase.text.types import ColorAttrs, ColorName
 
 
-@deprecated("Use Text class or LocalLogger instead.")
+@deprecated("Use Text.color or LocalLogger instead.")
 def color(text: Any, color_name: ColorName, attrs: ColorAttrs | None = None) -> str:
     """Use termcolor to return a string in the specified color if termcolor is available.
     Otherwise, gracefully falls back to returning the text as is.
@@ -32,7 +32,7 @@ def color(text: Any, color_name: ColorName, attrs: ColorAttrs | None = None) -> 
     return colored(text, color_name, attrs=attrs)
 
 
-@deprecated("Use Text class or LocalLogger instead.")
+@deprecated("Use Text.color_print or LocalLogger instead.")
 def print_colored(
     text: Any, color_name: ColorName, end: str = "\n", attrs: ColorAttrs | None = None
 ) -> None:
