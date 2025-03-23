@@ -66,7 +66,7 @@ class EnvManager:
 
     def _load_env_files(self) -> None:
         """Load environment variables from specified files."""
-        if self.env_file is None:
+        if not self.env_file:
             self.env_file = self.DEFAULT_ENV_FILES
             self.logger.debug("Using default env files: %s", self.DEFAULT_ENV_FILES)
 
