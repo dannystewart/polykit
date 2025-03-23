@@ -86,6 +86,12 @@ class EnvManager:
             else:
                 self.logger.debug("No %s found: %s", path_str, abs_path)
 
+    def refresh(self) -> None:
+        """Reload environment variables from files and clear cached values."""
+        self._load_env_files()
+        self.values.clear()
+        self.logger.info("EnvManager environment flushed and reloaded.")
+
     def validate_all(self) -> None:
         """Validate all registered environment variables at once.
 
