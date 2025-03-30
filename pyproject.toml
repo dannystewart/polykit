@@ -3,8 +3,8 @@ name = "dsbase"
 version = "0.4.1"
 description = "Delightful Python utility library with power and personality"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
-readme = "README.md"
 urls = { repository = "https://github.com/dannystewart/dsbase" }
+readme = "README.md"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.14"
@@ -31,7 +31,7 @@ dependencies = [
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.15.0"
-pdoc = "^15.0.1"
+pdoc = ">=15.0.1"
 ruff = ">=0.11.2"
 
 [build-system]
