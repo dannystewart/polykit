@@ -6,10 +6,18 @@ from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from dsbase.log import LocalLogger
+from dsbase import LocalLogger
 
 if TYPE_CHECKING:
     from logging import Logger
+
+
+class DiffStyle(StrEnum):
+    """Style of diff output."""
+
+    COLORED = "colored"
+    SIMPLE = "simple"
+    MINIMAL = "minimal"
 
 
 @dataclass
@@ -22,14 +30,6 @@ class DiffResult:
     deletions: list[str]
 
 
-class DiffStyle(StrEnum):
-    """Style of diff output."""
-
-    COLORED = "colored"
-    SIMPLE = "simple"
-    MINIMAL = "minimal"
-
-
 def diff_files(
     old_path: str | Path,
     new_path: str | Path,
@@ -40,7 +40,7 @@ def diff_files(
     Args:
         old_path: The original file to be compared against the new file.
         new_path: The new file which, if different, would overwrite the original content.
-        style: Styling to use for displaying the diff output. Defaults to colored.
+        style: The styling to use for the diff output. Defaults to colored.
 
     Returns:
         DiffResult containing the changes found.
@@ -63,11 +63,15 @@ def show_diff(
 ) -> DiffResult:
     """Show a unified diff between old and new content.
 
+    If a filename is provided, it will be used in log messages for context. If a logger is provided,
+    additional information will be logged. To skip logging altogether (apart from the diff itself),
+    make sure you don't pass a filename or a logger.
+
     Args:
         old: The original content to be compared against the new content.
         new: The new content which, if different, would overwrite the original content.
         filename: An optional filename to include in log messages for context.
-        style: The styling to use for displaying the diff output. Defaults to colored.
+        style: The styling to use for the diff output. Defaults to colored.
         logger: An optional external logger to use. Otherwise a local logger is created.
 
     Returns:
@@ -115,24 +119,50 @@ def _process_diff_line(
     if not _should_show_line(line, style):
         return
 
+    # Log with normalized spacing
+    normalized_line = _normalize_diff_line(line)
     if style == DiffStyle.COLORED:
         if line.startswith("+"):
-            log_func.info("  %s", line.rstrip())
+            log_func.info("  %s", normalized_line)
         elif line.startswith("-"):
-            log_func.warning("  %s", line.rstrip())
+            log_func.warning("  %s", normalized_line)
         else:
             log_func.debug("  %s", line.rstrip())
     else:
-        log_func.info("  %s", line.rstrip())
+        log_func.info("  %s", normalized_line if line.startswith(("+", "-")) else line.rstrip())
 
     if line.startswith("+"):
-        additions.append(line.rstrip())
+        additions.append(normalized_line)
     elif line.startswith("-"):
-        deletions.append(line.rstrip())
+        deletions.append(normalized_line)
+
+
+def _normalize_diff_line(line: str) -> str:
+    """Normalize a diff line by adding one additional space after the diff marker."""
+    # Normalize spacing only between the prefix and content
+    if line.startswith(("+", "-")):
+        prefix = line[0]
+        if len(line) > 1:
+            if line[1] == " " and (len(line) == 2 or line[2] != " "):
+                # Already has exactly one space, keep as is
+                normalized_line = line.rstrip()
+            elif line[1] == " ":
+                # Has multiple spaces after prefix, normalize to one space
+                normalized_line = prefix + " " + line[2:].rstrip()
+            else:
+                # No space after prefix, add one
+                normalized_line = prefix + " " + line[1:].rstrip()
+        else:
+            normalized_line = prefix + " "  # Just the prefix, add a space
+    else:
+        normalized_line = line.rstrip()
+
+    return normalized_line
 
 
 def _should_show_line(line: str, style: DiffStyle) -> bool:
     """Determine if a line should be shown based on the diff style."""
-    return style in {DiffStyle.COLORED, DiffStyle.SIMPLE} or (
-        style == DiffStyle.MINIMAL and line.startswith(("+", "-"))
-    )
+    is_colored_or_simple = style in {DiffStyle.COLORED, DiffStyle.SIMPLE}
+    is_minimal = style == DiffStyle.MINIMAL
+    is_diff_marker = line.startswith(("+", "-", "@"))
+    return is_colored_or_simple or (is_minimal and is_diff_marker)

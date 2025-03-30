@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
 from dotenv import load_dotenv
 
+from dsbase.env.env_var import EnvVar
 from dsbase.log import LocalLogger
 from dsbase.util import Singleton
 
@@ -19,51 +20,39 @@ T = TypeVar("T")
 
 
 @dataclass
-class EnvVar:
-    """Represents an environment variable with validation and type conversion.
+class EnvManager(metaclass=Singleton):
+    """EnvManager is a utility class that manages environment variables in a friendly way.
+
+    This class allows you to add environment variables with type conversion, validation, and secret
+    masking. Variables can be accessed as attributes. Defaults to loading environment variables from
+    `.env` and `~/.env`, but also uses the current environment and allows specifying custom files.
+
+    For detailed logging for EnvManager itself, set the ENV_DEBUG environment variable to '1'.
 
     Args:
-        name: Environment variable name.
-        required: Whether this variable is required.
-        default: Default value if not required.
-        var_type: Type to convert value to (e.g., int, float, str, bool).
-        description: Human-readable description of the variable.
-        secret: Whether to mask the value in logs.
-
-    NOTE: var_type is used as a converter function to wrap the provided data. This means it can also
-          use custom conversion functions to get other types of data with convert(value) -> Any.
+        env_file: A list of environment files to load. Defaults to [".env", "~/.env"].
+        add_debug: Whether to add a DEBUG variable automatically. Defaults to False.
     """
-
-    name: str
-    required: bool = False
-    default: Any = None
-    var_type: Callable[[str], Any] = str
-    description: str = ""
-    secret: bool = False
-
-    def __post_init__(self) -> None:
-        if not self.required and self.default is None:
-            msg = f"Non-required variable {self.name} must have a default value"
-            raise ValueError(msg)
-
-
-@dataclass
-class EnvManager(metaclass=Singleton):
-    """Manage environment variables in a friendly way."""
 
     DEFAULT_ENV_FILES: ClassVar[list[Path]] = [Path(".env"), Path("~/.env").expanduser()]
 
     env_file: list[Path] | Path | str | None = field(default_factory=list)
+    add_debug: bool = False
+
+    logger: Logger = field(init=False)
+
     vars: dict[str, EnvVar] = field(default_factory=dict)
     values: dict[str, Any] = field(default_factory=dict)
     attr_names: dict[str, str] = field(default_factory=dict)
 
-    logger: Logger = field(init=False)
-
     def __post_init__(self):
         """Initialize with default environment variables."""
-        self.logger = LocalLogger().get_logger(level=self.log_level)
+        env_debug = self.validate_bool(os.environ.get("ENV_DEBUG", "0"))
+        self.logger = LocalLogger().get_logger(level="DEBUG" if env_debug else "INFO")
         self._load_env_files()
+
+        if self.add_debug and "DEBUG" not in self.vars:
+            self.add_debug_var()
 
     def _load_env_files(self) -> None:
         """Load environment variables from specified files."""
@@ -71,7 +60,7 @@ class EnvManager(metaclass=Singleton):
             self.env_file = self.DEFAULT_ENV_FILES
             self.logger.debug("Using default env files: %s", [str(f) for f in self.env_file])
 
-        env_files = [self.env_file] if isinstance(self.env_file, (str, Path)) else self.env_file
+        env_files = [self.env_file] if isinstance(self.env_file, str | Path) else self.env_file
         for file in env_files:
             full_path = Path(file).expanduser() if isinstance(file, str) else file.expanduser()
 
