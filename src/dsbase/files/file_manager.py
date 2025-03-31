@@ -4,6 +4,7 @@ import hashlib
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from natsort import natsorted
@@ -15,7 +16,9 @@ from dsbase.shell import confirm_action
 if TYPE_CHECKING:
     from collections.abc import Callable
     from logging import Logger
-    from pathlib import Path
+
+# Type alias due to FileManager having a `list` method
+PathList = list[Path]
 
 
 class FileManager:
@@ -94,7 +97,7 @@ class FileManager:
 
     def delete(
         self,
-        file_paths: Path | list[Path],
+        file_paths: Path | PathList,
         show_output: bool = True,
         show_individual: bool = True,
         show_total: bool = True,
@@ -214,7 +217,7 @@ class FileManager:
             self.logger.error("Error moving file: %s", str(e))
             return False
 
-    def find_dupes_by_hash(self, files: list[Path]) -> None:
+    def find_dupes_by_hash(self, files: PathList) -> None:
         """Find and print duplicate files by comparing their SHA-256 hashes.
 
         Args:
