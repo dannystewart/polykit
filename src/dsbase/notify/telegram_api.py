@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import requests
 
 from dsbase import LocalLogger
@@ -24,16 +26,16 @@ class TelegramAPIHelper:
         self.token: str = token
         self.chat_id: str = chat_id
         self.url: str = f"https://api.telegram.org/bot{self.token}"
-        self.timeouts: dict = {"sendPhoto": 30, "sendAudio": 60}
+        self.timeouts: dict[str, int] = {"sendPhoto": 30, "sendAudio": 60}
         self.default_timeout: int = 10
 
     def call_api(
         self,
         api_method: str,
-        payload: dict | None = None,
+        payload: dict[str, str] | None = None,
         timeout: int | None = None,
-        files: dict | None = None,
-    ) -> dict:
+        files: dict[str, Any] | None = None,
+    ) -> dict[str, str]:
         """Make a POST request to the Telegram API using the specified method, payload, and timeout.
 
         If timeout is not specified, it's determined dynamically based on the API method if it's a
@@ -59,7 +61,7 @@ class TelegramAPIHelper:
             Exception: If the request to the Telegram API fails.
         """
         url = f"{self.url}/{api_method}"
-        payload = {k: v for k, v in payload.items() if v is not None} if payload else {}
+        payload = dict(payload.items()) if payload else {}
         timeout = timeout or self.timeouts.get(api_method, self.default_timeout)
 
         try:

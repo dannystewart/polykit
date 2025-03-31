@@ -90,11 +90,11 @@ class TelegramSender:
         try:
             with Path(audio_path).open(encoding="utf-8") as audio_file:
                 payload = {
-                    "chat_id": chat_id or self.chat_id,
-                    "duration": duration,
-                    "title": title,
-                    "performer": performer,
-                    "caption": caption,
+                    "chat_id": str(chat_id) or str(self.chat_id),
+                    "duration": str(duration),
+                    "title": str(title),
+                    "performer": str(performer),
+                    "caption": str(caption),
                 }
                 self.api.call_api("sendAudio", payload, files={"audio": audio_file})
             return True
