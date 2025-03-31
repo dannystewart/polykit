@@ -44,6 +44,6 @@ class Singleton(type):
 
         with Singleton.__locks[cls]:
             if cls not in Singleton.__instances:
-                instance = super().__call__(*args, **kwargs)
+                instance = super().__call__(*args, **kwargs)  # type: ignore[misc]
                 Singleton.__instances[cls] = instance
             return Singleton.__instances[cls]
