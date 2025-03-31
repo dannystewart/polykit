@@ -126,7 +126,7 @@ class ArgParser(argparse.ArgumentParser):
             self._update_formatter()
         return super().format_help()
 
-    def print_help(self, file: Any = None) -> None:
+    def print_help(self, file: Any | None = None) -> None:
         """Override print_help to update formatter before printing help text."""
         if self.arg_width == "auto":
             self._update_formatter()

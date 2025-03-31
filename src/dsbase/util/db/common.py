@@ -39,7 +39,7 @@ class QueryResult[T]:
             raise TypeError(msg)
         return self.data[key]
 
-    def get(self, key: str, default: Any = None) -> Any:
+    def get(self, key: str, default: Any | None = None) -> Any:
         """Dictionary-style get with default value."""
         try:
             return self[key]

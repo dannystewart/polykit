@@ -225,7 +225,7 @@ class EnvManager(metaclass=Singleton):
         """Get the appropriate log level based on debug settings."""
         return "DEBUG" if self.debug_enabled else "INFO"
 
-    def get(self, name: str, default: Any = None) -> Any:
+    def get(self, name: str, default: Any | None = None) -> Any:
         """Get the value of an environment variable.
 
         Args:
