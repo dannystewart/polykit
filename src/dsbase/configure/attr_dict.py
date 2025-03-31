@@ -40,7 +40,7 @@ class AttrDict[KT, VT](MutableMapping[KT, VT]):
 
     def __getattr__(self, name: str) -> Any:
         try:
-            return self[name]  # type: ignore
+            return self[name]  # type: ignore[index]
         except KeyError as e:
             msg = f"'AttrDict' object has no attribute '{name}'"
             raise AttributeError(msg) from e
@@ -49,7 +49,7 @@ class AttrDict[KT, VT](MutableMapping[KT, VT]):
         if name == "_data":
             super().__setattr__(name, value)
         else:
-            self[name] = value  # type: ignore
+            self[name] = value  # type: ignore[index]
 
     def __dir__(self) -> list[str]:
         return list(set(super().__dir__()) | {str(k) for k in self._data})
@@ -104,22 +104,22 @@ class AttrDict[KT, VT](MutableMapping[KT, VT]):
 
         return AttrDict(deepcopy(self._data))
 
-    def update(self, *args: Mapping[KT, VT] | Iterable[tuple[KT, VT]], **kwargs: Any) -> None:  # type: ignore
+    def update(self, *args: Mapping[KT, VT] | Iterable[tuple[KT, VT]], **kwargs: Any) -> None:  # type: ignore[override]
         """Update the AttrDict with the key/value pairs from other, overwriting existing keys."""
         for k, v in dict(*args, **kwargs).items():
-            self[k] = v
+            self[k] = v  # type: ignore[index]
 
     def setdefault(self, key: KT, default: VT | None = None) -> VT:
         """Insert key with a value of default if key is not in the dictionary."""
         if key not in self:
-            self[key] = default  # type: ignore
+            self[key] = default  # type: ignore[assignment]
         return self[key]
 
-    def get(self, key: KT, default: Any = None) -> Any:
+    def get(self, key: KT, default: Any | None = None) -> Any:
         """Return the value for key if key is in the dictionary, else default."""
         return self._data.get(key, default)
 
-    def pop(self, key: KT, default: Any = None) -> Any:
+    def pop(self, key: KT, default: Any | None = None) -> Any:
         """Remove specified key and return the corresponding value."""
         return self._data.pop(key, default)
 

@@ -277,18 +277,19 @@ class Config:
             self._excluded_change_warnings = set()
 
     @staticmethod
-    def _convert_toml(toml_data: Any) -> dict[str, Any]:
+    def _convert_toml(toml_data: Any) -> dict[str, Any] | Any:
         """Convert a TOMLDocument or nested TOML structures to a regular dictionary."""
         if hasattr(toml_data, "items"):
-            result = {}
+            result: dict[str, Any] = {}
             for key, value in toml_data.items():
                 if hasattr(value, "items"):
                     result[key] = Config._convert_toml(value)
                 elif isinstance(value, list):
-                    result[key] = [
+                    converted_list: list[Any] = [
                         Config._convert_toml(item) if hasattr(item, "items") else item
                         for item in value
                     ]
+                    result[key] = converted_list
                 else:
                     result[key] = value
             return result
@@ -337,7 +338,7 @@ class Config:
         """Check if an object is dict-like (dict or AttrDict)."""
         return isinstance(obj, dict | AttrDict)
 
-    def get(self, key: str, default: T = None) -> Any | T:
+    def get(self, key: str, default: T | None = None) -> Any | T:
         """Get a configuration value by key name, with an optional default value."""
         keys = self._split_key(key)
         value = self.settings
