@@ -1,6 +1,6 @@
 [project]
 name = "dsbase"
-version = "0.4.3"
+version = "0.4.4"
 description = "Delightful Python utility library with power and personality"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
 urls = { repository = "https://github.com/dannystewart/dsbase" }
