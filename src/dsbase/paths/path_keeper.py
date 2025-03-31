@@ -176,12 +176,13 @@ class PathKeeper:
     @property
     def onedrive_dir(self) -> Path:
         """Get the platform-specific OneDrive base directory."""
-        if sys.platform == "darwin":
+        platform = sys.platform
+        if platform == "darwin":
             return Path(self.home_dir) / "Library/CloudStorage/OneDrive-Personal"
-        if sys.platform == "win32":
+        if platform == "win32":
             return Path(self.home_dir) / "OneDrive"
         msg = "OneDrive not supported on this platform"
-        raise NotImplementedError(msg)  # type: ignore
+        raise NotImplementedError(msg)
 
     def from_home(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the user's home directory.
