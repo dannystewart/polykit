@@ -3,37 +3,37 @@ from __future__ import annotations
 import functools
 import inspect
 import logging
-from collections.abc import Callable
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 T = TypeVar("T")
-F = TypeVar("F", bound=Callable[..., Any])
-C = TypeVar("C", bound=type[Any])
 
 
-def deprecated(reason: str = "") -> Callable[[F | C], F | C]:
+def deprecated(reason: str = "") -> Callable[[T], T]:
     """Mark a function or class as deprecated by emitting a warning when used."""
 
-    def decorator(obj: F | C) -> F | C:
+    def decorator(obj: T) -> T:
         """Decorate a function or class with a warning message."""
-        message = f"{obj.__name__} is deprecated and will be removed in the future. {reason}"
+        message = f"{obj.__name__} is deprecated and will be removed in the future. {reason}"  # type: ignore[attr-defined]
         if isinstance(obj, type):
-            return _decorate_class(obj, message, DeprecationWarning)  # type: ignore
-        return _decorate_function(obj, message, DeprecationWarning)  # type: ignore
+            return _decorate_class(obj, message, DeprecationWarning)  # type: ignore[return-value]
+        return _decorate_function(obj, message, DeprecationWarning)  # type: ignore[return-value]
 
     return decorator
 
 
-def not_yet_implemented(reason: str = "") -> Callable[[F | C], F | C]:
+def not_yet_implemented(reason: str = "") -> Callable[[T], T]:
     """Mark a function or class as not yet implemented by raising a NotImplementedError."""
 
-    def decorator(obj: F | C) -> F | C:
+    def decorator(obj: T) -> T:
         """Decorate a function or class with a warning message."""
-        message = f"{obj.__name__} is not yet implemented and cannot be used. {reason}"
+        message = f"{obj.__name__} is not yet implemented and cannot be used. {reason}"  # type: ignore[attr-defined]
         if isinstance(obj, type):
-            return _decorate_class(obj, message, UserWarning)  # type: ignore
-        return _decorate_function(obj, message, UserWarning)  # type: ignore
+            return _decorate_class(obj, message, UserWarning)  # type: ignore[return-value]
+        return _decorate_function(obj, message, UserWarning)  # type: ignore[return-value]
 
     return decorator
 
@@ -46,10 +46,14 @@ def _decorate_function(
     @functools.wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         """Log a message and emit a warning."""
-        frame = inspect.currentframe().f_back
-        filename = frame.f_code.co_filename
-        line_num = frame.f_lineno
-        function = frame.f_code.co_name
+        frame = inspect.currentframe()
+        frame_back = frame.f_back if frame is not None else None
+        if frame is None or frame_back is None:
+            return func(*args, **kwargs)
+
+        filename = frame_back.f_code.co_filename
+        line_num = frame_back.f_lineno
+        function = frame_back.f_code.co_name
 
         _log_and_warn(message, category, filename, line_num, function)
 
@@ -68,10 +72,15 @@ def _decorate_class[T](cls: type[T], message: str, warn_type: type[Warning]) -> 
     @functools.wraps(orig_init)
     def new_init(self: Any, *args: Any, **kwargs: Any) -> None:
         """Log a message and emit a warning."""
-        frame = inspect.currentframe().f_back
-        filename = frame.f_code.co_filename
-        line_num = frame.f_lineno
-        function = frame.f_code.co_name
+        frame = inspect.currentframe()
+        frame_back = frame.f_back if frame is not None else None
+        if frame is None or frame_back is None:
+            orig_init(self, *args, **kwargs)
+            return
+
+        filename = frame_back.f_code.co_filename
+        line_num = frame_back.f_lineno
+        function = frame_back.f_code.co_name
 
         _log_and_warn(message, warn_type, filename, line_num, function)
 
@@ -79,7 +88,7 @@ def _decorate_class[T](cls: type[T], message: str, warn_type: type[Warning]) -> 
             raise NotImplementedError(message)
         orig_init(self, *args, **kwargs)
 
-    cls.__init__ = new_init
+    setattr(cls, "__init__", new_init)
     return cls
 
 
