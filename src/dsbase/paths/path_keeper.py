@@ -129,9 +129,8 @@ class PathKeeper:
     ) -> Path:
         """Join paths and create parent directory if needed."""
         path = base_dir.joinpath(*paths)
-        if self.create_dirs and not no_create:
-            if not path.exists() or not path.is_file():
-                path.parent.mkdir(parents=True, exist_ok=True)
+        if self.create_dirs and not no_create and (not path.exists() or not path.is_file()):
+            path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
     @property
@@ -182,7 +181,7 @@ class PathKeeper:
         if sys.platform == "win32":
             return Path(self.home_dir) / "OneDrive"
         msg = "OneDrive not supported on this platform"
-        raise NotImplementedError(msg)
+        raise NotImplementedError(msg)  # type: ignore
 
     def from_home(self, *paths: str | Path, no_create: bool = False) -> Path:
         """Get a path in the user's home directory.

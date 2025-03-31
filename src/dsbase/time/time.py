@@ -79,11 +79,11 @@ class Time:
                         if hour < current_hour or (hour == current_hour and minute <= now.minute):
                             # Time has passed for today, assume PM
                             hour += 12
-                    elif hour < 12:
-                        if hour > current_hour - 12 or (
-                            hour == current_hour - 12 and minute > now.minute
-                        ):  # Time is still upcoming today
-                            hour += 12
+                    elif hour < 12 and (
+                        hour > current_hour - 12
+                        or (hour == current_hour - 12 and minute > now.minute)
+                    ):  # Time is still upcoming today
+                        hour += 12
                 return Time.adjust_for_tomorrow_if_needed(now, hour, minute)
 
         return None
