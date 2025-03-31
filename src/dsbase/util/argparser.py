@@ -1,3 +1,5 @@
+# ruff: noqa SLF001
+
 from __future__ import annotations
 
 import argparse
@@ -54,13 +56,12 @@ class ArgParser(argparse.ArgumentParser):
         # Use fixed width if provided, otherwise use min_arg_width as starting point
         help_position = self.arg_width if self.arg_width != "auto" else self.min_arg_width
 
-        super().__init__(
-            *args,
-            **kwargs,
-            formatter_class=lambda prog: CustomHelpFormatter(
-                prog, max_help_position=help_position, width=self.max_width
-            ),
+        # Set the formatter_class in kwargs
+        kwargs["formatter_class"] = lambda prog: CustomHelpFormatter(
+            prog, max_help_position=help_position, width=self.max_width
         )
+
+        super().__init__(*args, **kwargs)
 
         # Add version argument if requested
         if self.add_version:
@@ -162,13 +163,10 @@ class ArgParser(argparse.ArgumentParser):
         arg_width = min(self.max_arg_width, max(self.min_arg_width, max_length))
         help_position = arg_width + self.padding
 
-        # Create a new formatter with the calculated width and replace the existing one
+        # Create a new formatter with the calculated width
         self._formatter_class = lambda prog: CustomHelpFormatter(
             prog, max_help_position=help_position, width=self.max_width
         )
-
-        # Update the existing formatter instance
-        self._get_formatter = lambda: self._formatter_class(self.prog)
 
 
 class CustomHelpFormatter(argparse.HelpFormatter):
