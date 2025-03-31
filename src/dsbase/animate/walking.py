@@ -24,21 +24,25 @@ class WalkingMan:
     CHARACTER_LEFT: ClassVar[str] = "<('-'<) "
     CHARACTER_RIGHT: ClassVar[str] = " (>'-')>"
 
+    # Default color for Walking Man (cyan is his favorite)
+    COLOR: ClassVar[ColorName | None] = "cyan"
+
     # Width in characters before Walking Man turns around
     WIDTH: ClassVar[int] = 30
 
-    # Default color for Walking Man (cyan is his favorite)
-    COLOR: ClassVar[ColorName | None] = "cyan"
+    # Default animation speed (seconds between frames)
+    SPEED: ClassVar[float] = 0.2
 
     def __init__(
         self,
         loading_text: str | None = None,
         color: ColorName | None = COLOR,
-        width: int = WIDTH,
+        speed: float = SPEED,
     ):
         self.loading_text: str | None = loading_text
         self.color: ColorName | None = color
-        self.width: int = width
+        self.speed: float = speed
+        self.width: int = self.WIDTH
         self.animation_thread: Thread | None = None
         self._stop_event: Event = Event()
 
@@ -102,47 +106,47 @@ class WalkingMan:
         colored_character = colorize(character, self.color) if self.color else character
         print(" " * position + colored_character, end="\r")
 
-        # Use a small timeout when waiting on the event to make the animation responsive to stopping
-        self._stop_event.wait(0.2)
+        # Use the customizable speed for the animation
+        self._stop_event.wait(self.speed)
 
 
 def walking_man(
     loading_text: str | None = None,
     color: ColorName | None = WalkingMan.COLOR,
-    width: int = WalkingMan.WIDTH,
+    speed: float = WalkingMan.SPEED,
 ) -> WalkingMan:
     """Create a Walking Man animation as a context manager. All arguments are optional.
 
     Args:
         loading_text: Text to print before starting the animation. Defaults to None.
-        color: Color to print the animation in. Defaults to None.
-        width: The width of the screen for the animation. Defaults to ANIMATION_WIDTH.
+        color: Color to print the animation in. Defaults to cyan.
+        speed: Animation speed (seconds between frames). Lower is faster. Defaults to 0.2.
 
     Usage:
-        with walking_man("Loading...", "yellow", 30):
+        with walking_man("Loading...", "yellow", 0.1):  # Walking Man go fast
             long_running_function()
     """
-    return WalkingMan(loading_text, color, width)
+    return WalkingMan(loading_text, color, speed)
 
 
 def conditional_walking_man(
     condition: bool,
     message: str | None = None,
     color: ColorName | None = WalkingMan.COLOR,
-    width: int = WalkingMan.WIDTH,
+    speed: float = WalkingMan.SPEED,
 ) -> AbstractContextManager[None]:
     """Run the Walking Man animation if the condition is met.
 
     Args:
         condition: The condition that must be met for the animation to display.
         message: The message to display during the animation. Defaults to None.
-        color: The color of the animation. Defaults to None.
-        width: The width of the screen for the animation. Defaults to ANIMATION_WIDTH.
+        color: The color of the animation. Defaults to cyan.
+        speed: Animation speed (seconds between frames). Lower is faster. Defaults to 0.2.
 
     Usage:
-        with conditional_animation(condition, "Loading..."):
+        with conditional_walking_man(verbose, "Loading...", speed=0.05):  # Walking Man go faster
             long_running_function()
     """
     if condition:
-        return WalkingMan(message, color, width)
+        return WalkingMan(message, color, speed)
     return nullcontext()
