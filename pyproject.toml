@@ -11,7 +11,7 @@ requires-python = ">=3.12,<3.14"
 dependencies = [
     "enviromancer (>=0.1.2,<0.2.0)",
     "halo (>=0.0.31)",
-    "logician (>=0.2.1,<0.3.0)",
+    "logician (>=0.2.2,<0.3.0)",
     "masterclass (>=0.0.3,<0.0.4)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",
     "natsort (>=8.4.0,<9.0.0)",
@@ -31,6 +31,7 @@ dependencies = [
     "types-send2trash (>=1.8.2.7,<2.0.0.0)",
     "tzdata (>=2025.2)",
     "tzlocal (>=5.3.1,<6.0.0)",
+    "walking-man (>=0.1.0,<0.2.0)",
     "watchdog (>=6.0.0,<7.0.0)",
 ]
 
@@ -41,6 +42,7 @@ pre-commit = ">=4.2.0"
 ruff = ">=0.11.2"
 enviromancer = { path = "../enviromancer", develop = true }
 logician = { path = "../logician", develop = true }
+walking-man = {path = "../walking-man", develop = true }
 
 [build-system]
 requires = ["poetry-core>=2.0"]

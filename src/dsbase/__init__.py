@@ -27,7 +27,6 @@ Some of the features include:
 
 from __future__ import annotations
 
-from dsbase.animate import WalkingMan
 from dsbase.files import FileManager
 from dsbase.media import MediaManager
 from dsbase.paths import PathKeeper
