@@ -12,7 +12,6 @@ pip install dsbase
 
 Some of the features include:
 
-- Drop-in `argparse` replacement with easier formatting
 - Simple helper for comparing files and showing diffs
 - Database helper interfaces for MySQL and SQLite
 - Helpers for highly customizable copying, deleting, and listing of files
@@ -30,4 +29,3 @@ from dsbase.files import FileManager
 from dsbase.media import MediaManager
 from dsbase.text import Text
 from dsbase.time import Time
-from dsbase.util import ArgParser

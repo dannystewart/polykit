@@ -20,7 +20,6 @@ pip install dsbase
 
 Some of the features include:
 
-- Drop-in `argparse` replacement with easier formatting
 - Simple helper for comparing files and showing diffs
 - Database helper interfaces for MySQL and SQLite
 - Helpers for highly customizable copying, deleting, and listing of files
@@ -36,6 +35,7 @@ Some of the features include:
 - Elegant and sophisticated logging *(now moved to [Logician](https://github.com/dannystewart/logician/))*
 - Environment variable management *(now moved to [Enviromancer](https://github.com/dannystewart/enviromancer/))*
 - Convenient cross-platform access to common paths *(now moved to [PathKeeper](https://github.com/dannystewart/pathkeeper/))*
+- Drop-in `argparse` replacement with easier formatting *(now moved to [Arguer](https://github.com/dannystewart/arguer/))*
 - Thread-safe `Singleton` metaclass *(now moved to [masterclass](https://github.com/dannystewart/masterclass/))*
 
 ## License

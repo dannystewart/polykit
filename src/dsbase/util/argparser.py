@@ -8,7 +8,7 @@ import textwrap
 from typing import Any, ClassVar
 
 
-class ArgParser(argparse.ArgumentParser):
+class Arguer(argparse.ArgumentParser):
     """Drop-in replacement for ArgumentParser with easier adjustment of column widths.
 
     Args:
@@ -22,10 +22,10 @@ class ArgParser(argparse.ArgumentParser):
 
     Example:
         # to automatically determine the optimal argument width
-        parser = ArgParser(description=__doc__)
+        parser = Arguer(description=__doc__)
 
         # or to set fixed widths
-        parser = ArgParser(description=__doc__, arg_width=24, max_width=120)
+        parser = Arguer(description=__doc__, arg_width=24, max_width=120)
     """
 
     DEFAULT_MAX_WIDTH: ClassVar[int] = 100
