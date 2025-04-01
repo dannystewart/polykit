@@ -6,20 +6,32 @@
 EnvManager is a utility class that manages environment variables in a friendly way.
 
 This class allows you to add environment variables with type conversion, validation, and secret
-masking. Variables can be accessed as attributes. Defaults to loading environment variables from
-`.env` and `~/.env`, but also uses the current environment and allows specifying custom files.
+masking. Variables can be accessed as attributes.
+
+Environment Loading Strategy:
+1. Loads from .env files in parent directories (up to user's home directory)
+2. Loads from the current directory's .env file
+3. Loads from ~/.env (user's home directory)
+4. Uses current environment variables
+5. Allows specifying custom files that override all of the above
+
+This hierarchical approach means more specific configurations (closer to the current directory)
+override broader ones. For example, if you have /home/user/.env and /home/user/project/.env,
+variables in the project-specific file will take precedence.
+
+For detailed logging for EnvManager itself, set the ENV_DEBUG environment variable to '1'.
 
 ## Usage
 
 ```python
-# Basic usage with default values of .env and ~/.env
+# Basic usage with default values
 env_man = EnvManager()
 
 # Custom .env file
 env_man = EnvManager(env_file="~/.env_man.local")
 
 # Multiple .env files (processed in order, so later files take precedence)
-env_man = EnvManager(env_file=["~/.env", "~/.env_man.local"])
+env_man = EnvManager(env_file=["~/.env", "~/.env.local"])
 
 # Add variables with automatic attribute names
 env_man.add_var(

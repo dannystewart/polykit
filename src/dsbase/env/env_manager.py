@@ -24,17 +24,29 @@ class EnvManager(metaclass=Singleton):
     """EnvManager is a utility class that manages environment variables in a friendly way.
 
     This class allows you to add environment variables with type conversion, validation, and secret
-    masking. Variables can be accessed as attributes. Defaults to loading environment variables from
-    `.env` and `~/.env`, but also uses the current environment and allows specifying custom files.
+    masking. Variables can be accessed as attributes.
+
+    Environment Loading Strategy:
+    1. Loads from .env files in parent directories (up to user's home directory)
+    2. Loads from the current directory's .env file
+    3. Loads from ~/.env (user's home directory)
+    4. Uses current environment variables
+    5. Allows specifying custom files that override all of the above
+
+    This hierarchical approach means more specific configurations (closer to the current directory)
+    override broader ones. For example, if you have /home/user/.env and /home/user/project/.env,
+    variables in the project-specific file will take precedence.
 
     For detailed logging for EnvManager itself, set the ENV_DEBUG environment variable to '1'.
 
     Args:
-        env_file: A list of environment files to load. Defaults to [".env", "~/.env"].
+        env_file: Custom environment files to load instead of the default hierarchy.
+                  If provided, only these files will be used.
         add_debug: Whether to add a DEBUG variable automatically. Defaults to False.
     """
 
-    DEFAULT_ENV_FILES: ClassVar[list[Path]] = [Path(".env"), Path("~/.env").expanduser()]
+    # File name to look for in directories
+    ENV_FILENAME: ClassVar[str] = ".env"
 
     env_file: list[Path] | Path | str | None = field(default_factory=list)
     add_debug: bool = False
@@ -47,34 +59,94 @@ class EnvManager(metaclass=Singleton):
 
     def __post_init__(self):
         """Initialize with default environment variables."""
+        # If env_file is a string or list, convert to Path objects
+        self.env_file = (
+            Path(self.env_file)
+            if isinstance(self.env_file, str)
+            else [Path(f) for f in self.env_file]
+            if isinstance(self.env_file, list)
+            else self.env_file
+        )
+
+        # Check the environment variable for debug mode
         env_debug = self.validate_bool(os.environ.get("ENV_DEBUG", "0"))
+
+        # Set up the logger
         self.logger = LocalLogger().get_logger(level="DEBUG" if env_debug else "INFO")
+
+        # Load environment variables from files
         self._load_env_files()
 
         if self.add_debug and "DEBUG" not in self.vars:
             self.add_debug_var()
 
     def _load_env_files(self) -> None:
-        """Load environment variables from specified files."""
-        if not self.env_file:
-            self.env_file = self.DEFAULT_ENV_FILES
-            self.logger.debug("Using default env files: %s", [str(f) for f in self.env_file])
+        """Load environment variables from specified files, including parent directories."""
+        if not self.env_file:  # If no specific files are provided, use hierarchical loading
+            env_files = []
+
+            # Add .env files from parent directories (from root toward current dir)
+            current_dir = Path.cwd().absolute()
+            parent_dirs = list(current_dir.parents)
+
+            # Limit how far up we go - stop at the user's home directory
+            home_dir = Path.home()
+            if home_dir in parent_dirs:
+                # Only include parents up to and including home directory
+                parent_dirs = parent_dirs[: parent_dirs.index(home_dir) + 1]
+
+            # Add parent directories in reverse order (from furthest to closest)
+            for parent in reversed(parent_dirs):
+                parent_env = parent / self.ENV_FILENAME
+                env_files.append(parent_env)
+
+            # Add current directory's .env
+            env_files.append(Path(self.ENV_FILENAME))
+
+            # Add ~/.env explicitly to ensure it's always checked
+            home_env = Path(f"~/{self.ENV_FILENAME}").expanduser()
+            if home_env not in env_files:
+                env_files.append(home_env)
+
+            self.env_file = env_files
+            self.logger.debug("Using hierarchical env files: %s", [str(f) for f in self.env_file])
+        else:  # Custom files were specified, so use only those
+            self.logger.debug(
+                "Using custom env files: %s",
+                [str(self.env_file)]
+                if isinstance(self.env_file, (str, Path))
+                else [str(f) for f in self.env_file],
+            )
 
         env_files = [self.env_file] if isinstance(self.env_file, str | Path) else self.env_file
+
+        # Track which variables came from which files for potential debugging
+        loaded_from = {}
+
         for file in env_files:
             full_path = Path(file).expanduser() if isinstance(file, str) else file.expanduser()
-
-            local_dir = full_path == self.DEFAULT_ENV_FILES[0]
             abs_path = full_path.absolute()
-            path_str = "local env" if local_dir else "env"
 
-            self.logger.debug("Checking for %s: %s", path_str, abs_path)
+            self.logger.debug("Checking for env file: %s", abs_path)
             if full_path.exists():
                 self.logger.debug("Loading env from: %s", abs_path)
-                result = load_dotenv(str(full_path), override=True)
-                self.logger.debug("Env load result: %s", "Success" if result else "No changes")
+                # Track which variables were loaded from this file
+                before_keys = set(os.environ.keys())
+                load_dotenv(str(full_path), override=True)
+                after_keys = set(os.environ.keys())
+
+                new_keys = after_keys - before_keys
+                for key in new_keys:
+                    loaded_from[key] = str(abs_path)
+
+                self.logger.debug("Env load from %s: %s variables loaded", abs_path, len(new_keys))
             else:
-                self.logger.debug("No %s found: %s", path_str, abs_path)
+                self.logger.debug("No env file found: %s", abs_path)
+
+        if loaded_from and self.logger.isEnabledFor(10):  # DEBUG level
+            self.logger.debug("Environment variables loaded from:")
+            for var, source in sorted(loaded_from.items()):
+                self.logger.debug("  %s: %s", var, source)
 
     def refresh(self) -> None:
         """Reload environment variables from files and clear cached values."""
