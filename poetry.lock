@@ -268,6 +268,21 @@ files = [
 colorama = ">=0.3.9"
 
 [[package]]
+name = "logician"
+version = "0.1.0"
+description = "The logical choice for Python logging"
+optional = false
+python-versions = ">=3.12"
+groups = ["main"]
+files = [
+    {file = "logician-0.1.0-py3-none-any.whl", hash = "sha256:1873572feb5cd8943da9e6ca9d06047240ccbf1bd67d260ecc43db465fc51f31"},
+    {file = "logician-0.1.0.tar.gz", hash = "sha256:eee9b64df52b351715b0c7c2711d0c814ab861bc229c3dd6bf54a6a32b47a47f"},
+]
+
+[package.dependencies]
+dsroot = ">=0.0.3"
+
+[[package]]
 name = "markupsafe"
 version = "3.0.2"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -918,4 +933,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "0a82306eedd15d944ef01d9f8039dfb52da8cb658eeaa56f7f339bcf86c38f83"
+content-hash = "b00f5fc50ca06a5e0b745f0045d796cb9d7138e004a8589db4f7f373ece03768"
