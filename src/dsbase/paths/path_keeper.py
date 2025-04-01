@@ -50,9 +50,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from enviromancer import Enviromancer
 from platformdirs import PlatformDirs
-
-from dsbase.env import EnvManager
 
 
 @dataclass
@@ -81,15 +80,15 @@ class PathKeeper:
 
     def __post_init__(self):
         # Get app author and domain prefix from environment variables if available
-        env_man = EnvManager()
-        env_man.add_var("PATHKEEPER_APP_AUTHOR", attr_name="app_author", required=False)
-        env_man.add_var("PATHKEEPER_APP_DOMAIN_PREFIX", attr_name="app_domain", required=False)
+        env = Enviromancer()
+        env.add_var("PATHKEEPER_APP_AUTHOR", attr_name="app_author", required=False)
+        env.add_var("PATHKEEPER_APP_DOMAIN_PREFIX", attr_name="app_domain", required=False)
 
         # Set these if they exist in the environment and weren't otherwise supplied
-        if self.app_author is None and hasattr(env_man, "app_author") and env_man.app_author:
-            self.app_author = env_man.app_author
-        if self.app_domain_prefix is None and hasattr(env_man, "app_domain") and env_man.app_domain:
-            self.app_domain_prefix = env_man.app_domain
+        if self.app_author is None and hasattr(env, "app_author") and env.app_author:
+            self.app_author = env.app_author
+        if self.app_domain_prefix is None and hasattr(env, "app_domain") and env.app_domain:
+            self.app_domain_prefix = env.app_domain
 
         if sys.platform == "darwin" and self.app_domain_prefix:
             # For macOS, use domain-based path if provided

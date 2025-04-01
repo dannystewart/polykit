@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 
+from enviromancer import Enviromancer
 from logician import Logician
 
 from dsbase.util.traceback import log_traceback
@@ -26,9 +27,7 @@ def dsbase_setup() -> VersionInfo:
     # Get and log version information
     version_info = VersionChecker.get_version_info(package_name)
 
-    from dsbase import EnvManager
-
-    env = EnvManager()
+    env = Enviromancer()
     env.add_bool("SHOW_VER")
     level = "DEBUG" if env.show_ver else "INFO"
 
