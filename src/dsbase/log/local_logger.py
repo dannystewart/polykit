@@ -13,9 +13,10 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from dsroot import Singleton
+
 from dsbase.log.log_formatters import CustomFormatter, FileFormatter
 from dsbase.log.log_metadata import LogLevel
-from dsbase.util import Singleton
 
 if TYPE_CHECKING:
     from dsbase.env import EnvManager
@@ -30,7 +31,7 @@ class LocalLogger(metaclass=Singleton):
     Usage:
         from dsbase import LocalLogger
         logger = LocalLogger().get_logger(self.__class__.__name__)
-        logger = LocalLogger().get_logger("MyClassLogger", advanced=True)
+        logger = LocalLogger().get_logger("MyClassLogger", simple=True)
     """
 
     def get_logger(

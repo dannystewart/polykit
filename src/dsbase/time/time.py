@@ -3,10 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from functools import partial
 from typing import Any, ClassVar
-from zoneinfo import ZoneInfo
 
-# Sorry if you live anywhere else!
-TZ = ZoneInfo("America/New_York")
+from dsbase.time.zone_manager import TZ
 
 
 class Time:
