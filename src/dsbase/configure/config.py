@@ -5,9 +5,9 @@ from pathlib import Path
 from threading import Lock
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
-import logician
 import tomlkit
 import yaml
+from logician import Logician
 from tomlkit import TOMLDocument
 
 from dsbase import PathKeeper, Text
@@ -46,7 +46,7 @@ class Config:
         """
         self.config_name: str = config_name
         self.auto_reload: bool = auto_reload
-        self.logger: Logger = logger or logician.Logger()
+        self.logger: Logger = logger or Logician.get_logger()
 
         # Internal state
         self._lock: Lock = Lock()

@@ -5,7 +5,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import logician
+from logician import Logician
 
 from dsbase.animate import conditional_walking_man
 from dsbase.media.video_helper import VideoHelper
@@ -24,7 +24,9 @@ class MediaManager:
         detailed_log: bool = False,
         logger: Logger | None = None,
     ):
-        self.logger: Logger = logger or logician.Logger(level=log_level, simple=not detailed_log)
+        self.logger: Logger = logger or Logician.get_logger(
+            level=log_level, simple=not detailed_log
+        )
         self.video = VideoHelper(self)
 
     def run_ffmpeg(

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import logician
 import requests
+from logician import Logician
 
 if TYPE_CHECKING:
     from logging import Logger
@@ -24,7 +24,7 @@ class TelegramAPIHelper:
     """
 
     def __init__(self, token: str, chat_id: str):
-        self.logger: Logger = logician.Logger()
+        self.logger: Logger = Logician.get_logger()
         self.token: str = token
         self.chat_id: str = chat_id
         self.url: str = f"https://api.telegram.org/bot{self.token}"

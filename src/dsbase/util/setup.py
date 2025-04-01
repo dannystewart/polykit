@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 
-import logician
+from logician import Logician
 
 from dsbase.util.traceback import log_traceback
 from dsbase.version import VersionChecker, VersionInfo
@@ -32,7 +32,7 @@ def dsbase_setup() -> VersionInfo:
     env.add_bool("SHOW_VER")
     level = "DEBUG" if env.show_ver else "INFO"
 
-    logger = logician.Logger(level=level, simple=True)
+    logger = Logician.get_logger(level=level, simple=True)
     logger.debug("Starting %s", version_info)
 
     return version_info

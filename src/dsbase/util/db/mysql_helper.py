@@ -5,8 +5,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
-import logician
 import mysql.connector
+from logician import Logician
 from mysql.connector import Error as MySQLError
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import MySQLConnectionPool, PooledMySQLConnection
@@ -37,7 +37,7 @@ class MySQLHelper:
     logger: Logger = field(init=False)
 
     def __post_init__(self):
-        self.logger = logician.Logger()
+        self.logger = Logician.get_logger()
 
     @property
     def pool(self) -> MySQLConnectionPool:

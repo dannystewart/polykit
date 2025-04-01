@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
-import logician
+from logician import Logician
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -108,6 +108,6 @@ def _log_and_warn(
     location = f"{short_name}:{line_num} in {function}" if filename and line_num else ""
 
     # Create a logger and log the warning
-    logger = logician.Logger(simple=True)
+    logger = Logician.get_logger(simple=True)
     log_level = logging.WARNING if warn_type is DeprecationWarning else logging.ERROR
     logger.log(log_level, "%s (%s)", message, location)

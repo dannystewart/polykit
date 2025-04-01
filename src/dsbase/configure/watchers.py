@@ -5,7 +5,7 @@ from pathlib import Path
 from threading import Lock
 from typing import TYPE_CHECKING, Any
 
-import logician
+from logician import Logician
 
 from dsbase.util.deprecate import not_yet_implemented
 from dsbase.util.singleton import Singleton
@@ -23,7 +23,7 @@ class ConfigFileHandler:
 
     def __init__(self, watcher: ConfigWatcher):
         """Initialize the file system event handler with the ConfigWatcher instance that owns it."""
-        self.logger: logging.Logger = logician.Logger()
+        self.logger: logging.Logger = Logician.get_logger()
         self.watcher = watcher
 
     def on_modified(self, event: FileSystemEvent) -> None:
@@ -85,7 +85,7 @@ class ConfigWatcher(metaclass=Singleton):
 
     def __init__(self):
         """Initialize the file watcher."""
-        self.logger: logging.Logger = logician.Logger()
+        self.logger: logging.Logger = Logician.get_logger()
         self.callbacks: dict[str, list[Callable[[str], None]]] = {}
         self.watched_files: set[str] = set()
         self.watched_dirs: set[str] = set()

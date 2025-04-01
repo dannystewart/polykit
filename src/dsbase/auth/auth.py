@@ -6,12 +6,12 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import logician
+from logician import Logician
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-logger = logician.Logger()
+logger = Logician.get_logger()
 
 AUTHORIZED_FINGERPRINTS = [
     "14d17037b9900d5a540ab946a4b66b6d76186001fe341f4afe85955ab212788d",
