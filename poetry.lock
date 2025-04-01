@@ -156,14 +156,16 @@ version = "0.0.3"
 description = "Core dependencies for DS packages"
 optional = false
 python-versions = ">=3.12"
-groups = ["main"]
-files = [
-    {file = "dsroot-0.0.3-py3-none-any.whl", hash = "sha256:2629800ce03460de65bb11285c5be2652e92b10866a9be26cc6e89b03da896ec"},
-    {file = "dsroot-0.0.3.tar.gz", hash = "sha256:e1be0937e0c2b5f1f64c67887b0abd5d91566efe42a1e5ca8e23d60a79f9d02e"},
-]
+groups = ["main", "dev"]
+files = []
+develop = true
 
 [package.dependencies]
-tzlocal = ">=5.3.1,<6.0.0"
+tzlocal = ">=5.3.1"
+
+[package.source]
+type = "directory"
+url = "../dsroot"
 
 [[package]]
 name = "enviromancer"
@@ -171,16 +173,18 @@ version = "0.1.2"
 description = "Gain mastery over your environment variables"
 optional = false
 python-versions = ">=3.12"
-groups = ["main"]
-files = [
-    {file = "enviromancer-0.1.2-py3-none-any.whl", hash = "sha256:b27d90faee8328671eaf3bdc991af4a221d68f81b23838fd2c06f1219d4d94c1"},
-    {file = "enviromancer-0.1.2.tar.gz", hash = "sha256:8ec77bcb6e97a05068b7ba321d4818979c928f402139d41324233ddfe5839e06"},
-]
+groups = ["main", "dev"]
+files = []
+develop = true
 
 [package.dependencies]
 dsroot = ">=0.0.3,<0.0.4"
 logician = ">=0.2.1,<0.3.0"
 python-dotenv = ">=1.1.0,<2.0.0"
+
+[package.source]
+type = "directory"
+url = "../enviromancer"
 
 [[package]]
 name = "filelock"
@@ -290,14 +294,16 @@ version = "0.2.1"
 description = "The logical choice for Python logging"
 optional = false
 python-versions = ">=3.12"
-groups = ["main"]
-files = [
-    {file = "logician-0.2.1-py3-none-any.whl", hash = "sha256:46e7896cbe2d30bb40c6f11e9a31a29c2fbc77221d10c27b86bb20c8cdc8e05c"},
-    {file = "logician-0.2.1.tar.gz", hash = "sha256:8becf9f1ad8c6b82e69e88d0ef927a0c5df0b5afe17c026f8e5b84e8eabccbd5"},
-]
+groups = ["main", "dev"]
+files = []
+develop = true
 
 [package.dependencies]
 dsroot = ">=0.0.3"
+
+[package.source]
+type = "directory"
+url = "../logician"
 
 [[package]]
 name = "markupsafe"
@@ -606,7 +612,7 @@ version = "1.1.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "python_dotenv-1.1.0-py3-none-any.whl", hash = "sha256:d7c01d9e2293916c18baf562d95698754b0dbbb5e74d457c45d4f6561fb9d55d"},
     {file = "python_dotenv-1.1.0.tar.gz", hash = "sha256:41f90bc6f5f177fb41f53e87666db362025010eb28f60a01c9143bfa33a2b2d5"},
@@ -841,7 +847,7 @@ version = "2025.2"
 description = "Provider of IANA time zone data"
 optional = false
 python-versions = ">=2"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8"},
     {file = "tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9"},
@@ -853,7 +859,7 @@ version = "5.3.1"
 description = "tzinfo object for the local timezone"
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "tzlocal-5.3.1-py3-none-any.whl", hash = "sha256:eb1a66c3ef5847adf7a834f1be0800581b683b5608e74f86ecbcef8ab91bb85d"},
     {file = "tzlocal-5.3.1.tar.gz", hash = "sha256:cceffc7edecefea1f595541dbd6e990cb1ea3d19bf01b2809f362a03dd7921fd"},
@@ -950,4 +956,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "becd24e3e0d57b0c13bb45195500e0a4466c4419bb0ac5d6ee4c95e83c7aef4f"
+content-hash = "c45977826252868140b6730804699fff52a673c5eb37a2ee0202e6f3b8c031b9"
