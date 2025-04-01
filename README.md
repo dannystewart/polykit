@@ -36,7 +36,7 @@ Some of the features include:
 
 - Elegant and sophisticated logging *(now moved to [Logician](https://github.com/dannystewart/logician/))*
 - Environment variable management *(now moved to [Enviromancer](https://github.com/dannystewart/enviromancer/))*
-- Thread-safe `Singleton` metaclass *(now moved to [dsroot](https://github.com/dannystewart/dsroot/))*
+- Thread-safe `Singleton` metaclass *(now moved to [masterclass](https://github.com/dannystewart/masterclass/))*
 
 ## License
 

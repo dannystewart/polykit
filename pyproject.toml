@@ -9,10 +9,10 @@ license = "LGPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "dsroot (>=0.0.3,<0.0.4)",
     "enviromancer (>=0.1.2,<0.2.0)",
     "halo (>=0.0.31)",
     "logician (>=0.2.1,<0.3.0)",
+    "masterclass (>=0.0.3,<0.0.4)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",
     "natsort (>=8.4.0,<9.0.0)",
     "packaging (>=24.2,<25.0)",
@@ -24,6 +24,8 @@ dependencies = [
     "requests (>=2.32.3,<3.0.0)",
     "send2trash (>=1.8.3,<2.0.0)",
     "termcolor (>=3.0.0)",
+    "textparse (>=0.0.1,<0.0.2)",
+    "timecapsule (>=0.0.2,<0.0.3)",
     "tomlkit (>=0.13.2,<0.14.0)",
     "types-requests (>=2.32.0.20250328,<3.0.0.0)",
     "types-send2trash (>=1.8.2.7,<2.0.0.0)",
@@ -37,7 +39,6 @@ mypy = ">=1.15.0"
 pdoc = ">=15.0.1"
 pre-commit = ">=4.2.0"
 ruff = ">=0.11.2"
-dsroot = { path = "../dsroot", develop = true }
 enviromancer = { path = "../enviromancer", develop = true }
 logician = { path = "../logician", develop = true }
 

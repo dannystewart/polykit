@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from typing import Any, ClassVar
 
-from dsroot.time import TZ
+from timecapsule import TZ
 
 
 class Time:
