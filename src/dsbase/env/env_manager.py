@@ -118,7 +118,9 @@ class EnvManager(metaclass=Singleton):
                 else [str(f) for f in self.env_file],
             )
 
-        env_files = [self.env_file] if isinstance(self.env_file, str | Path) else self.env_file
+        env_files = (
+            [Path(self.env_file)] if isinstance(self.env_file, str | Path) else self.env_file
+        )
 
         # Track which variables came from which files for potential debugging
         loaded_from = {}
