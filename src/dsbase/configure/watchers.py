@@ -5,13 +5,14 @@ from pathlib import Path
 from threading import Lock
 from typing import TYPE_CHECKING, Any
 
-from dsbase import LocalLogger
+import logician
+
 from dsbase.util.deprecate import not_yet_implemented
 from dsbase.util.singleton import Singleton
 
 if TYPE_CHECKING:
+    import logging
     from collections.abc import Callable
-    from logging import Logger
 
     from watchdog.events import FileSystemEvent
 
@@ -22,7 +23,7 @@ class ConfigFileHandler:
 
     def __init__(self, watcher: ConfigWatcher):
         """Initialize the file system event handler with the ConfigWatcher instance that owns it."""
-        self.logger: Logger = LocalLogger().get_logger()
+        self.logger: logging.Logger = logician.Logger()
         self.watcher = watcher
 
     def on_modified(self, event: FileSystemEvent) -> None:
@@ -84,7 +85,7 @@ class ConfigWatcher(metaclass=Singleton):
 
     def __init__(self):
         """Initialize the file watcher."""
-        self.logger: Logger = LocalLogger().get_logger()
+        self.logger: logging.Logger = logician.Logger()
         self.callbacks: dict[str, list[Callable[[str], None]]] = {}
         self.watched_files: set[str] = set()
         self.watched_dirs: set[str] = set()

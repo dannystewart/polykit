@@ -5,7 +5,7 @@ from __future__ import annotations
 import smtplib
 from email.mime.text import MIMEText
 
-from dsbase import LocalLogger
+import logician
 
 
 class MailSender:
@@ -31,7 +31,7 @@ class MailSender:
         smtp_password: str,
         timeout: int = 10,
     ):
-        self.logger = LocalLogger().get_logger(f"{self.__class__.__name__}")
+        self.logger = logician.Logger(f"{self.__class__.__name__}")
         self.name = name
         self.email = email
         self.smtp_server = smtp_server

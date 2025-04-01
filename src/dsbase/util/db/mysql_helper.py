@@ -5,12 +5,12 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
+import logician
 import mysql.connector
 from mysql.connector import Error as MySQLError
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import MySQLConnectionPool, PooledMySQLConnection
 
-from dsbase import LocalLogger
 from dsbase.util.db import DatabaseError, QueryResult
 
 if TYPE_CHECKING:
@@ -37,7 +37,7 @@ class MySQLHelper:
     logger: Logger = field(init=False)
 
     def __post_init__(self):
-        self.logger = LocalLogger().get_logger()
+        self.logger = logician.Logger()
 
     @property
     def pool(self) -> MySQLConnectionPool:

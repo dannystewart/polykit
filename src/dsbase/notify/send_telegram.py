@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import logician
 import requests
-
-from dsbase import LocalLogger
 
 from .telegram_api import TelegramAPIHelper
 
@@ -23,7 +22,7 @@ class TelegramSender:
     """
 
     def __init__(self, token: str, chat_id: str):
-        self.logger = LocalLogger().get_logger(f"{self.__class__.__name__}")
+        self.logger = logician.Logger()
         self.api = TelegramAPIHelper(token, chat_id)
         self.chat_id = chat_id
 

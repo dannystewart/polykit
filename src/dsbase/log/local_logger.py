@@ -13,10 +13,9 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from dsroot import Singleton
-
 from dsbase.log.log_formatters import CustomFormatter, FileFormatter
 from dsbase.log.log_metadata import LogLevel
+from dsroot import Singleton
 
 if TYPE_CHECKING:
     from dsbase.env import EnvManager
@@ -56,7 +55,7 @@ class LocalLogger(metaclass=Singleton):
             env: An optional EnvManager instance to get the log level from.
         """
         logger_name = LocalLogger().get_logger_name(logger_name)
-        logger = logging.getLogger(logger_name)
+        logger = Logger(logger_name)
 
         # Use the log level from EnvManager if we have it, unless we're already at DEBUG level
         if env is not None and level != "DEBUG":

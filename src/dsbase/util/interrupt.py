@@ -4,6 +4,8 @@ import sys
 from functools import wraps
 from typing import TYPE_CHECKING, Any, TypeVar
 
+import logician
+
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
     from logging import Logger
@@ -64,9 +66,7 @@ def handle_interrupt(
                 if logger:  # Use supplied logger
                     logger.error(message)
                 else:  # Create new logger
-                    from dsbase import LocalLogger
-
-                    LocalLogger().get_logger(simple=True).error(message)
+                    logician.Logger(simple=True).error(message)
                 sys.exit(exit_code)
 
         return wrapper
@@ -106,9 +106,7 @@ def async_interrupt_handler[T](
             if logger:  # Use supplied logger
                 logger.error(message)
             else:  # Create new logger
-                from dsbase import LocalLogger
-
-                LocalLogger().get_logger(simple=True).error(message)
+                logician.Logger(simple=True).error(message)
             sys.exit(exit_code)
 
     return wrapper

@@ -7,10 +7,10 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+import logician
 from natsort import natsorted
 from send2trash import send2trash
 
-from dsbase.log.local_logger import LocalLogger
 from dsbase.shell import confirm_action
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ class FileManager:
         detailed_log: bool = False,
         logger: Logger | None = None,
     ):
-        self.logger = logger or LocalLogger().get_logger(level=log_level, simple=not detailed_log)
+        self.logger = logger or logician.Logger(level=log_level, simple=not detailed_log)
 
     def list(
         self,

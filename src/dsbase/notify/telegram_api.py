@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import logician
 import requests
 
-from dsbase import LocalLogger
+if TYPE_CHECKING:
+    from logging import Logger
 
 
 class TelegramAPIHelper:
@@ -22,7 +24,7 @@ class TelegramAPIHelper:
     """
 
     def __init__(self, token: str, chat_id: str):
-        self.logger = LocalLogger().get_logger(f"{self.__class__.__name__}")
+        self.logger: Logger = logician.Logger()
         self.token: str = token
         self.chat_id: str = chat_id
         self.url: str = f"https://api.telegram.org/bot{self.token}"

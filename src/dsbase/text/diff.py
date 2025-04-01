@@ -6,7 +6,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from dsbase import LocalLogger
+import logician
 
 if TYPE_CHECKING:
     from logging import Logger
@@ -77,7 +77,7 @@ def show_diff(
     Returns:
         A DiffResult object containing the changes that were identified.
     """
-    logger = logger or LocalLogger().get_logger(simple=True)
+    logger = logger or logician.Logger(simple=True)
     content = filename or "text"
 
     changes: list[str] = []

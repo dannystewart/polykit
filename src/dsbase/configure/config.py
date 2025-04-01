@@ -5,11 +5,12 @@ from pathlib import Path
 from threading import Lock
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
+import logician
 import tomlkit
 import yaml
 from tomlkit import TOMLDocument
 
-from dsbase import LocalLogger, PathKeeper, Text
+from dsbase import PathKeeper, Text
 from dsbase.configure.attr_dict import AttrDict
 from dsbase.configure.watchers import ConfigWatcher
 from dsbase.util.deprecate import not_yet_implemented
@@ -41,11 +42,11 @@ class Config:
         Args:
             config_name: Name of the configuration (used for paths).
             auto_reload: Whether to automatically reload on file changes.
-            logger: Optional logger instance (defaults to LocalLogger).
+            logger: Optional logger instance (defaults to Logician).
         """
         self.config_name: str = config_name
         self.auto_reload: bool = auto_reload
-        self.logger: Logger = logger or LocalLogger().get_logger()
+        self.logger: Logger = logger or logician.Logger()
 
         # Internal state
         self._lock: Lock = Lock()

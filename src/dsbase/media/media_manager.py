@@ -5,7 +5,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from dsbase import LocalLogger
+import logician
+
 from dsbase.animate import conditional_walking_man
 from dsbase.media.video_helper import VideoHelper
 from dsbase.shell.progress import halo_progress
@@ -23,7 +24,7 @@ class MediaManager:
         detailed_log: bool = False,
         logger: Logger | None = None,
     ):
-        self.logger = logger or LocalLogger().get_logger(level=log_level, simple=not detailed_log)
+        self.logger: Logger = logger or logician.Logger(level=log_level, simple=not detailed_log)
         self.video = VideoHelper(self)
 
     def run_ffmpeg(
