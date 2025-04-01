@@ -6,9 +6,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from logician import Logician
+from shelper import halo_progress
 from walking_man import conditional_walking_man
-
-from dsbase.shell.progress import halo_progress
 
 from .video_helper import VideoHelper
 

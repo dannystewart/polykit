@@ -10,8 +10,7 @@ from typing import TYPE_CHECKING, Any
 from logician import Logician
 from natsort import natsorted
 from send2trash import send2trash
-
-from dsbase.shell import confirm_action
+from shelper import confirm_action
 
 if TYPE_CHECKING:
     from collections.abc import Callable
