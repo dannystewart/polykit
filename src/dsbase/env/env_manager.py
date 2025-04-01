@@ -126,7 +126,7 @@ class EnvManager(metaclass=Singleton):
         loaded_from = {}
 
         for file in env_files:
-            full_path = Path(file).expanduser() if isinstance(file, str) else file.expanduser()
+            full_path = Path(file).expanduser()
             abs_path = full_path.absolute()
 
             self.logger.debug("Checking for env file: %s", abs_path)
