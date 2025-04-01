@@ -162,7 +162,7 @@ version = "0.4.6"
 description = "Cross-platform colored terminal text."
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -181,23 +181,8 @@ files = [
 ]
 
 [[package]]
-name = "dsroot"
-version = "0.0.3"
-description = "Core dependencies for DS packages"
-optional = false
-python-versions = ">=3.12"
-groups = ["main", "dev"]
-files = [
-    {file = "dsroot-0.0.3-py3-none-any.whl", hash = "sha256:2629800ce03460de65bb11285c5be2652e92b10866a9be26cc6e89b03da896ec"},
-    {file = "dsroot-0.0.3.tar.gz", hash = "sha256:e1be0937e0c2b5f1f64c67887b0abd5d91566efe42a1e5ca8e23d60a79f9d02e"},
-]
-
-[package.dependencies]
-tzlocal = ">=5.3.1,<6.0.0"
-
-[[package]]
 name = "enviromancer"
-version = "0.1.2"
+version = "0.1.3"
 description = "Gain mastery over your environment variables"
 optional = false
 python-versions = ">=3.12"
@@ -206,8 +191,8 @@ files = []
 develop = true
 
 [package.dependencies]
-dsroot = ">=0.0.3,<0.0.4"
-logician = ">=0.2.1,<0.3.0"
+logician = ">=0.2.4,<0.3.0"
+masterclass = ">=0.1.0,<0.2.0"
 python-dotenv = ">=1.1.0"
 
 [package.source]
@@ -237,7 +222,7 @@ version = "0.0.31"
 description = "Beautiful terminal spinners in Python"
 optional = false
 python-versions = ">=3.4"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "halo-0.0.31-py2-none-any.whl", hash = "sha256:5350488fb7d2aa7c31a1344120cee67a872901ce8858f60da7946cef96c208ab"},
     {file = "halo-0.0.31.tar.gz", hash = "sha256:7b67a3521ee91d53b7152d4ee3452811e1d2a6321975137762eb3d70063cc9d6"},
@@ -323,7 +308,7 @@ version = "0.0.14"
 description = "Colored symbols for various log levels for Python"
 optional = false
 python-versions = "*"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "log_symbols-0.0.14-py3-none-any.whl", hash = "sha256:4952106ff8b605ab7d5081dd2c7e6ca7374584eff7086f499c06edd1ce56dcca"},
     {file = "log_symbols-0.0.14.tar.gz", hash = "sha256:cf0bbc6fe1a8e53f0d174a716bc625c4f87043cc21eb55dd8a740cfe22680556"},
@@ -334,7 +319,7 @@ colorama = ">=0.3.9"
 
 [[package]]
 name = "logician"
-version = "0.2.2"
+version = "0.2.4"
 description = "The logical choice for Python logging"
 optional = false
 python-versions = ">=3.12"
@@ -423,14 +408,14 @@ files = [
 
 [[package]]
 name = "masterclass"
-version = "0.0.3"
+version = "0.1.0"
 description = "Definitive Python singleton implementation"
 optional = false
 python-versions = ">=3.12"
 groups = ["main", "dev"]
 files = [
-    {file = "masterclass-0.0.3-py3-none-any.whl", hash = "sha256:31132030be23965f2ce6cc53cc538ccdb4e059eeb951e3215faecfb7bc44c4be"},
-    {file = "masterclass-0.0.3.tar.gz", hash = "sha256:7ce360f3cd4f34a6610550033e19266684b83ed536ec7feaf0bc44d5c51954b1"},
+    {file = "masterclass-0.1.0-py3-none-any.whl", hash = "sha256:921fa913e0899deb5d2a98e91a6968bd567de57196318b1edf80b2aaca098805"},
+    {file = "masterclass-0.1.0.tar.gz", hash = "sha256:d935ceefc2d38f8b3c0d7a11ba39280153e9c63223b4a4b2aa4c0118241dc1a7"},
 ]
 
 [[package]]
@@ -809,6 +794,23 @@ objc = ["pyobjc-framework-Cocoa ; sys_platform == \"darwin\""]
 win32 = ["pywin32 ; sys_platform == \"win32\""]
 
 [[package]]
+name = "shelper"
+version = "0.1.0"
+description = "The shell helper"
+optional = false
+python-versions = ">=3.12"
+groups = ["main", "dev"]
+files = [
+    {file = "shelper-0.1.0-py3-none-any.whl", hash = "sha256:0862e9daaa1bda3276020acae4b27f7e6ce66816309f7f0b28a20ccae92f259b"},
+    {file = "shelper-0.1.0.tar.gz", hash = "sha256:238085a2d2a64a57333bbbd5457f3586b711f717460dab8be172b03a05d987be"},
+]
+
+[package.dependencies]
+halo = ">=0.0.31,<0.0.32"
+logician = ">=0.2.2,<0.3.0"
+textparse = ">=0.0.1"
+
+[[package]]
 name = "six"
 version = "1.17.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -826,7 +828,7 @@ version = "0.0.24"
 description = "Spinners for terminals"
 optional = false
 python-versions = "*"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "spinners-0.0.24-py3-none-any.whl", hash = "sha256:2fa30d0b72c9650ad12bbe031c9943b8d441e41b4f5602b0ec977a19f3290e98"},
     {file = "spinners-0.0.24.tar.gz", hash = "sha256:1eb6aeb4781d72ab42ed8a01dcf20f3002bf50740d7154d12fb8c9769bf9e27f"},
@@ -838,7 +840,7 @@ version = "3.0.0"
 description = "ANSI color formatting for output in terminal"
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "termcolor-3.0.0-py3-none-any.whl", hash = "sha256:fdfdc9f2bdb71c69fbbbaeb7ceae3afef0461076dd2ee265bf7b7c49ddb05ebb"},
     {file = "termcolor-3.0.0.tar.gz", hash = "sha256:0cd855c8716383f152ad02bbb39841d6e4694538ff5d424088e56c8b81fde525"},
@@ -849,33 +851,34 @@ tests = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "textparse"
-version = "0.0.1"
+version = "0.1.0"
 description = "The missing text toolkit for Python"
 optional = false
 python-versions = ">=3.12"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
-    {file = "textparse-0.0.1-py3-none-any.whl", hash = "sha256:b1cde606a9aacb0362a97aa24c3d15190ec38bbcc391f5a212da2a4caf77983e"},
-    {file = "textparse-0.0.1.tar.gz", hash = "sha256:bcba22778b7314eb5f2a76406655a289af9bd113659f57f09cf12e9833443533"},
+    {file = "textparse-0.1.0-py3-none-any.whl", hash = "sha256:894b48bb94a213a77e5da83403310d6cf514891cd4cffcdef837dab1084e3016"},
+    {file = "textparse-0.1.0.tar.gz", hash = "sha256:084d3e459e737de3161096dfe95a71cc7b801d32e078a6e01a4859a672beb79e"},
 ]
 
 [package.dependencies]
 logician = ">=0.2.1,<0.3.0"
+termcolor = ">=3.0.0,<4.0.0"
 
 [[package]]
 name = "timecapsule"
-version = "0.0.2"
+version = "0.1.0"
 description = "Human-friendly datetime handling for Python"
 optional = false
 python-versions = ">=3.12"
 groups = ["main", "dev"]
 files = [
-    {file = "timecapsule-0.0.2-py3-none-any.whl", hash = "sha256:4c05f671461f1b1b91a1dfd2df25f5174d5f46bf3898b846e15c5f42122f71f5"},
-    {file = "timecapsule-0.0.2.tar.gz", hash = "sha256:f215d969da0003606d71ff0c3c80fb5716d122b7ce49cc024a6d063459ba8a6f"},
+    {file = "timecapsule-0.1.0-py3-none-any.whl", hash = "sha256:06b0171dd255a88d22375c1f6a2647e2290b99f0dfe4126bebc94870a80f4f83"},
+    {file = "timecapsule-0.1.0.tar.gz", hash = "sha256:6e12ee3170bd9f0e565e25b5a51e7da1dc6dd4451daad0e0a4ee8569c83bb143"},
 ]
 
 [package.dependencies]
-masterclass = ">=0.0.2"
+masterclass = ">=0.0.3"
 python-dateutil = ">=2.9.0.post0"
 tzlocal = ">=5.3.1"
 
@@ -1001,7 +1004,7 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 
 [[package]]
 name = "walking-man"
-version = "0.1.0"
+version = "0.2.1"
 description = "Walking Man goes on an adventure"
 optional = false
 python-versions = ">=3.12,<3.14"
@@ -1011,7 +1014,8 @@ develop = true
 
 [package.dependencies]
 blessed = ">=1.20.0,<2.0.0"
-dsbase = ">=0.4.3,<0.5.0"
+shelper = ">=0.1.0,<0.2.0"
+textparse = ">=0.1.0"
 
 [package.source]
 type = "directory"
@@ -1075,4 +1079,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "189e4a1f73deda95395f1f29405ea134e92103de3ae91a2e202d5039eec6d58b"
+content-hash = "174bbc6461ce179548e13bf19ec12a6b2a07a5ae827568549062cf621e09a443"
