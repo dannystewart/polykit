@@ -8,10 +8,10 @@ from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 import tomlkit
 import yaml
 from logician import Logician
+from pathkeeper import PathKeeper
 from textparse import TextParse
 from tomlkit import TOMLDocument
 
-from dsbase import PathKeeper
 from dsbase.configure.attr_dict import AttrDict
 from dsbase.configure.watchers import ConfigWatcher
 from dsbase.util.deprecate import not_yet_implemented

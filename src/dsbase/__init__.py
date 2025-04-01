@@ -12,7 +12,6 @@ pip install dsbase
 
 Some of the features include:
 
-- `PathKeeper` for convenient cross-platform access to common paths
 - Drop-in `argparse` replacement with easier formatting
 - Simple helper for comparing files and showing diffs
 - Database helper interfaces for MySQL and SQLite
@@ -29,7 +28,6 @@ from __future__ import annotations
 
 from dsbase.files import FileManager
 from dsbase.media import MediaManager
-from dsbase.paths import PathKeeper
 from dsbase.text import Text
 from dsbase.time import Time
 from dsbase.util import ArgParser

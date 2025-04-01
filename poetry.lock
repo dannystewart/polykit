@@ -566,6 +566,22 @@ files = [
 ]
 
 [[package]]
+name = "pathkeeper"
+version = "0.1.0"
+description = "Easy path access for Python projects"
+optional = false
+python-versions = ">=3.12"
+groups = ["main"]
+files = [
+    {file = "pathkeeper-0.1.0-py3-none-any.whl", hash = "sha256:31e399735a77cdc0f67780517686d4e97037578cbef042593d2752c60e4f18b0"},
+    {file = "pathkeeper-0.1.0.tar.gz", hash = "sha256:0a61e0df0b38d77a44f95a0744702436f2bda4d2dddeab5c060b2a73695aba8d"},
+]
+
+[package.dependencies]
+enviromancer = ">=0.1.2,<0.2.0"
+platformdirs = ">=4.3.7,<5.0.0"
+
+[[package]]
 name = "pdoc"
 version = "15.0.1"
 description = "API Documentation for Python Projects"
@@ -1079,4 +1095,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "174bbc6461ce179548e13bf19ec12a6b2a07a5ae827568549062cf621e09a443"
+content-hash = "e153fc1b6b599a4f966e5d7ec5c9e0e3aaa41006bfb71c375b81c688f086741d"
