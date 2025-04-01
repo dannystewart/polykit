@@ -8,8 +8,9 @@ from typing import TYPE_CHECKING
 from logician import Logician
 from walking_man import conditional_walking_man
 
-from dsbase.media.video_helper import VideoHelper
 from dsbase.shell.progress import halo_progress
+
+from .video_helper import VideoHelper
 
 if TYPE_CHECKING:
     from logging import Logger
