@@ -1,4 +1,4 @@
-# Ruff config version: 18
+# Ruff config version: 19
 # -----------------------
 
 # Files and directories to exclude
@@ -183,6 +183,7 @@ section-order = [
     "future",
     "standard-library",
     "third-party",
+    "personal_core",
     "personal_util",
     "personal_bin",
     "first-party",
@@ -190,8 +191,9 @@ section-order = [
 ]
 
 [lint.isort.sections]
-personal_util = ["configs", "dsbase", "dsutil"]
-personal_bin = ["dsbin", "dsupdater", "evremixes", "iplookup", "prism", "pybounce", "workcalc", "wpmusic"]
+personal_core = ["dsroot", "dsbase", "dsutil"]
+personal_util = ["enviromancer", "logician"]
+personal_bin = ["dsbin", "evremixes", "iplookup", "prism"]
 
 [lint.mccabe]
 max-complexity = 10

@@ -151,6 +151,21 @@ files = [
 ]
 
 [[package]]
+name = "dsroot"
+version = "0.0.3"
+description = "Core dependencies for DS packages"
+optional = false
+python-versions = ">=3.12"
+groups = ["main"]
+files = [
+    {file = "dsroot-0.0.3-py3-none-any.whl", hash = "sha256:2629800ce03460de65bb11285c5be2652e92b10866a9be26cc6e89b03da896ec"},
+    {file = "dsroot-0.0.3.tar.gz", hash = "sha256:e1be0937e0c2b5f1f64c67887b0abd5d91566efe42a1e5ca8e23d60a79f9d02e"},
+]
+
+[package.dependencies]
+tzlocal = ">=5.3.1,<6.0.0"
+
+[[package]]
 name = "filelock"
 version = "3.18.0"
 description = "A platform independent file lock."
@@ -903,4 +918,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "31dca9872ace49db56a655d2c0eb3fc1ec559e1c8583ee3e749a18428f8e1aa8"
+content-hash = "0a82306eedd15d944ef01d9f8039dfb52da8cb658eeaa56f7f339bcf86c38f83"
