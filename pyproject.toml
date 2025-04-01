@@ -10,6 +10,7 @@ license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.14"
 dependencies = [
     "dsroot (>=0.0.3,<0.0.4)",
+    "enviromancer (>=0.1.2,<0.2.0)",
     "halo (>=0.0.31)",
     "logician (>=0.2.1,<0.3.0)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",

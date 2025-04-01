@@ -166,6 +166,23 @@ files = [
 tzlocal = ">=5.3.1,<6.0.0"
 
 [[package]]
+name = "enviromancer"
+version = "0.1.2"
+description = "Gain mastery over your environment variables"
+optional = false
+python-versions = ">=3.12"
+groups = ["main"]
+files = [
+    {file = "enviromancer-0.1.2-py3-none-any.whl", hash = "sha256:b27d90faee8328671eaf3bdc991af4a221d68f81b23838fd2c06f1219d4d94c1"},
+    {file = "enviromancer-0.1.2.tar.gz", hash = "sha256:8ec77bcb6e97a05068b7ba321d4818979c928f402139d41324233ddfe5839e06"},
+]
+
+[package.dependencies]
+dsroot = ">=0.0.3,<0.0.4"
+logician = ">=0.2.1,<0.3.0"
+python-dotenv = ">=1.1.0,<2.0.0"
+
+[[package]]
 name = "filelock"
 version = "3.18.0"
 description = "A platform independent file lock."
@@ -933,4 +950,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "318bab70dd95de28c9c63bf3d8e8fec8fb9ba5283b33e28ce2b14d7b80c2ee6b"
+content-hash = "becd24e3e0d57b0c13bb45195500e0a4466c4419bb0ac5d6ee4c95e83c7aef4f"
