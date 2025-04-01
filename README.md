@@ -49,4 +49,4 @@ Contributions are welcome! Please feel free to submit a pull request!
 
 ## License
 
-This project is licensed under the LGPL-3.0 License. See the LICENSE file for details.
+This project is licensed under the LGPL-3.0 License. See the [LICENSE](https://github.com/dannystewart/dsbase/blob/main/LICENSE) file for details.
