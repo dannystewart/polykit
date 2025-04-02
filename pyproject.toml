@@ -9,16 +9,16 @@ license = "LGPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "enviromancer (>=0.1.3)",
+    "enviromancer (>=0.1.5)",
     "halo (>=0.0.31)",
-    "logician (>=0.2.4)",
+    "logician (>=0.3.2)",
     "natsort (>=8.4.0,<9.0.0)",
     "requests (>=2.32.3,<3.0.0)",
     "send2trash (>=1.8.3,<2.0.0)",
-    "textparse (>=0.1.0)",
+    "textparse (>=0.1.2)",
     "types-requests (>=2.32.0.20250328,<3.0.0.0)",
     "types-send2trash (>=1.8.2.7,<2.0.0.0)",
-    "walking-man (>=0.2.1)",
+    "walking-man (>=0.2.6)",
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -26,9 +26,13 @@ mypy = ">=1.15.0"
 pdoc = ">=15.0.1"
 pre-commit = ">=4.2.0"
 ruff = ">=0.11.2"
+devpkg = { path = "../devpkg", develop = true }
 enviromancer = { path = "../enviromancer", develop = true }
 logician = { path = "../logician", develop = true }
+pathkeeper = { path = "../pathkeeper", develop = true }
+shelper = { path = "../shelper", develop = true }
 textparse = { path = "../textparse", develop = true }
+timecapsule = { path = "../timecapsule", develop = true }
 walking-man = { path = "../walking-man", develop = true }
 
 [build-system]

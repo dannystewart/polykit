@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import sys
 
+from devpkg import VersionChecker, VersionInfo
 from enviromancer import Enviromancer
 from logician import Logician
-from pkgversioner import VersionChecker, VersionInfo
 
 from dsbase.util.traceback import log_traceback
 
