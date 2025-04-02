@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from collections import defaultdict
 from pathlib import Path
@@ -8,8 +9,6 @@ from typing import TYPE_CHECKING
 from logician import Logician
 from shelper import halo_progress
 from walking_man import conditional_walking_man
-
-from .video_helper import VideoHelper
 
 if TYPE_CHECKING:
     from logging import Logger
@@ -27,7 +26,6 @@ class MediaManager:
         self.logger: Logger = logger or Logician.get_logger(
             level=log_level, simple=not detailed_log
         )
-        self.video = VideoHelper(self)
 
     def run_ffmpeg(
         self,
@@ -163,7 +161,7 @@ class MediaManager:
 
         if preserve_metadata:
             command.extend(["-map_metadata", "0"])
-            if input_file and self.video.has_video_stream(input_file):
+            if input_file and self.has_video_stream(input_file):
                 command.extend(["-map", "0:v", "-c:v", "copy"])
             command.extend(["-map", "0:a"])
         else:
@@ -318,3 +316,80 @@ class MediaManager:
                 selected_file = files[0]
             prioritized_files.append(selected_file)
         return prioritized_files
+
+    def ffmpeg_video(
+        self,
+        input_files: Path | list[Path],
+        output_format: str,
+        output_file: str | None = None,
+        overwrite: bool = True,
+        video_codec: str | None = None,
+        video_bitrate: str | None = None,
+        audio_codec: str | None = None,
+        additional_args: list[str] | None = None,
+        show_output: bool = False,
+    ):
+        """Convert a video file to a different format using ffmpeg with various options.
+
+        Args:
+            input_files: The path to the input file or a list of paths to input files.
+            output_format: The desired output format.
+            output_file: The path to the output file. Defaults to None.
+            overwrite: Whether to overwrite the output file if it already exists. Defaults to True.
+            video_codec: The desired video codec. Defaults to None, which uses "copy".
+            video_bitrate: The desired video bitrate. Defaults to None.
+            audio_codec: The desired audio codec. Defaults to None, which uses "copy".
+            additional_args: List of additional arguments to pass to ffmpeg. Defaults to None.
+            show_output: Whether to display ffmpeg output. Defaults to False.
+        """
+        if not isinstance(input_files, list):
+            input_files = [input_files]
+
+        for input_file in input_files:
+            current_output_file = self.construct_filename(
+                input_file,
+                output_file,
+                output_format,
+                input_files,
+            )
+            command = self.construct_ffmpeg_command(input_file, overwrite)
+            self.add_video_flags(command, video_codec, video_bitrate, audio_codec)
+
+            if additional_args:
+                command.extend(additional_args)
+
+            command.append(current_output_file)
+            self.run_ffmpeg(command, input_file, show_output)
+
+    def has_video_stream(self, file_path: Path) -> bool:
+        """Check if the file has a video stream (potentially cover art)."""
+        stream_info = self.get_stream_info(file_path)
+        return any(stream["codec_type"] == "video" for stream in stream_info["streams"])
+
+    @staticmethod
+    def add_video_flags(
+        command: list[str],
+        video_codec: str | None,
+        video_bitrate: str | None,
+        audio_codec: str | None,
+    ) -> None:
+        """Add the necessary flags for the desired video codec settings to the ffmpeg command.
+
+        Args:
+            command: The ffmpeg command to which to apply the settings.
+            video_codec: The desired video codec. Defaults to None.
+            video_bitrate: The desired video bitrate. Defaults to None.
+            audio_codec: The desired audio codec. Defaults to None.
+        """
+        command += ["-c:v", video_codec] if video_codec else ["-c:v", "copy"]
+        if video_bitrate:
+            command += ["-b:v", video_bitrate]
+
+        command += ["-c:a", audio_codec] if audio_codec else ["-c:a", "copy"]
+
+    @staticmethod
+    def get_stream_info(file_path: Path) -> dict[str, dict[dict[str, str], str]]:
+        """Get stream information from the input file."""
+        command = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", file_path]
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
+        return json.loads(result.stdout)
