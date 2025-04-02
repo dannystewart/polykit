@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib
 from typing import TYPE_CHECKING
 
-from dsbase.text import print_colored
+from textparse import print_color
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -63,9 +63,9 @@ def find_duplicate_files_by_hash(files: list[Path]) -> None:
     for file_hash, file_list in hash_map.items():
         if len(file_list) > 1:
             print("\nHash:", file_hash)
-            print_colored("Duplicate files:", "yellow")
+            print_color("Duplicate files:", "yellow")
             for duplicate_file in file_list:
                 print(f"  - {duplicate_file}")
 
     if not duplicates_found:
-        print_colored("\nNo duplicates found!", "green")
+        print_color("\nNo duplicates found!", "green")

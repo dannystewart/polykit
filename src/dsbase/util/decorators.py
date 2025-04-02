@@ -6,6 +6,7 @@ from functools import wraps
 from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
 from halo import Halo
+from textparse import print_color
 
 if TYPE_CHECKING:
     import logging
@@ -35,9 +36,8 @@ def with_retries[T](operation_func: Callable[..., T]) -> Callable[..., T]:
                     return operation_func(*args, **kwargs)
             except subprocess.CalledProcessError as e:
                 last_exception = e
-                from dsbase.text import print_colored
 
-                print_colored(
+                print_color(
                     f"Failed to complete: {operation_func.__name__}, retrying... ({attempt + 1} out of {retries})",
                     "yellow",
                 )
@@ -76,9 +76,7 @@ def retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
-                        from dsbase.text import print_colored
-
-                        print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
+                        print_color(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
                     tries -= 1
                     delay *= backoff
@@ -120,9 +118,7 @@ def async_retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
-                        from dsbase.text import print_colored
-
-                        print_colored(f"{e}. Retrying in {delay} seconds...", "yellow")
+                        print_color(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
                     tries -= 1
                     delay *= backoff

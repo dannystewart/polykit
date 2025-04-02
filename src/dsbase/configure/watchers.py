@@ -6,9 +6,9 @@ from threading import Lock
 from typing import TYPE_CHECKING, Any
 
 from logician import Logician
+from masterclass import Singleton
 
 from dsbase.util.deprecate import not_yet_implemented
-from dsbase.util.singleton import Singleton
 
 if TYPE_CHECKING:
     import logging

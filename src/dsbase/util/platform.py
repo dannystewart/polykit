@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from textparse import print_color
+
 
 def is_doc_tool() -> bool:
     """Check if code is being imported for documentation generation."""
@@ -25,8 +27,6 @@ def platform_check(platform_name: str = "Darwin", exit_on_mismatch: bool = True)
     import os
     import sys
 
-    from dsbase.text import print_colored
-
     # Skip actual check if being imported for documentation
     if is_doc_tool():
         return True
@@ -36,7 +36,7 @@ def platform_check(platform_name: str = "Darwin", exit_on_mismatch: bool = True)
     if not is_correct_platform and exit_on_mismatch:
         os_name = "macOS" if platform_name == "Darwin" else platform_name
         message = f"This can only be run on {os_name}. Aborting."
-        print_colored(message, "red")
+        print_color(message, "red")
 
         # Only exit if running as a script, not when imported
         if __name__ == "__main__":
