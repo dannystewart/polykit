@@ -9,32 +9,16 @@ license = "LGPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "enviromancer (>=0.1.3,<0.2.0)",
+    "enviromancer (>=0.1.3)",
     "halo (>=0.0.31)",
-    "logician (>=0.2.4,<0.3.0)",
-    "masterclass (>=0.1.0,<0.2.0)",
-    "mysql-connector-python (>=9.2.0,<10.0.0)",
+    "logician (>=0.2.4)",
     "natsort (>=8.4.0,<9.0.0)",
-    "packaging (>=24.2,<25.0)",
-    "pathkeeper (>=0.1.0,<0.2.0)",
-    "pkgversioner (>=0.1.3,<0.2.0)",
-    "platformdirs (>=4.3.7,<5.0.0)",
-    "pygments (>=2.19.1,<3.0.0)",
-    "python-dateutil (>=2.9.0.post0,<3.0.0)",
-    "python-dotenv (>=1.1.0,<2.0.0)",
-    "pyyaml (>=6.0.2,<7.0.0)",
     "requests (>=2.32.3,<3.0.0)",
     "send2trash (>=1.8.3,<2.0.0)",
-    "termcolor (>=3.0.0)",
-    "textparse (>=0.1.0,<0.2.0)",
-    "timecapsule (>=0.1.0,<0.2.0)",
-    "tomlkit (>=0.13.2,<0.14.0)",
+    "textparse (>=0.1.0)",
     "types-requests (>=2.32.0.20250328,<3.0.0.0)",
     "types-send2trash (>=1.8.2.7,<2.0.0.0)",
-    "tzdata (>=2025.2)",
-    "tzlocal (>=5.3.1,<6.0.0)",
     "walking-man (>=0.2.1)",
-    "watchdog (>=6.0.0,<7.0.0)",
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -44,11 +28,7 @@ pre-commit = ">=4.2.0"
 ruff = ">=0.11.2"
 enviromancer = { path = "../enviromancer", develop = true }
 logician = { path = "../logician", develop = true }
-masterclass = { path = "../masterclass", develop = true }
-pathkeeper = { path = "../pathkeeper", develop = true }
-pkgversioner = { path = "../pkgversioner", develop = true }
 textparse = { path = "../textparse", develop = true }
-timecapsule = { path = "../timecapsule", develop = true }
 walking-man = { path = "../walking-man", develop = true }
 
 [build-system]
