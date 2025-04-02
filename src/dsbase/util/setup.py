@@ -4,9 +4,9 @@ import sys
 
 from enviromancer import Enviromancer
 from logician import Logician
+from pkgversioner import VersionChecker, VersionInfo
 
 from dsbase.util.traceback import log_traceback
-from dsbase.version import VersionChecker, VersionInfo
 
 
 def dsbase_setup() -> VersionInfo:

@@ -571,15 +571,17 @@ version = "0.1.0"
 description = "Easy path access for Python projects"
 optional = false
 python-versions = ">=3.12"
-groups = ["main"]
-files = [
-    {file = "pathkeeper-0.1.0-py3-none-any.whl", hash = "sha256:31e399735a77cdc0f67780517686d4e97037578cbef042593d2752c60e4f18b0"},
-    {file = "pathkeeper-0.1.0.tar.gz", hash = "sha256:0a61e0df0b38d77a44f95a0744702436f2bda4d2dddeab5c060b2a73695aba8d"},
-]
+groups = ["main", "dev"]
+files = []
+develop = true
 
 [package.dependencies]
-enviromancer = ">=0.1.2,<0.2.0"
+enviromancer = ">=0.1.3,<0.2.0"
 platformdirs = ">=4.3.7,<5.0.0"
+
+[package.source]
+type = "directory"
+url = "../pathkeeper"
 
 [[package]]
 name = "pdoc"
@@ -597,6 +599,18 @@ files = [
 Jinja2 = ">=2.11.0"
 MarkupSafe = ">=1.1.1"
 pygments = ">=2.12.0"
+
+[[package]]
+name = "pkgversioner"
+version = "0.0.2"
+description = "Package versioning tools for Python projects"
+optional = false
+python-versions = ">=3.12"
+groups = ["main"]
+files = [
+    {file = "pkgversioner-0.0.2-py3-none-any.whl", hash = "sha256:637bc7db5836c146e658b946b1fb71cc5aab1ce9cd57ea60d652d7b3575078dd"},
+    {file = "pkgversioner-0.0.2.tar.gz", hash = "sha256:e162ab789899fcd4f7817efb733ec2eb6508e30b18c6ea44fbc625fc1b5e6741"},
+]
 
 [[package]]
 name = "platformdirs"
@@ -1095,4 +1109,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "e153fc1b6b599a4f966e5d7ec5c9e0e3aaa41006bfb71c375b81c688f086741d"
+content-hash = "841bd980c7b9cf5c836c53a7df61c55a2e4955ba28ad3ef8f4938846161659ed"
