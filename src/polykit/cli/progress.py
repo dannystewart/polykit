@@ -8,14 +8,14 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from halo import Halo
 
-from polykit.parsers import color as colorize
-from polykit.parsers import print_color
+from polykit.formatters import color as colorize
+from polykit.formatters import print_color
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
     from pathlib import Path
 
-    from polykit.parsers.types import TextColor
+    from polykit.formatters.types import TextColor
 
 T = TypeVar("T")
 

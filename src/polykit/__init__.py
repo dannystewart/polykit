@@ -5,5 +5,5 @@ from .core.is_literal import is_literal
 from .core.setup import polykit_setup
 from .core.singleton import Singleton
 from .core.traceback import log_traceback
-from .parsers.text import Text
-from .parsers.time import TZ, Time
+from .formatters.text import Text
+from .formatters.time import TZ, Time

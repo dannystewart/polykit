@@ -32,7 +32,7 @@ def platform_check(platform_name: str = "Darwin", exit_on_mismatch: bool = True)
     is_correct_platform = os.uname().sysname == platform_name
 
     if not is_correct_platform and exit_on_mismatch:
-        from polykit.parsers import print_color
+        from polykit.formatters import print_color
 
         os_name = "macOS" if platform_name == "Darwin" else platform_name
         message = f"This can only be run on {os_name}. Aborting."

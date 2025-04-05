@@ -41,7 +41,7 @@ def with_retries[T](operation_func: Callable[..., T]) -> Callable[..., T]:
             except subprocess.CalledProcessError as e:
                 last_exception = e
 
-                from polykit.parsers import print_color
+                from polykit.formatters import print_color
 
                 print_color(
                     f"Failed to complete: {operation_func.__name__}, retrying... ({attempt + 1} out of {retries})",
@@ -82,7 +82,7 @@ def retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
-                        from polykit.parsers import print_color
+                        from polykit.formatters import print_color
 
                         print_color(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
@@ -126,7 +126,7 @@ def async_retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
-                        from polykit.parsers import print_color
+                        from polykit.formatters import print_color
 
                         print_color(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
