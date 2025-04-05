@@ -84,7 +84,7 @@ class PolyFiles:
     @classmethod
     def delete(
         cls, paths: Path | PathList, dry_run: bool = False, logger: Logger | None = None
-    ) -> tuple[int, int, list[str] | None]:
+    ) -> tuple[list[Path], list[Path]]:
         """Safely move files to the trash or delete them permanently if necessary.
 
         Args:
@@ -93,14 +93,13 @@ class PolyFiles:
             logger: Optional logger for operation information.
 
         Returns:
-            A tuple containing: (successful_deletions, failed_deletions, dry_run_messages).
-            The dry_run_messages list is only populated when dry_run=True.
+            A tuple containing (successful_paths, failed_paths), which are lists of Path objects
+            that were successfully deleted or failed to delete.
         """
         # Initialize tracking variables
         file_list = [paths] if isinstance(paths, Path) else paths
-        successful = 0
-        failed = 0
-        dry_run_messages = [] if dry_run else None
+        successful: list[Path] = []
+        failed: list[Path] = []
 
         # Log dry run mode
         if dry_run and logger:
@@ -110,54 +109,37 @@ class PolyFiles:
         for file_path in file_list:
             # Skip non-existent files
             if not file_path.exists():
-                failed += 1
+                failed.append(file_path)
                 if logger:
                     logger.warning("File %s does not exist.", file_path.name)
                 continue
 
             # Handle file based on dry run mode
             if dry_run:
-                if cls._handle_dry_run_delete(file_path, logger, dry_run_messages):
-                    successful += 1
+                message = f"Would delete: {file_path}"
+                if logger:
+                    logger.info(message)
+                    successful.append(file_path)
                 else:
-                    failed += 1
+                    failed.append(file_path)
             # First try sending to trash
             elif cls._try_trash_file(file_path, logger) or cls._try_permanent_delete(
                 file_path, logger
             ):
-                successful += 1
+                successful.append(file_path)
             else:
-                failed += 1
+                failed.append(file_path)
 
         # Log summary if not in dry run mode
         if logger and not dry_run:
-            message = f"{successful} file{'s' if successful != 1 else ''} trashed."
-            if failed > 0:
-                message += f" Failed to delete {failed} file{'s' if failed != 1 else ''}."
+            s_count = len(successful)
+            f_count = len(failed)
+            message = f"{s_count} file{'s' if s_count != 1 else ''} trashed."
+            if f_count > 0:
+                message += f" Failed to delete {f_count} file{'s' if f_count != 1 else ''}."
             logger.info(message)
 
-        return successful, failed, dry_run_messages
-
-    @classmethod
-    def _handle_dry_run_delete(
-        cls, file_path: Path, logger: Logger | None, dry_run_messages: list[str] | None
-    ) -> bool:
-        """Handle file deletion simulation in dry run mode.
-
-        Args:
-            file_path: The file to simulate deletion for.
-            logger: Optional logger for messages.
-            dry_run_messages: A list to collect dry run messages, or None.
-
-        Returns:
-            True, as the simulation is always successful.
-        """
-        message = f"Would delete: {file_path}"
-        if logger:
-            logger.info(message)
-        if dry_run_messages is not None:
-            dry_run_messages.append(message)
-        return True
+        return successful, failed
 
     @classmethod
     def _try_trash_file(cls, file_path: Path, logger: Logger | None) -> bool:
