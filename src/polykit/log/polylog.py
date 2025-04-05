@@ -6,13 +6,21 @@ defining console color codes for use in the formatter to colorize messages by lo
 
 from __future__ import annotations
 
+import contextlib
+import functools
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from polykit.core.singleton import Singleton
 from polykit.log.formatters import CustomFormatter, FileFormatter
 from polykit.log.types import LogLevel
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+T = TypeVar("T")
 
 
 class PolyLog(metaclass=Singleton):
@@ -22,7 +30,7 @@ class PolyLog(metaclass=Singleton):
     features like automatic context detection, color-coded output, and datetime formatting.
 
     Usage:
-        from logician import PolyLog
+        from polykit.log import PolyLog
 
         # Basic usage with automatic name detection
         logger = PolyLog.get_logger()
@@ -146,3 +154,98 @@ class PolyLog(metaclass=Singleton):
         file_handler.setFormatter(formatter)
         logger.setLevel(logging.DEBUG)
         logger.addHandler(file_handler)
+
+    @classmethod
+    def exception(
+        cls,
+        logger: logging.Logger | str | None = None,
+        exc_info: bool = True,
+        message: str = "An exception occurred:",
+        level: str = "error",
+    ) -> None:
+        """Log an exception with full traceback information.
+
+        Args:
+            logger: Logger object or logger name to use. If None, creates a new logger.
+            exc_info: Exception info to log. True uses current exception from sys.exc_info().
+            message: Custom message to log with the exception.
+            level: Log level to use.
+        """
+        if logger is None:
+            # Create a default logger if none provided
+            logger = PolyLog.get_logger()
+        elif isinstance(logger, str):
+            logger = PolyLog.get_logger(logger_name=logger)
+
+        log_level = LogLevel.get_level(level)
+
+        # Log at the appropriate level with exception info
+        if log_level >= logging.ERROR:
+            logger.error(message, exc_info=exc_info)
+        elif log_level >= logging.WARNING:
+            logger.warning(message, exc_info=exc_info)
+        elif log_level >= logging.INFO:
+            logger.info(message, exc_info=exc_info)
+        else:
+            logger.debug(message, exc_info=exc_info)
+
+    @classmethod
+    @contextlib.contextmanager
+    def catch(
+        cls,
+        logger: logging.Logger | str | None = None,
+        message: str = "An exception occurred:",
+        level: str = "error",
+        reraise: bool = True,
+    ):
+        """Context manager to catch and log exceptions.
+
+        Args:
+            logger: Logger object or logger name to use. If None, creates a new logger.
+            message: Custom message to log with the exception.
+            level: Log level to use.
+            reraise: Whether to re-raise the exception after logging.
+
+        Example:
+            with PolyLog.catch(logger, "Error processing data"):
+                # code that might raise an exception
+        """
+        try:
+            yield
+        except Exception as e:
+            cls.exception(logger, True, f"{message} {e!s}", level)
+            if reraise:
+                raise
+
+    @classmethod
+    def decorate(
+        cls,
+        logger: logging.Logger | str | None = None,
+        message: str = "Exception in {func_name}:",
+        level: str = "error",
+        reraise: bool = True,
+    ) -> Callable[[Callable[..., T]], Callable[..., T]]:
+        """Decorator to log exceptions raised in functions.
+
+        Args:
+            logger: Logger object or logger name to use.
+            message: Message template to use ({func_name} will be replaced).
+            level: Log level to use.
+            reraise: Whether to re-raise the exception after logging.
+
+        Example:
+            @PolyLog.decorate(logger, "Error in data processing")
+            def process_data():
+                # code that might raise an exception
+        """
+
+        def decorator(func: Callable[..., T]) -> Callable[..., T]:
+            @functools.wraps(func)
+            def wrapper(*args: Any, **kwargs: Any) -> Any:
+                formatted_message = message.format(func_name=func.__name__)
+                with cls.catch(logger, formatted_message, level, reraise):
+                    return func(*args, **kwargs)
+
+            return wrapper
+
+        return decorator
