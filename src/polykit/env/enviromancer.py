@@ -6,10 +6,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
 from dotenv import load_dotenv
-from logician import Logician
 
-from polykit import Singleton
+from polykit.core import Singleton
 from polykit.env.variable import EnvironmentVariable
+from polykit.log import Logician
 
 if TYPE_CHECKING:
     from collections.abc import Callable

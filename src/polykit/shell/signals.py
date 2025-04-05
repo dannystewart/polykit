@@ -4,8 +4,6 @@ import sys
 from functools import wraps
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from polykit.deps import get_logician, has_logician
-
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
     from logging import Logger
@@ -65,10 +63,10 @@ def handle_interrupt(
 
                 if logger:  # Use supplied logger
                     logger.error(message)
-                elif has_logician:  # Create new logger
-                    get_logician(simple=True).error(message)
-                else:  # Fallback to print
-                    print(message)
+                else:  # Create new logger
+                    from polykit.log.logician import Logician
+
+                    Logician.get_logger(simple=True).error(message)
                 sys.exit(exit_code)
 
         return wrapper
@@ -107,10 +105,10 @@ def async_interrupt_handler[T](
 
             if logger:  # Use supplied logger
                 logger.error(message)
-            elif has_logician:  # Create new logger
-                get_logician(simple=True).error(message)
-            else:  # Fallback to print
-                print(message)
+            else:  # Create new logger
+                from polykit.log.logician import Logician
+
+                Logician.get_logger(simple=True).error(message)
             sys.exit(exit_code)
 
     return wrapper

@@ -6,8 +6,6 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from polykit.deps import get_logician, has_logician
-
 if TYPE_CHECKING:
     from collections.abc import Callable
 
@@ -107,10 +105,8 @@ def _log_and_warn(
     location = f"{short_name}:{line_num} in {function}" if filename and line_num else ""
 
     # Create a logger and log the warning
-    if not has_logician:
-        print(f"{message} ({location})")
-        return
+    from polykit.log.logician import Logician
 
-    logger = get_logician(simple=True)
+    logger = Logician.get_logger(simple=True)
     log_level = logging.WARNING if warn_type is DeprecationWarning else logging.ERROR
     logger.log(log_level, "%s (%s)", message, location)

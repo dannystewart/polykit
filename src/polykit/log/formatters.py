@@ -6,7 +6,7 @@ from datetime import datetime
 from logging import Formatter, LogRecord
 from zoneinfo import ZoneInfo
 
-from logician.types import LogColors, LogLevel
+from polykit.log.types import LogColors, LogLevel
 
 
 @dataclass

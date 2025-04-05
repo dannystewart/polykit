@@ -5,8 +5,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from polykit.formatters import get_pretty_time
-
 if TYPE_CHECKING:
     from collections.abc import Mapping
     from types import TracebackType
@@ -27,6 +25,8 @@ class TimeAwareLogger(logging.Logger):
 
     @staticmethod
     def _format_args(*args: Any) -> list[Any]:
+        from polykit.formatters import get_pretty_time
+
         return [get_pretty_time(arg) if isinstance(arg, datetime) else arg for arg in args]
 
     def debug(

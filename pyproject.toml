@@ -9,7 +9,6 @@ license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
     "halo (>=0.0.31)",
-    "logician (>=0.3.3)",
     "packaging (>=24.2)",
     "platformdirs (>=4.3.7)",
     "python-dateutil (>=2.9.0.post0)",
@@ -36,9 +35,6 @@ mypy = ">=1.15.0"
 pdoc = ">=15.0.1"
 pre-commit = ">=4.2.0"
 ruff = ">=0.11.4"
-enviromancer = { path = "../enviromancer", develop = true }
-logician = { path = "../logician", develop = true }
-walking-man = { path = "../walking-man", develop = true }
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

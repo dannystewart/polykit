@@ -10,7 +10,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-from polykit import Singleton
+from polykit.core.singleton import Singleton
 from polykit.log.formatters import CustomFormatter, FileFormatter
 from polykit.log.types import LogLevel
 
@@ -87,7 +87,7 @@ class Logician(metaclass=Singleton):
             logger.propagate = False
 
         if time_aware:
-            from logician.time_aware import TimeAwareLogger
+            from polykit.log.time_aware import TimeAwareLogger
 
             return TimeAwareLogger(logger)
 
