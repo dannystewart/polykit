@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.7.0] (2025-04-05)
+
 ### Added
 
 - Adds exception handling utilities to `PolyLog`: `exception` for logging exceptions, `catch` as a context manager, and `decorate` as a decorator for wrapping functions with exception logging.
@@ -30,33 +32,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ### Removed
 
-- Removes deprecated features from the README.
-
-## [0.5.2] (2025-04-04)
-
-### Changed
-
-- Replaces `EnvManager` with `Enviromancer` for environment variable management in `PathKeeper`.
-- Changes folder structure by renaming `parsers` to `formatters` (breaking change: update imports from `polykit.parsers` to `polykit.formatters`).
-- Updates `.pre-commit-config.yaml` to enhance hook execution by checking availability beforehand.
-- Updates `poetry.lock` and `pyproject.toml` with improved dependency grouping and version constraints for consistency.
-- Updates Visual Studio Code workspace settings for conventional commits.
-- Enhances `__init__.py` module docstring to align with the README.
-
-### Fixed
-
-- Fixes an issue where `env_file` was not properly converted to a `Path` object when provided as a string.
-- Fixes import statement for `VideoHelper` in `media_manager`.
-- Fixes path handling in `EnvManager` for better compatibility with `env_files`.
-
-### Documentation
-
-- Updates installation instructions and clarifies feature migration in `README.md`.
+- Removes deprecated features from the codebase and documentation.
 
 <!-- Links -->
 [Keep a Changelog]: https://keepachangelog.com/en/1.1.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.5.2...HEAD
-[0.5.2]: https://github.com/dannystewart/polykit/releases/tag/v0.5.2
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/dannystewart/polykit/releases/tag/v0.7.0
