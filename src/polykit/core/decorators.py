@@ -5,12 +5,12 @@ import time
 from functools import wraps
 from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
-from halo import Halo
-from textparse import print_color
+from polykit.deps import get_halo, has_halo
 
 if TYPE_CHECKING:
     import logging
     from collections.abc import Callable, Coroutine
+
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -29,13 +29,19 @@ def with_retries[T](operation_func: Callable[..., T]) -> Callable[..., T]:
         last_exception = None
         for attempt in range(retries):
             try:
-                if spinner:
-                    with Halo(spinner, color="blue"):
+                if spinner and has_halo:
+                    halo = get_halo(text=spinner, color="blue")
+                    if halo is not None:  # Check if halo is not None before using with
+                        with halo:
+                            return operation_func(*args, **kwargs)
+                    else:
                         return operation_func(*args, **kwargs)
                 else:
                     return operation_func(*args, **kwargs)
             except subprocess.CalledProcessError as e:
                 last_exception = e
+
+                from polykit.parsers import print_color
 
                 print_color(
                     f"Failed to complete: {operation_func.__name__}, retrying... ({attempt + 1} out of {retries})",
@@ -76,6 +82,8 @@ def retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
+                        from polykit.parsers import print_color
+
                         print_color(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
                     tries -= 1
@@ -118,6 +126,8 @@ def async_retry_on_exception(
                     if logger:
                         logger.warning("%s. Retrying in %s seconds...", str(e), delay)
                     else:
+                        from polykit.parsers import print_color
+
                         print_color(f"{e}. Retrying in {delay} seconds...", "yellow")
                     time.sleep(delay)
                     tries -= 1
