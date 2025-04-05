@@ -29,7 +29,7 @@ logger.info("Starting process with %s items", count)
 logger.success("All items processed successfully!")
 ```
 
-Features include colorized output, custom log levels, context managers, and much more.
+Features include colorized output, context managers, and more.
 
 ### Environment Variable Management
 
