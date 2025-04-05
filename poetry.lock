@@ -800,4 +800,4 @@ url = "../walking-man"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "2e966d38f6327000fe7fa7eb795e11711da3fde3c1f07edd598839c2557846e5"
+content-hash = "80a303c1391bbe65705e587da08f839fee9a29f1007a0f7e6e260decce61161c"
