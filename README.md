@@ -13,11 +13,11 @@ It contains various helpers refined through years of practical development, incl
 
 Some of the features include:
 
-- [Logician](src/polykit/log/README.md) for elegant and sophisticated logging that you'll love - see
-- [Enviromancer](src/polykit/env/README.md) for clear setup and access to environment variables
-- [PathKeeper](src/polykit/paths/README.md) for convenient cross-platform access to common paths
-- Thread-safe [Singleton](src/polykit/core/singleton.py) metaclass for use in any project
-- Drop-in [ArgParse](src/polykit/cli/args.py) replacement with easier formatting
+- [Logician](https://github.com/dannystewart/polykit/blob/main/src/polykit/log/README.md) for elegant and sophisticated logging that you'll love - see
+- [Enviromancer](https://github.com/dannystewart/polykit/blob/main/src/polykit/env/README.md) for clear setup and access to environment variables
+- [PathKeeper](https://github.com/dannystewart/polykit/blob/main/src/polykit/paths/README.md) for convenient cross-platform access to common paths
+- Thread-safe [Singleton](https://github.com/dannystewart/polykit/blob/main/src/polykit/core/singleton.py) metaclass for use in any project
+- Drop-in [ArgParse](https://github.com/dannystewart/polykit/blob/main/src/polykit/cli/args.py) replacement with easier formatting
 - Simple helper for comparing files and showing diffs
 - Database helper interfaces for MySQL and SQLite
 - Helpers for highly customizable copying, deleting, and listing of files
