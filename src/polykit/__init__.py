@@ -50,9 +50,9 @@ api_key = env.API_KEY
 Easily work with application directories across operating systems:
 
 ```python
-from polykit.paths import PolyPaths
+from polykit.paths import PolyPath
 
-paths = PolyPaths("myapp", app_author="MyCompany")
+paths = PolyPath("myapp", app_author="MyCompany")
 
 config_file = paths.from_config("settings.json")  # ~/.config/myapp/settings.json on Linux
 cache_dir = paths.from_cache("responses")  # ~/Library/Caches/myapp/responses on macOS

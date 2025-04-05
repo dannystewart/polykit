@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 PathList = list[Path]
 
 
-class PolyFiles:
+class PolyFile:
     """A utility class with a comprehensive set of methods for common file operations.
 
     It supports listing files with filtering and sorting options, safe file deletion with trash bin

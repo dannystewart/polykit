@@ -1,8 +1,8 @@
 # ruff: noqa: D212, D415
 
-r"""# PolyPaths
+r"""# PolyPath
 
-PolyPaths simplifies working with application and user directories across different operating
+PolyPath simplifies working with application and user directories across different operating
 systems, providing consistent access to standard locations while respecting platform conventions.
 
 Platform-specific paths:
@@ -32,12 +32,12 @@ Platform-specific paths:
 
 Examples:
     Basic usage:
-        paths = PolyPaths("myapp")
+        paths = PolyPath("myapp")
         config_file = paths.from_config("settings.json")
         cache_dir = paths.from_cache("responses")
 
     With author and domain (recommended for macOS):
-        paths = PolyPaths(
+        paths = PolyPath(
             app_name="MyApp",
             app_author="DeveloperName",
             app_domain_prefix="com.developername",
@@ -46,4 +46,4 @@ Examples:
 
 from __future__ import annotations
 
-from .polypaths import PolyPaths
+from .polypath import PolyPath

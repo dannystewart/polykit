@@ -1,8 +1,8 @@
 # ruff: noqa: D102
 
-r"""PolyPaths: A friendly cross-platform path management utility.
+r"""PolyPath: A friendly cross-platform path management utility.
 
-PolyPaths simplifies working with application and user directories across different operating
+PolyPath simplifies working with application and user directories across different operating
 systems, providing consistent access to standard locations while respecting platform conventions.
 
 Platform-specific paths:
@@ -32,12 +32,12 @@ Platform-specific paths:
 
 Examples:
     Basic usage:
-        paths = PolyPaths("myapp")
+        paths = PolyPath("myapp")
         config_file = paths.from_config("settings.json")
         cache_dir = paths.from_cache("responses")
 
     With author and domain (recommended for macOS):
-        paths = PolyPaths(
+        paths = PolyPath(
             app_name="MyApp",
             app_author="DeveloperName",
             app_domain_prefix="com.developername",
@@ -56,7 +56,7 @@ from polykit.env import PolyEnv
 
 
 @dataclass
-class PolyPaths:
+class PolyPath:
     """Manage paths in a friendly way.
 
     Args:
@@ -66,7 +66,7 @@ class PolyPaths:
         version: Application version.
 
     Usage:
-        paths = PolyPaths("dsmusic")
+        paths = PolyPath("dsmusic")
 
         db_path = paths.get_data_path("upload_log.db")
         cache_path = paths.get_cache_path("api_responses", "tracks.json")
