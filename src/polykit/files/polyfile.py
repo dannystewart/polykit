@@ -38,7 +38,7 @@ class PolyFile:
         sort_key: Callable[..., Any] | None = None,
         reverse: bool = False,
         logger: Logger | None = None,
-    ) -> list[Path]:
+    ) -> PathList:
         """List all files in a directory that match the given criteria.
 
         Args:
@@ -63,7 +63,7 @@ class PolyFile:
         else:
             glob_patterns = ["*"]
 
-        files_filtered: list[Path] = []
+        files_filtered: PathList = []
         for pattern in glob_patterns:
             files = path.rglob(pattern) if recurse else path.glob(pattern)
             try:
@@ -98,8 +98,8 @@ class PolyFile:
         """
         # Initialize tracking variables
         file_list = [paths] if isinstance(paths, Path) else paths
-        successful: list[Path] = []
-        failed: list[Path] = []
+        successful: PathList = []
+        failed: PathList = []
 
         # Log dry run mode
         if dry_run and logger:
@@ -241,7 +241,7 @@ class PolyFile:
     @classmethod
     def find_dupes_by_hash(
         cls, files: PathList, logger: Logger | None = None
-    ) -> dict[str, list[Path]]:
+    ) -> dict[str, PathList]:
         """Find duplicate files by comparing their SHA-256 hashes.
 
         Args:
@@ -251,7 +251,7 @@ class PolyFile:
         Returns:
             A dictionary mapping file hashes to lists of duplicate files.
         """
-        hash_map: dict[str, list[Path]] = {}
+        hash_map: dict[str, PathList] = {}
         duplicates_found = False
 
         for file_path in files:
