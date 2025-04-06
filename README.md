@@ -17,7 +17,7 @@ Polykit doesn't try to be everything to everyone. Instead, it focuses on doing c
 
 ### `PolyLog`: Sophisticated Logging with Personality
 
-Forget everything you know about boring, hard-to-configure logging systems. `PolyLog` brings both intelligence and style to your application's logging needs.
+Forget everything you know about boring, hard-to-configure logging systems. `PolyLog` is more than just another logger—it makes your application's internal dialogue clear, informative, and a pleasure to read. It's the first thing I add to any new project.
 
 - **Context-Aware**: Automatically detects caller class and module names.
 - **Time-Intelligent**: Formats datetime objects into human-readable strings.
@@ -42,8 +42,6 @@ logger.info("Next maintenance scheduled for %s.", datetime.now() + timedelta(day
 with PolyLog.catch(logger, "Failed during data processing"):
     process_complex_data()  # Any exceptions are beautifully logged
 ```
-
-`PolyLog` is more than just another logger—it's a communication tool that makes your application's internal dialogue clear, informative, and a pleasure to read. I never start a project without it.
 
 ---
 
@@ -83,13 +81,11 @@ except ValueError as e:
     print(f"Configuration error: {e}")
 ```
 
-`PolyEnv` brings structure and confidence to environment configuration, turning a traditional pain point into a streamlined, enjoyable experience.
-
 ---
 
 ### `PolyPath`: Navigate File Systems with Confidence
 
-Stop wrestling with platform-specific paths and directory structures. `PolyPath` brings sanity to file management across operating systems. `PolyPath` eliminates an entire class of cross-platform headaches:
+`PolyPath` brings sanity to file management across operating systems and eliminates an entire class of cross-platform headaches:
 
 - **Cross-Platform Consistency**: Write once, run anywhere with the right paths for each OS.
 - **Automatic Directory Creation**: Parent directories are created as needed, eliminating boilerplate `mkdir` calls.
@@ -152,8 +148,6 @@ for hash_value, file_list in dupes.items():
     # Keep the first file, delete the rest
     PolyFile.delete(file_list[1:])
 ```
-
-`PolyFile` handles the tedious details of file management so you can focus on your application's core functionality.
 
 ---
 
@@ -327,7 +321,7 @@ Singletons are deceptively difficult to implement correctly, but `Singleton` han
 
 ---
 
-## So why Polykit?
+## Why Polykit?
 
 When you use Polykit, you're benefiting from:
 
