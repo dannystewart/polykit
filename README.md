@@ -47,7 +47,7 @@ with PolyLog.catch(logger, "Failed during data processing"):
 
 ### `PolyEnv`: Environment Variables, Elevated
 
-Environment configuration shouldn't be a source of frustration. `PolyEnv` transforms environment variables from a necessary evil into a delightful part of your application.
+Environment configuration shouldn't be a source of frustration. `PolyEnv` transforms environment variables from a necessary evil into a clear, declarative part of your application.
 
 - **Hierarchical Loading**: Automatically loads from multiple `.env` files with smart precedence rules.
 - **Type Conversion**: Transforms environment strings to Python types (`int`, `bool`, etc.) automatically.
@@ -217,7 +217,7 @@ args = parser.parse_args()
 
 ### `VersionChecker`: Package Version Intelligence
 
-Managing package versions shouldn't require detective work. `VersionChecker` gives you visibility into your dependencies—what's installed, where it came from, and what updates are available.
+`VersionChecker` gives you visibility into your dependencies—what's installed, where it came from, and what updates are available.
 
 - **Multi-Source Intelligence**: Check versions against PyPI, GitHub, GitLab, or any Git repository.
 - **Dev Environment Awareness**: Detects when you're running from source or in editable mode.
@@ -257,12 +257,12 @@ version_info = checker.check_package(current_package)
 
 ### `Text` and `Time`: The Swiss Army Knives of Formatting
 
-Stop wrestling with text manipulation and datetime formatting. Polykit's `Text` and `Time` utility classes handle everything from pluralization to timezone-aware parsing.
+Stop wrestling with text manipulation and datetime formatting. Polykit's `Text` and `Time` utility classes handle everything from pluralization to timezone-aware parsing, solving real-world text and time challenges and hardened against some of the nastiest edge cases. Why spend months solving these problems when you don't have to?
 
-- **Battle-Tested Reliability**: The `split_message()` function alone represents nearly a year of refinement through production use. It can survive almost anything—and it has.
-- **Edge Case Mastery**: Handles tricky scenarios like nested code blocks and special characters with grace and reliability.
-- **No More Pluralization Bugs**: Automatically handle singular/plural forms for cleaner messages.
 - **Smart Text Handling**: Truncate, format, and manipulate text with intelligent defaults.
+- **No More Pluralization Bugs**: Automatically handle singular/plural forms for cleaner messages.
+- **Edge Case Mastery**: Handles tricky scenarios like nested code blocks and special characters with grace and reliability.
+- **Battle-Tested**: The `split_message()` function alone represents nearly a year of refinement through production use. It can survive almost anything—and it has.
 - **Human-Readable Times**: Parse and format dates and times in natural language.
 - **Timezone Intelligence**: Automatic timezone detection and handling.
 
@@ -291,8 +291,6 @@ print(Time.get_pretty_time(deadline))  # "Friday at 5:00 PM"
 # Convert durations to readable text
 print(Time.convert_sec_to_interval(3725))  # "1 hour, 2 minutes and 5 seconds"
 ```
-
-These utilities solve real-world text and time challenges and have been hardened against some of the nastiest edge cases. Why spend months solving these problems when you don't have to?
 
 ---
 
