@@ -45,6 +45,7 @@ class PolyArgs(argparse.ArgumentParser):
         # Version handling options
         self.add_version = kwargs.pop("add_version", True)
         self.version_flags = kwargs.pop("version_flags", ["--version"])
+        self._user_added_version = False  # Track if the user adds their own version argument
 
         # Extract the lines parameter (0 means all lines)
         self.description_lines = kwargs.pop("lines", 0)
@@ -65,12 +66,12 @@ class PolyArgs(argparse.ArgumentParser):
 
         super().__init__(*args, **kwargs)
 
-        # Add --version argument if requested and dsbin is available
-        if self.add_version:
-            self._add_version_argument()
-
     def add_argument(self, *args: Any, **kwargs: Any) -> argparse.Action:
-        """Override add_argument to automatically lowercase help text."""
+        """Override add_argument to track version arguments and handle help text."""
+        # Check if this is a version argument being added by the user
+        if self.add_version and any(flag in args for flag in self.version_flags):
+            self._user_added_version = True
+
         # Extract the keep_caps parameter, defaulting to False
         keep_caps = kwargs.pop("keep_caps", False)
 
@@ -81,8 +82,16 @@ class PolyArgs(argparse.ArgumentParser):
             if help_text and len(help_text) > 0:
                 kwargs["help"] = help_text[0].lower() + help_text[1:]
 
-        # Call the PolyArgs's add_argument method
+        # Call the ArgumentParser's add_argument method
         return super().add_argument(*args, **kwargs)
+
+    def parse_args(self, *args: Any, **kwargs: Any) -> Any:
+        """Override parse_args to add version argument just before parsing."""
+        # Add the version argument if requested and not already added by user
+        if self.add_version and not self._user_added_version:
+            self._add_version_argument()
+
+        return super().parse_args(*args, **kwargs)
 
     def _add_version_argument(self) -> None:
         """Add a version argument that automatically detects package version."""
