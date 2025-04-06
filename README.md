@@ -317,7 +317,7 @@ Singletons are deceptively difficult to implement correctly, but `Singleton` han
 - Check permissions with `is_root_user()` and elevate with `acquire_sudo()` if needed.
 - Get user confirmation with a single keypress using `confirm_action()`.
 - Use stylish loading indicators like spinners with the `with_spinner()` context manager…
-- …or use Walking Man `<('-'<)`. (Honestly, he alone is worth the download.)
+- …or use Walking Man `<('-'<)` (honestly, he alone is worth the download).
 
 ---
 
