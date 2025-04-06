@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Added
+
+- Adds enhanced handling for the `--version` argument in the CLI to avoid duplication and ensure user-defined arguments are respected. Improves detection of version flags for smoother parsing.
+
+### Changed
+
+- Improves README structure for better clarity and navigation.
+
 ## [0.7.2] (2025-04-06)
 
 ### Added
