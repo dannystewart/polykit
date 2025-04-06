@@ -84,7 +84,7 @@ class PolyFile:
     @classmethod
     def delete(
         cls, paths: Path | PathList, dry_run: bool = False, logger: Logger | None = None
-    ) -> tuple[list[Path], list[Path]]:
+    ) -> tuple[PathList, PathList]:
         """Safely move files to the trash or delete them permanently if necessary.
 
         Args:
