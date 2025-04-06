@@ -25,11 +25,7 @@ class WalkingMan:
     CHARACTER_LEFT: ClassVar[str] = "<('-'<) "
     CHARACTER_MIDDLE: ClassVar[str] = "<('-')>"
     CHARACTER_RIGHT: ClassVar[str] = " (>'-')>"
-
-    # Walking Man stops to wave at you if you wait long enough!
-    CHARACTER_WAVE_1: ClassVar[str] = "<('-')/"  # First wave frame
-    CHARACTER_WAVE_2: ClassVar[str] = "<('-')>"  # Second wave frame
-    CHARACTER_WAVE_3: ClassVar[str] = "\\('-')>"  # Third wave frame
+    CHARACTER_WAVE: ClassVar[str] = "<('-')/"
 
     # Default color for Walking Man (cyan is his favorite)
     COLOR: ClassVar[TextColor | None] = "cyan"
@@ -38,10 +34,10 @@ class WalkingMan:
     WIDTH: ClassVar[int] = 25
 
     # Default animation speed (seconds between frames)
-    SPEED: ClassVar[float] = 0.2
+    SPEED: ClassVar[float] = 0.15
 
     # Number of wave cycles after completing a rotation
-    WAVE_CYCLES: ClassVar[int] = 2
+    WAVE_CYCLES: ClassVar[int] = 3
 
     def __init__(
         self,
@@ -115,10 +111,8 @@ class WalkingMan:
             # If waving, show the wave animation
             if is_waving:
                 wave_frames = [
-                    self.CHARACTER_WAVE_1,
-                    self.CHARACTER_WAVE_2,
-                    self.CHARACTER_WAVE_3,
-                    self.CHARACTER_WAVE_2,
+                    self.CHARACTER_MIDDLE,
+                    self.CHARACTER_WAVE,
                 ]
                 display_char = wave_frames[wave_frame % len(wave_frames)]
                 self._print_frame(display_char, position)
