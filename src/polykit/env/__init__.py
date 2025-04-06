@@ -1,4 +1,4 @@
-"""Gain mastery over your environment variables.
+"""# PolyEnv
 
 PolyEnv is an environment variable manager for Python applications. It handles loading from multiple `.env` files, type conversion, validation, and provides an elegant interface for accessing your environment configuration.
 
@@ -11,6 +11,14 @@ PolyEnv is an environment variable manager for Python applications. It handles l
 - **Secret masking** to prevent sensitive values from appearing in logs.
 - **Smart boolean parsing** that understands various truthy/falsey string formats.
 - **Singleton pattern** ensuring consistent environment state throughout your application.
+
+### Why PolyEnv?
+
+- **Cleaner code**: Access environment variables with proper IDE autocompletion
+- **Type safety**: No more manual type conversion or validation
+- **Hierarchical configuration**: Different settings for development, staging, and production
+- **Explicit requirements**: Document which environment variables your application needs
+- **Fail-fast validation**: Detect missing or invalid configuration early
 
 ## Quick Start
 
@@ -133,15 +141,7 @@ Or in your code:
 import os
 os.environ["ENV_DEBUG"] = "1"
 ```
-
-## Why PolyEnv?
-
-- **Cleaner code**: Access environment variables with proper IDE autocompletion
-- **Type safety**: No more manual type conversion or validation
-- **Hierarchical configuration**: Different settings for development, staging, and production
-- **Explicit requirements**: Document which environment variables your application needs
-- **Fail-fast validation**: Detect missing or invalid configuration early
-"""  # noqa: D212, W505
+"""  # noqa: D212, D415, W505
 
 from __future__ import annotations
 

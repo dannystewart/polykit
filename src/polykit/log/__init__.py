@@ -1,5 +1,7 @@
 """# PolyLog
 
+**The logical choice for Python logging.** 🖖
+
 PolyLog is a powerful, colorful, and intuitive logging library for Python that makes beautiful logs easy.
 
 ## Features
@@ -20,10 +22,10 @@ pip install polylog
 ## Quick Start
 
 ```python
-from polylog import Logger
+from polylog import PolyLog
 
 # Create a basic logger
-logger = Logger("MyApp")
+logger = PolyLog.get_logger("MyApp")
 logger.info("Application started")
 logger.warning("Something seems off...")
 logger.error("An error occurred!")
@@ -31,25 +33,25 @@ logger.error("An error occurred!")
 # With automatic name detection
 class MyClass:
     def __init__(self):
-        self.logger = Logger()  # Automatically uses "MyClass" as the logger name
+        self.logger = PolyLog.get_logger()  # Automatically uses "MyClass" as the logger name
         self.logger.info("MyClass initialized")
 
 # Simple format (just the message)
-simple_logger = Logger("SimpleLogger", simple=True)
+simple_logger = PolyLog.get_logger("SimpleLogger", simple=True)
 simple_logger.info("This message appears without timestamp or context")
 
 # With context information
-context_logger = Logger("ContextLogger", show_context=True)
+context_logger = PolyLog.get_logger("ContextLogger", show_context=True)
 context_logger.info("This message shows which function called it")
 
 # Time-aware logging
 from datetime import datetime
-time_logger = Logger("TimeLogger", time_aware=True)
+time_logger = PolyLog.get_logger("TimeLogger", time_aware=True)
 time_logger.info("Event occurred at %s", datetime.now())  # Formats the datetime nicely
 
 # File logging
 from pathlib import Path
-file_logger = Logger("FileLogger", log_file=Path("app.log"))
+file_logger = PolyLog.get_logger("FileLogger", log_file=Path("app.log"))
 file_logger.info("This message goes to both console and file")
 ```
 
@@ -59,11 +61,11 @@ file_logger.info("This message goes to both console and file")
 
 ```python
 # Different log level
-logger = Logger("DEBUG_LOGGER", level="DEBUG")
+logger = PolyLog.get_logger("DEBUG_LOGGER", level="DEBUG")
 logger.debug("This debug message will be visible")
 
 # Turning off colors (useful for CI/CD environments)
-no_color_logger = Logger("NoColor", color=False)
+no_color_logger = PolyLog.get_logger("NoColor", color=False)
 ```
 
 ### TimeAwareLogger
@@ -72,9 +74,9 @@ The TimeAwareLogger automatically formats datetime objects in log messages:
 
 ```python
 from datetime import datetime, timedelta
-from polylog import Logger
+from polylog import PolyLog
 
-logger = Logger("TimeDemo", time_aware=True)
+logger = PolyLog.get_logger("TimeDemo", time_aware=True)
 
 now = datetime.now()
 yesterday = now - timedelta(days=1)
@@ -84,6 +86,36 @@ logger.info("Current time: %s", now)  # "Current time: today at 2:30 PM"
 logger.info("Yesterday was: %s", yesterday)  # "Yesterday was: yesterday at 2:30 PM"
 logger.info("Meeting scheduled for: %s", next_week)  # "Meeting scheduled for: Monday at 2:30 PM"
 ```
+
+## Types and Constants
+
+PolyLog provides several types and constants that you can import directly for type-safe logging:
+
+```python
+from polylog import PolyLog
+from polylog.types import LogLevel, LogColors
+
+# Use enum values for type safety
+logger = PolyLog.get_logger(level=LogLevel.DEBUG)
+
+# Log with specific levels
+logger.log(LogLevel.get_level(LogLevel.WARNING), "This is a warning")
+
+# Check log levels in code
+if current_level == LogLevel.ERROR:
+    # Handle error case
+    pass
+
+# Access color constants if needed for custom formatting
+print(f"{LogColors.RED}This text is red{LogColors.RESET}")
+```
+
+### Available Types
+
+- **LogLevel**: Enum for log levels (`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`)
+- **LogColors**: Enum for ANSI color codes used in terminal output
+
+This provides better IDE support for autocompletion and type checking compared to string literals.
 """  # noqa: D415, W505
 
 from __future__ import annotations

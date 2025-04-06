@@ -395,7 +395,7 @@ Polykit also has a few more tricks up its sleeve for common development challeng
 ### Elegant Error Handling
 
 ```python
-from polykit.decorators import handle_interrupt, retry_on_exception
+from polykit.core import handle_interrupt, retry_on_exception
 
 # Gracefully handle keyboard interrupts
 @handle_interrupt(message="Download cancelled. Cleaning up...")
@@ -445,7 +445,7 @@ class ConfigManager(metaclass=Singleton):
 ### Development Tools
 
 ```python
-from polykit.decorators import deprecated, not_yet_implemented
+from polykit.core import deprecated, not_yet_implemented
 from polykit.shell import log_traceback
 
 # Mark APIs for future removal

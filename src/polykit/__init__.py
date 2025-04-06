@@ -1,148 +1,24 @@
-"""A delightful Python utility toolkit that brings power and personality to your projects.
+"""Every developer has a collection of utilities they've refined over years of solving the same problems again and again. Polykit is that collection—polished, perfected, and packaged for your enjoyment.
 
-[![PyPI version](https://img.shields.io/pypi/v/polykit.svg)](https://pypi.org/project/polykit/)
-[![Python versions](https://img.shields.io/pypi/pyversions/polykit.svg)](https://pypi.org/project/polykit/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/polykit.svg)](https://pypi.org/project/polykit/)
-[![License](https://img.shields.io/pypi/l/polykit.svg)](https://github.com/dannystewart/polykit/blob/main/LICENSE)
+"*Another* utility library?" I already hear you asking. But don't close the tab just yet! What sets Polykit apart isn't just the functionality it provides but the thought behind each implementation. These are tools born from years of solving real-world problems, used in production but refined as a passion.
 
-Polykit contains various utilities refined through years of practical development, offering elegant solutions for common programming tasks. From sophisticated logging to environment variable management, from path handling to text processing, Polykit makes everyday coding more joyful and productive.
+If you're managing environment variables, handling paths across different operating systems, formatting text for human consumption, building command-line interfaces, or just want a really nice logger, Polykit provides elegant solutions that just work, often in ways you didn't realize you needed until you experience them.
 
-## Installation
+Polykit doesn't try to be everything to everyone. Instead, it focuses on doing common tasks extraordinarily well, with an emphasis on developer happiness and code that's a pleasure to use.
 
-```bash
-pip install polykit
-```
+## Why Choose Polykit?
 
-## Core Components
+What you've seen here represents a collection of utilities that solve common programming challenges with uncommon elegance. When you use Polykit, you're benefiting from:
 
-### Elegant Logging with PolyLog
+- **Battle-tested reliability** that comes from components used in real production environments.
+- **Developer-centric design** that prioritizes clean APIs and intuitive interfaces.
+- **Attention to edge cases** that others often overlook or ignore.
+- **Consistent design philosophy** across all components for a cohesive experience.
+- **Modern Python practices** including comprehensive type hints and up-to-date language features.
 
-Polykit includes a beautiful, customizable logging system that you'll actually enjoy using:
+Every component in Polykit was created to solve genuine problems in day-to-day development, so it prioritizes developer experience with IDE-friendly interfaces, meaningful error messages, sensible defaults, and comprehensive (if still evolving) documentation. Every detail has been considered from the perspective of the person who will actually use these tools (because that person was me!).
 
-```python
-from polykit.log import PolyLog
-
-logger = PolyLog.get_logger(__name__)
-logger.info("Starting process with %s items", count)
-logger.success("All items processed successfully!")
-```
-
-Features include colorized output, custom log levels, context managers, and much more.
-
-### Environment Variable Management
-
-Declaratively define and validate environment variables:
-
-```python
-from polykit.env import PolyEnv
-
-env = PolyEnv()
-env.add_var("API_KEY", required=True)
-env.add_var("DEBUG", default="False", transform=bool)
-env.add_var("MAX_CONNECTIONS", default="10", transform=int)
-
-# Access anywhere
-api_key = env.API_KEY
-```
-
-### Cross-Platform Path Management
-
-Easily work with application directories across operating systems:
-
-```python
-from polykit.paths import PolyPath
-
-paths = PolyPath("myapp", app_author="MyCompany")
-
-config_file = paths.from_config("settings.json")  # ~/.config/myapp/settings.json on Linux
-cache_dir = paths.from_cache("responses")  # ~/Library/Caches/myapp/responses on macOS
-```
-
-### Command Line Interface Tools
-
-Build better command-line tools with minimal effort:
-
-```python
-from polykit.cli import ArgParser
-
-parser = ArgParser(description="My awesome tool")
-parser.add_argument("--input", "-i", help="Input file")
-args = parser.parse_args()
-```
-
-### Smart Text Processing
-
-Powerful text manipulation and formatting tools:
-
-```python
-from polykit.formatters import Text
-
-# Convert between formats
-html = Text.markdown_to_html("# Hello World")
-
-# Format text with color
-colored_text = Text.color("Important message", color="red", style=["bold"])
-Text.print_color("Success!", color="green")
-
-# Smart text operations
-Text.truncate("This is a very long text...", chars=20)  # "This is a very lon..."
-Text.plural("item", 5, with_count=True)  # "5 items"
-Text.format_duration(hours=2, minutes=30)  # "2 hours and 30 minutes"
-```
-
-### Intelligent Time Handling
-
-Work with times in a natural, human-friendly way:
-
-```python
-from polykit.time import Time, TZ
-
-# Parse natural language time expressions
-meeting = Time.parse("3pm tomorrow")
-deadline = Time.parse("Friday at 5pm")
-
-# Format times in a human-readable way
-Time.get_pretty_time(meeting)  # "tomorrow at 3:00 PM"
-Time.get_pretty_time(deadline, capitalize=True)  # "Friday at 5:00 PM"
-
-# Convert durations to readable text
-Time.convert_sec_to_interval(3665)  # "1 hour, 1 minute and 5 seconds"
-```
-
-### Walking Man, Your Friendly Loading Animation `<('-'<)`
-
-Meet Walking Man, the charming character who keeps your users company during long-running operations:
-
-```python
-from polykit.cli import walking_man
-
-# As a context manager
-with walking_man("Loading your data..."):
-    time.sleep(5)  # Your long-running operation here
-
-# Customize his appearance (walk faster, in yellow!)
-with walking_man("Processing...", color="yellow", speed=0.1):
-    process_data()
-```
-
-Walking Man appears when you need him and cleans up after himself when the task is done!
-
-## Additional Utilities
-
-Polykit also includes:
-
-- Thread-safe `Singleton` metaclass
-- Database interfaces for MySQL and SQLite
-- File comparison and diff tools
-- Media transcoding helpers (using ffmpeg)
-- Notification systems (email, Telegram)
-- Progress indicators and loading animations
-- Time parsing and manipulation utilities
-- Shell operation helpers
-
-## License
-
-This project is licensed under the LGPL-3.0 License. See the [LICENSE](https://github.com/dannystewart/polykit/blob/main/LICENSE) file for details. Contributions welcome!
+Polykit strives to be intuitive, handle complexity behind clean interfaces, and integrate seamlessly with each other and with your existing code. It's a toolkit from a developer who refuses to accept "good enough" and always pursues "genuinely excellent." Part of that means the work is never finished—Polykit is still being actively developed, with new tools added and existing tools refined on a regular basis.
 """  # noqa: D212, D415, W505
 
 from __future__ import annotations
