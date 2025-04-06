@@ -26,6 +26,11 @@ class WalkingMan:
     CHARACTER_MIDDLE: ClassVar[str] = "<('-')>"
     CHARACTER_RIGHT: ClassVar[str] = " (>'-')>"
 
+    # Walking Man stops to wave at you if you wait long enough!
+    CHARACTER_WAVE_1: ClassVar[str] = "<('-')/"  # First wave frame
+    CHARACTER_WAVE_2: ClassVar[str] = "<('-')>"  # Second wave frame
+    CHARACTER_WAVE_3: ClassVar[str] = "\\('-')>"  # Third wave frame
+
     # Default color for Walking Man (cyan is his favorite)
     COLOR: ClassVar[TextColor | None] = "cyan"
 
@@ -34,6 +39,9 @@ class WalkingMan:
 
     # Default animation speed (seconds between frames)
     SPEED: ClassVar[float] = 0.2
+
+    # Number of wave cycles after completing a rotation
+    WAVE_CYCLES: ClassVar[int] = 2
 
     def __init__(
         self,
@@ -81,15 +89,21 @@ class WalkingMan:
             self.animation_thread.join()
 
     @handle_interrupt()
-    def _show_animation(self) -> None:
+    def _show_animation(self) -> None:  # noqa: C901, PLR0912, PLR0915
         """Run the Walking Man animation until stopped."""
         # Start facing right
-        character = self.CHARACTER_RIGHT.strip()  # Remove any extra spaces
+        character = self.CHARACTER_RIGHT.strip()
         position = 0
         direction = 1  # 1 for right, -1 for left
 
         # Track turn state: 0 = normal, 1 = showing middle, 2 = completed turn
         turn_state = 0
+
+        # Track full rotations and waving
+        completed_rotations = 0
+        is_waving = False
+        wave_frame = 0
+        wave_count = 0
 
         if self.loading_text:
             if self.color:
@@ -97,37 +111,80 @@ class WalkingMan:
             else:
                 print(self.loading_text)
 
-        while not self._stop_event.is_set():
-            # Add appropriate spacing based on direction
-            display_char = character
-            if direction == 1 and not turn_state:
-                display_char = " " + display_char  # Space before right-facing
-            elif direction == -1 and not turn_state:
-                display_char += " "  # Space after left-facing
+        while not self._stop_event.is_set():  # noqa: PLR1702
+            # If waving, show the wave animation
+            if is_waving:
+                wave_frames = [
+                    self.CHARACTER_WAVE_1,
+                    self.CHARACTER_WAVE_2,
+                    self.CHARACTER_WAVE_3,
+                    self.CHARACTER_WAVE_2,
+                ]
+                display_char = wave_frames[wave_frame % len(wave_frames)]
+                self._print_frame(display_char, position)
 
-            self._print_frame(display_char, position)
+                wave_frame += 1
+                if wave_frame >= len(wave_frames) * 2:  # Do each frame twice for visibility
+                    wave_frame = 0
+                    wave_count += 1
 
-            # Handle turn state transitions
-            if turn_state == 1:  # Middle position shown, now complete turn
-                turn_state = 2
-                character = (
-                    self.CHARACTER_LEFT.strip() if direction == -1 else self.CHARACTER_RIGHT.strip()
-                )
-            elif turn_state == 2:  # Turn completed, resume normal movement
-                turn_state = 0
-                position += direction  # First step in new direction
-            else:  # Normal movement
-                position += direction
+                if wave_count >= self.WAVE_CYCLES:
+                    is_waving = False
+                    wave_count = 0
+                    wave_frame = 0
+                    character = (
+                        self.CHARACTER_RIGHT.strip()
+                        if direction == 1
+                        else self.CHARACTER_LEFT.strip()
+                    )
+            else:
+                # Normal walking animation
+                display_char = character
+                if direction == 1 and not turn_state:
+                    display_char = " " + display_char
+                elif direction == -1 and not turn_state:
+                    display_char += " "
 
-                # Check boundaries
-                if (position >= self.width and direction == 1) or (
-                    position <= 0 and direction == -1
-                ):
-                    # Ensure we're exactly at the boundary
-                    position = self.width if direction == 1 else 0
-                    turn_state = 1  # Start turn sequence
-                    direction *= -1  # Change direction
-                    character = self.CHARACTER_MIDDLE  # Show middle position
+                self._print_frame(display_char, position)
+
+                # Handle turn state transitions
+                if turn_state == 1:  # Middle position shown, now complete turn
+                    turn_state = 2
+                    character = (
+                        self.CHARACTER_LEFT.strip()
+                        if direction == -1
+                        else self.CHARACTER_RIGHT.strip()
+                    )
+                elif turn_state == 2:  # Turn completed, resume normal movement
+                    turn_state = 0
+                    position += direction  # First step in new direction
+                else:  # Normal movement
+                    position += direction
+
+                    # Check boundaries
+                    if position >= self.width and direction == 1:
+                        position = self.width
+                        turn_state = 1
+                        direction = -1
+                        character = self.CHARACTER_MIDDLE
+
+                        # Check if we completed a full rotation (right → left → right)
+                        if completed_rotations % 2 == 1:
+                            completed_rotations += 1
+                            # Time to wave!
+                            if completed_rotations > 1:  # Only wave after the first full rotation
+                                is_waving = True
+                                wave_frame = 0
+
+                    elif position <= 0 and direction == -1:
+                        position = 0
+                        turn_state = 1
+                        direction = 1
+                        character = self.CHARACTER_MIDDLE
+
+                        # Check if we completed half rotation (right → left)
+                        if completed_rotations % 2 == 0:
+                            completed_rotations += 1  # Show middle position
 
     @handle_interrupt()
     def _print_frame(self, character: str, position: int) -> None:
