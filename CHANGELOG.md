@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### **Walking Man 2.0: The Waving Man Update!**
+
+### Added
+
+- Adds a middle position state for Walking Man to create smoother turns and improve alignment. `<('-')>`
+- Adds a waving animation for Walking Man, triggered after multiple rotations, complete with new character frames and logic. `<('-')/ \('-')>`
+
+### Changed
+
+- Improves boundary handling for Walking Man to ensure accurate position updates while moving.
+
 ## [0.7.1] (2025-04-05)
 
 ### Added
