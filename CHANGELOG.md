@@ -6,15 +6,19 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.7.2] (2025-04-06)
+
 ### Added
 
-#### **Walking Man 2.0: The Waving Man Update!**
+#### `<('-')>` **Walking Man 2.0: The Waving Man Update!**  `<('-')/`
 
-- Adds a middle position state for Walking Man to create smoother turns and improve alignment. `<('-')>`
-- Adds a waving animation for Walking Man, triggered after multiple rotations, complete with new character frames and logic. `<('-')/ \('-')>`
+- Introduces a middle position state for Walking Man, for smoother turns and improved alignment.
+- Adds a waving animation for Walking Man, triggered after multiple rotations, complete with new character frames and logic.
 
 ### Changed
 
+- Updates README to improve structure, clarity, and navigation, expanding feature descriptions with examples and streamlining content flow.
+- Refines and expands changelog details for Walking Man 2.0, covering features like the middle position state, waving animation, and improved boundary handling.
 - Improves Walking Man's boundary handling for more accurate position updates.
 - Enhances character alignment during movement by refining spacing logic.
 
@@ -66,6 +70,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.1...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/dannystewart/polykit/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/dannystewart/polykit/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/dannystewart/polykit/releases/tag/v0.7.0
