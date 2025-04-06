@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.7.1] (2025-04-05)
+
+### Added
+
+- Enhances README with detailed usage examples for core utilities such as `PolyLog`, `PolyEnv`, `PolyPath`, `PolyFile`, and `PolyDiff`. Includes code snippets, usage scenarios, and explanations to improve onboarding and highlight key features.
+
+### Changed
+
+- Renames `ArgParser` to `PolyArgs` for improved clarity and alignment with project naming conventions. Updates imports and documentation accordingly.
+- Improves documentation across module initialization files, reorganizing imports for better logical grouping and readability. Adds examples and refines descriptions for enhanced developer experience.
+
+### Fixed
+
+- Updates type hints for the `delete` method in the `files` module to ensure consistency and correctness by using `PathList`.
+
 ## [0.7.0] (2025-04-05)
 
 ### Added
@@ -39,5 +54,6 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.0...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/dannystewart/polykit/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/dannystewart/polykit/releases/tag/v0.7.0
