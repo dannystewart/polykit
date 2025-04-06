@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Changed
+
+- Simplifies Walking Man's wave animation. (Waving with both arms made it look like he was doing finger guns!)
+
+## [0.7.3] (2025-04-06)
+
 ### Added
 
 - Adds enhanced handling for the `--version` argument in the CLI to avoid duplication and ensure user-defined arguments are respected. Improves detection of version flags for smoother parsing.
@@ -78,7 +84,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.2...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.3...HEAD
+[0.7.3]: https://github.com/dannystewart/polykit/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/dannystewart/polykit/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/dannystewart/polykit/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/dannystewart/polykit/releases/tag/v0.7.0
