@@ -23,6 +23,7 @@ class WalkingMan:
 
     # The ASCII, the myth, the legend: it's Walking Man himself
     CHARACTER_LEFT: ClassVar[str] = "<('-'<) "
+    CHARACTER_MIDDLE: ClassVar[str] = "<('-')>"
     CHARACTER_RIGHT: ClassVar[str] = " (>'-')>"
 
     # Default color for Walking Man (cyan is his favorite)
@@ -82,9 +83,13 @@ class WalkingMan:
     @handle_interrupt()
     def _show_animation(self) -> None:
         """Run the Walking Man animation until stopped."""
-        character = self.CHARACTER_RIGHT
+        # Start facing right
+        character = self.CHARACTER_RIGHT.strip()  # Remove any extra spaces
         position = 0
         direction = 1  # 1 for right, -1 for left
+
+        # Track turn state: 0 = normal, 1 = showing middle, 2 = completed turn
+        turn_state = 0
 
         if self.loading_text:
             if self.color:
@@ -93,12 +98,36 @@ class WalkingMan:
                 print(self.loading_text)
 
         while not self._stop_event.is_set():
-            self._print_frame(character, position)
-            position += direction
+            # Add appropriate spacing based on direction
+            display_char = character
+            if direction == 1 and not turn_state:
+                display_char = " " + display_char  # Space before right-facing
+            elif direction == -1 and not turn_state:
+                display_char += " "  # Space after left-facing
 
-            if position in {0, self.width}:
-                direction *= -1
-                character = self.CHARACTER_LEFT if direction == -1 else self.CHARACTER_RIGHT
+            self._print_frame(display_char, position)
+
+            # Handle turn state transitions
+            if turn_state == 1:  # Middle position shown, now complete turn
+                turn_state = 2
+                character = (
+                    self.CHARACTER_LEFT.strip() if direction == -1 else self.CHARACTER_RIGHT.strip()
+                )
+            elif turn_state == 2:  # Turn completed, resume normal movement
+                turn_state = 0
+                position += direction  # First step in new direction
+            else:  # Normal movement
+                position += direction
+
+                # Check boundaries
+                if (position >= self.width and direction == 1) or (
+                    position <= 0 and direction == -1
+                ):
+                    # Ensure we're exactly at the boundary
+                    position = self.width if direction == 1 else 0
+                    turn_state = 1  # Start turn sequence
+                    direction *= -1  # Change direction
+                    character = self.CHARACTER_MIDDLE  # Show middle position
 
     @handle_interrupt()
     def _print_frame(self, character: str, position: int) -> None:
