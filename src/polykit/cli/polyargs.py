@@ -8,7 +8,7 @@ from typing import Any, ClassVar
 from polykit.packages import VersionChecker
 
 
-class ArgParser(argparse.ArgumentParser):
+class PolyArgs(argparse.ArgumentParser):
     """Drop-in replacement for ArgumentParser with easier adjustment of column widths.
 
     Args:
@@ -24,10 +24,10 @@ class ArgParser(argparse.ArgumentParser):
 
     Example:
         # to automatically determine the optimal argument width
-        parser = ArgParser(description=__doc__)
+        parser = PolyArgs(description=__doc__)
 
         # or to set fixed widths
-        parser = ArgParser(description=__doc__, arg_width=24, max_width=120)
+        parser = PolyArgs(description=__doc__, arg_width=24, max_width=120)
     """
 
     DEFAULT_MAX_WIDTH: ClassVar[int] = 100
@@ -81,7 +81,7 @@ class ArgParser(argparse.ArgumentParser):
             if help_text and len(help_text) > 0:
                 kwargs["help"] = help_text[0].lower() + help_text[1:]
 
-        # Call the argparser's add_argument method
+        # Call the PolyArgs's add_argument method
         return super().add_argument(*args, **kwargs)
 
     def _add_version_argument(self) -> None:
@@ -174,7 +174,7 @@ class CustomHelpFormatter(argparse.HelpFormatter):
 
     This help formatter allows for customizing the column widths of arguments and help text in an
     argument parser. You can use it by passing it as the formatter_class to ArgumentParser, but it's
-    designed for the custom ArgParser class and not intended to be used directly.
+    designed for the custom PolyArgs class and not intended to be used directly.
     """
 
     def __init__(self, prog: str, max_help_position: int = 24, width: int = 120):
