@@ -15,7 +15,7 @@ Polykit doesn't try to be everything to everyone. Instead, it focuses on doing c
 
 ## Features
 
-### `PolyLog`: Easy, Elegant Logging
+### [`PolyLog`](https://github.com/dannystewart/polykit/tree/main/src/polykit/log): Easy, Elegant Logging
 
 `PolyLog` is more than just another boring, hard-to-configure logger—it makes your application's internal dialogue clear and informative, and it looks beautiful doing it. It's the first thing I add to any new project.
 
@@ -40,7 +40,7 @@ with PolyLog.catch(logger, "Failed during data processing"):
 
 ---
 
-### `PolyEnv`: Demystify Environment Variables
+### [`PolyEnv`](https://github.com/dannystewart/polykit/tree/main/src/polykit/env): Demystify Environment Variables
 
 Environment variables shouldn't be a source of confusion and frustration, which is why I wrote `PolyEnv`—to make them a clear, declarative part of your application.
 
@@ -74,7 +74,7 @@ except ValueError as e:
 
 ---
 
-### `PolyPath`: Navigate File Systems with Confidence
+### [`PolyPath`](https://github.com/dannystewart/polykit/tree/main/src/polykit/paths): Navigate File Systems with Confidence
 
 `PolyPath` brings sanity to file management and eliminates an entire class of cross-platform headaches:
 
@@ -98,7 +98,7 @@ downloads = paths.from_downloads("temp.zip")       # ~/Downloads/temp.zip
 
 ---
 
-### `PolyFile`: File Operations Simplified
+### [`PolyFile`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polyfile.py): File Operations Simplified
 
 `PolyFile` brings elegance and safety to everyday file operations:
 
@@ -133,7 +133,7 @@ for hash_value, file_list in dupes.items():
 
 ---
 
-### `PolyDiff`: Elegant File Comparison
+### [`PolyDiff`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polydiff.py): Elegant File Comparison
 
 `PolyDiff` makes text and file comparison clean and intuitive:
 
@@ -160,7 +160,7 @@ if changes.has_changes:
 
 ---
 
-### `PolyArgs`: Command-Line Interfaces That Look Professional
+### [`PolyArgs`](https://github.com/dannystewart/polykit/blob/main/src/polykit/cli/polyargs.py): Command-Line Interfaces That Look Professional
 
 `PolyArgs` transforms the standard `argparse` experience into something you'll actually enjoy:
 
@@ -183,7 +183,7 @@ args = parser.parse_args()
 
 ---
 
-### `VersionChecker`: Package Version Intelligence
+### [`VersionChecker`](https://github.com/dannystewart/polykit/blob/main/src/polykit/packages/packages.py): Package Version Intelligence
 
 `VersionChecker` gives you visibility into your dependencies—what's installed, where it came from, and what updates are available.
 
@@ -213,7 +213,7 @@ current_package = VersionChecker.get_caller_package_name()
 
 ---
 
-### `Text` and `Time`: The Swiss Army Knives of Formatting
+### [`Text`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/text.py) and [`Time`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/time.py): The Swiss Army Knives of Formatting
 
 Polykit's `Text` and `Time` utility classes handle everything from pluralization to timezone-aware parsing, solving real-world text and time challenges and hardened against some of the nastiest edge cases.
 
@@ -255,7 +255,7 @@ Why spend months solving these problems when somebody else has put in the time (
 
 Polykit also has a few more tricks up its sleeve for common development challenges.
 
-#### `Singleton` Metaclass
+#### [`Singleton`](https://github.com/dannystewart/polykit/blob/main/src/polykit/core/singleton.py) Metaclass
 
 Singletons are deceptively difficult to implement correctly, but `Singleton` handles it all:
 
