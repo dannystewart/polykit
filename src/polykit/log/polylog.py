@@ -249,3 +249,32 @@ class PolyLog(metaclass=Singleton):
             return wrapper
 
         return decorator
+
+
+class LogLevelOverride:
+    """Temporarily override the log level of a logger.
+
+    This context manager allows you to change the log level of a logger for the duration of a
+    context. It can be useful for debugging or temporarily silencing log messages.
+
+    Example:
+        with LogLevelOverride(logger, logging.ERROR):
+            logger.info("This will not be logged.")
+            logger.error("This will be logged.")
+    """
+
+    def __init__(self, logger: logging.Logger, new_level: int | str):
+        self.logger = logger
+        self.new_level = LogLevel.get_level(new_level)
+        self.original_level = logger.getEffectiveLevel()
+
+    def __enter__(self) -> None:
+        """Set the new log level."""
+        if self.new_level != self.original_level:
+            self.logger.setLevel(self.new_level)
+            setattr(self.logger, "temporary_override", True)
+
+    def __exit__(self, exc_type: Exception, exc_val: Exception, exc_tb: Exception) -> None:
+        """Revert to the original log level."""
+        if self.new_level != self.original_level:
+            setattr(self.logger, "temporary_override", False)
