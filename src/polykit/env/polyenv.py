@@ -411,14 +411,21 @@ class PolyEnv(metaclass=Singleton):
         Args:
             include_secrets: Whether to include variables marked as secret.
         """
+        # Temporarily set log level to DEBUG since this was explicitly requested
+        log_level = self.log_level
+        self.logger.setLevel("DEBUG")
+
         values = self.get_all_values(include_secrets=True)
         for name, value in values.items():
             try:
                 if self.vars[name].secret and not include_secrets:
                     value = "****"
-                print(f"{name}: {value}")
+                self.logger.debug("%s: %s", name, value)
             except KeyError:
                 continue
+
+        # Reset log level to the original value
+        self.logger.setLevel(log_level)
 
     @staticmethod
     def validate_bool(value: str) -> bool:
