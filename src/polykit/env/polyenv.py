@@ -89,7 +89,8 @@ class PolyEnv(metaclass=Singleton):
 
     def _load_env_files(self) -> None:
         """Load environment variables from specified files, including parent directories."""
-        if not self.env_file:  # If no specific files are provided, use hierarchical loading
+        if not self.env_file:
+            # If no specific files are provided, use hierarchical loading
             env_files = []
 
             # Add .env files from parent directories (from root toward current dir)
@@ -117,7 +118,9 @@ class PolyEnv(metaclass=Singleton):
 
             self.env_file = env_files
             self.logger.debug("Using hierarchical env files: %s", [str(f) for f in self.env_file])
-        else:  # Custom files were specified, so use only those
+
+        else:
+            # Custom files were specified, so use only those
             self.logger.debug(
                 "Using custom env files: %s",
                 [str(self.env_file)]
@@ -129,17 +132,15 @@ class PolyEnv(metaclass=Singleton):
             [Path(self.env_file)] if isinstance(self.env_file, str | Path) else self.env_file
         )
 
-        # Track which variables came from which files for potential debugging
         loaded_from = {}
-
         for file in env_files:
             full_path = Path(file).expanduser()
             abs_path = full_path.absolute()
 
+            # Track which variables came from which files for debugging
             self.logger.debug("Checking for env file: %s", abs_path)
             if full_path.exists():
                 self.logger.debug("Loading env from: %s", abs_path)
-                # Track which variables were loaded from this file
                 before_keys = set(os.environ.keys())
                 load_dotenv(str(full_path), override=True)
                 after_keys = set(os.environ.keys())
@@ -170,7 +171,6 @@ class PolyEnv(metaclass=Singleton):
             ValueError: With a summary of all missing or invalid variables.
         """
         errors = []
-
         for name in self.vars:
             try:
                 self.get(name)
@@ -232,7 +232,7 @@ class PolyEnv(metaclass=Singleton):
         """Add multiple environment variables at once.
 
         Args:
-            *vars: EnvVar instances to add
+            *vars: PolyVar instances to add.
         """
         for var in vars:
             self.add_var(
@@ -262,8 +262,8 @@ class PolyEnv(metaclass=Singleton):
         - False: 'false', '0', 'no', 'off', 'f', 'n'
 
         Args:
-            name: Environment variable name (e.g. "ENABLE_FEATURE")
-            attr_name: Optional attribute name override (e.g. "feature_enabled")
+            name: Environment variable name (e.g. "ENABLE_FEATURE").
+            attr_name: Optional attribute name override (e.g. "feature_enabled").
             required: Whether this variable is required.
             default: Default boolean value if not required.
             description: Human-readable description.
@@ -310,8 +310,8 @@ class PolyEnv(metaclass=Singleton):
         """Get the value of an environment variable.
 
         Args:
-            name: The environment variable name
-            default: Override default value (takes precedence over registered default)
+            name: The environment variable name.
+            default: Override default value (takes precedence over registered default).
 
         Raises:
             KeyError: If the given name is unknown.
@@ -376,7 +376,7 @@ class PolyEnv(metaclass=Singleton):
             include_secrets: Whether to include variables marked as secret.
 
         Returns:
-            Dictionary of variable names to their values.
+            A dictionary of variable names to their values.
         """
         result = {}
         for name, var in self.vars.items():
@@ -387,6 +387,21 @@ class PolyEnv(metaclass=Singleton):
             except (ValueError, KeyError):
                 result[name] = None
         return result
+
+    def print_all_values(self, include_secrets: bool = False) -> None:
+        """Print all environment variable values.
+
+        Retrieves secret values, but only prints them as masked unless include_secrets=True. Seeing
+        them may still be important to confirm that they're present.
+
+        Args:
+            include_secrets: Whether to include variables marked as secret.
+        """
+        values = self.get_all_values(include_secrets=True)
+        for name, value in values.items():
+            if self.vars[name].secret and not include_secrets:
+                value = "****"
+            print(f"{name}: {value}")
 
     @staticmethod
     def validate_bool(value: str) -> bool:
