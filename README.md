@@ -15,7 +15,23 @@ Polykit doesn't try to be everything to everyone. Instead, it focuses on doing c
 
 ## Features
 
-### [`PolyLog`](https://github.com/dannystewart/polykit/tree/main/src/polykit/log): Easy, Elegant Logging
+Here's some of what Polykit has to offer:
+
+| Component | Description |
+|---|---|
+| 📝 [`PolyLog`](#polylog) | Beautiful, context-aware logging |
+| 🔧 [`PolyEnv`](#polyenv) | Environment variable management |
+| 🗂️ [`PolyPath`](#polypath) | Cross-platform path handling |
+| 📂 [`PolyFile`](#polyfile) | Simplified file operations |
+| 🔄 [`PolyDiff`](#polydiff) | File comparison utilities |
+| 💻 [`PolyArgs`](#polyargs) | Professional CLI interfaces |
+| 🔍 [`VersionChecker`](#versionchecker) | Package version utilities |
+| ✏️ [`Text` and `Time`](#text-time) | Text and time formatting |
+| 🏆 [Honorable Mention](#honorable-mention) | Singleton, loading indicators, and more |
+
+<a id="polylog"></a>
+
+## [`PolyLog`](https://github.com/dannystewart/polykit/tree/main/src/polykit/log): Beautiful, Context-Aware Logging
 
 `PolyLog` is more than just another boring, hard-to-configure logger—it makes your application's internal dialogue clear and informative, and it looks beautiful doing it. It's the first thing I add to any new project.
 
@@ -38,9 +54,9 @@ with PolyLog.catch(logger, "Failed during data processing"):
     process_complex_data()  # Any exceptions are beautifully logged
 ```
 
----
+<a id="polyenv"></a>
 
-### [`PolyEnv`](https://github.com/dannystewart/polykit/tree/main/src/polykit/env): Demystify Environment Variables
+## [`PolyEnv`](https://github.com/dannystewart/polykit/tree/main/src/polykit/env): Demystify Environment Variables
 
 Environment variables shouldn't be a source of confusion and frustration, which is why I wrote `PolyEnv`—to make them a clear, declarative part of your application.
 
@@ -72,9 +88,9 @@ except ValueError as e:
     print(f"Configuration error: {e}")
 ```
 
----
+<a id="polypath"></a>
 
-### [`PolyPath`](https://github.com/dannystewart/polykit/tree/main/src/polykit/paths): Navigate File Systems with Confidence
+## [`PolyPath`](https://github.com/dannystewart/polykit/tree/main/src/polykit/paths): Navigate File Systems with Confidence
 
 `PolyPath` brings sanity to file management and eliminates an entire class of cross-platform headaches:
 
@@ -96,9 +112,9 @@ music = paths.from_music("Playlists")              # ~/Music/Playlists
 downloads = paths.from_downloads("temp.zip")       # ~/Downloads/temp.zip
 ```
 
----
+<a id="polyfile"></a>
 
-### [`PolyFile`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polyfile.py): File Operations Simplified
+## [`PolyFile`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polyfile.py): File Operations Simplified
 
 `PolyFile` brings elegance and safety to everyday file operations:
 
@@ -131,9 +147,9 @@ for hash_value, file_list in dupes.items():
     PolyFile.delete(file_list[1:])
 ```
 
----
+<a id="polydiff"></a>
 
-### [`PolyDiff`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polydiff.py): Elegant File Comparison
+## [`PolyDiff`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polydiff.py): Elegant File Comparison
 
 `PolyDiff` makes text and file comparison clean and intuitive:
 
@@ -158,9 +174,9 @@ if changes.has_changes:
         process(added_line)
 ```
 
----
+<a id="polyargs"></a>
 
-### [`PolyArgs`](https://github.com/dannystewart/polykit/blob/main/src/polykit/cli/polyargs.py): Command-Line Interfaces That Look Professional
+## [`PolyArgs`](https://github.com/dannystewart/polykit/blob/main/src/polykit/cli/polyargs.py): Command-Line Interfaces That Look Professional
 
 `PolyArgs` transforms the standard `argparse` experience into something you'll actually enjoy:
 
@@ -181,9 +197,9 @@ parser.add_argument("--verbose", "-v", action="store_true", help="Enable detaile
 args = parser.parse_args()
 ```
 
----
+<a id="versionchecker"></a>
 
-### [`VersionChecker`](https://github.com/dannystewart/polykit/blob/main/src/polykit/packages/packages.py): Package Version Intelligence
+## [`VersionChecker`](https://github.com/dannystewart/polykit/blob/main/src/polykit/packages/packages.py): Package Version Intelligence
 
 `VersionChecker` gives you visibility into your dependencies—what's installed, where it came from, and what updates are available.
 
@@ -211,9 +227,9 @@ if checker.is_development_version("my_package"):
 current_package = VersionChecker.get_caller_package_name()
 ```
 
----
+<a id="text-time"></a>
 
-### [`Text`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/text.py) and [`Time`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/time.py): The Swiss Army Knives of Formatting
+## [`Text`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/text.py) and [`Time`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/time.py): The Swiss Army Knives of Formatting
 
 Polykit's `Text` and `Time` utility classes handle everything from pluralization to timezone-aware parsing, solving real-world text and time challenges and hardened against some of the nastiest edge cases.
 
@@ -249,13 +265,13 @@ print(Time.convert_sec_to_interval(3725))  # "1 hour, 2 minutes and 5 seconds"
 
 Why spend months solving these problems when somebody else has put in the time (lots and lots of time) solving them for you?
 
----
+<a id="honorable-mention"></a>
 
-### Honorable Mention
+## Honorable Mention
 
 Polykit also has a few more tricks up its sleeve for common development challenges.
 
-#### [`Singleton`](https://github.com/dannystewart/polykit/blob/main/src/polykit/core/singleton.py) Metaclass
+### [`Singleton`](https://github.com/dannystewart/polykit/blob/main/src/polykit/core/singleton.py) Metaclass
 
 Singletons are deceptively difficult to implement correctly, but `Singleton` handles it all:
 
@@ -264,7 +280,7 @@ Singletons are deceptively difficult to implement correctly, but `Singleton` han
 - **IDE-Friendly**: Designed to preserve method visibility and code intelligence in IDEs.
 - **Type-Hinting Compatible**: Works seamlessly with static type checkers and modern Python typing.
 
-#### And even more:
+### And even more:
 
 - Gracefully handle keyboard interrupts with the `@handle_interrupt()` decorator.
 - Auto-retry operations that might fail transiently with the `@retry_on_exception()` decorator.
@@ -272,8 +288,6 @@ Singletons are deceptively difficult to implement correctly, but `Singleton` han
 - Get user confirmation with a single keypress using `confirm_action()`.
 - Use stylish loading indicators like spinners with the `with_spinner()` context manager…
 - …or use Walking Man `<('-'<)` (honestly, he alone is worth the download).
-
----
 
 ## Why Polykit?
 
@@ -295,6 +309,6 @@ I'd love it if you gave Polykit a try, and I'd love even more if it helps you li
 pip install polykit
 ```
 
-### License
+## License
 
 Polykit is licensed under the [LGPL-3.0 license](https://github.com/dannystewart/polykit/blob/main/LICENSE). Contributions and feedback are welcome!
