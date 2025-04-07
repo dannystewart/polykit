@@ -58,11 +58,11 @@ class PolyEnv(metaclass=Singleton):
     env_file: list[Path] | Path | str | None = field(default_factory=list)
     add_debug: bool = False
 
-    logger: Logger = field(init=False)
-
+    # Dictionaries to hold environment variable definitions
     vars: dict[str, PolyVar] = field(default_factory=dict)
     values: dict[str, Any] = field(default_factory=dict)
     attr_names: dict[str, str] = field(default_factory=dict)
+    logger: Logger = field(init=False)
 
     def __post_init__(self):
         """Initialize with default environment variables."""
@@ -75,11 +75,9 @@ class PolyEnv(metaclass=Singleton):
             else self.env_file
         )
 
-        # Check the environment variable for debug mode
-        env_debug = self.validate_bool(os.environ.get("ENV_DEBUG", "0"))
-
-        # Set up the logger
-        self.logger = PolyLog.get_logger(level="DEBUG" if env_debug else "INFO")
+        # Check the environment variable for debug mode and set up logging
+        self.env_debug = self.validate_bool(os.environ.get("ENV_DEBUG", "0"))
+        self.logger = PolyLog.get_logger(level="DEBUG" if self.env_debug else "INFO")
 
         # Load environment variables from files
         self._load_env_files()
@@ -379,13 +377,29 @@ class PolyEnv(metaclass=Singleton):
             A dictionary of variable names to their values.
         """
         result = {}
+        # Process registered variables
         for name, var in self.vars.items():
             if var.secret and not include_secrets:
                 continue
             try:
                 result[name] = self.get(name)
             except (ValueError, KeyError):
+                # Only reached if the variable is required but missing
                 result[name] = None
+
+        # Add special environment variables that might not be registered
+        if "ENV_DEBUG" not in result:
+            env_debug = self.validate_bool(os.environ.get("ENV_DEBUG", "0"))
+            result["ENV_DEBUG"] = env_debug
+
+        # Include DEBUG if it's in the environment but not in vars
+        if "DEBUG" not in result and "DEBUG" in os.environ:
+            try:
+                debug_value = self.validate_bool(os.environ.get("DEBUG", "0"))
+                result["DEBUG"] = debug_value
+            except ValueError:
+                result["DEBUG"] = None
+
         return result
 
     def print_all_values(self, include_secrets: bool = False) -> None:
