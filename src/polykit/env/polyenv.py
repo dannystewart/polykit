@@ -415,14 +415,23 @@ class PolyEnv(metaclass=Singleton):
         log_level = self.log_level
         self.logger.setLevel("DEBUG")
 
+        # Get all values including secrets so we can check which ones are secret
         values = self.get_all_values(include_secrets=True)
+        var_count = 0
+
         for name, value in values.items():
             try:
-                if self.vars[name].secret and not include_secrets:
+                # Mask secret values if needed
+                if name in self.vars and self.vars[name].secret and not include_secrets:
                     value = "****"
                 self.logger.debug("%s: %s", name, value)
+                var_count += 1
             except KeyError:
                 continue
+
+        self.logger.debug(
+            "Displayed %s environment variable%s.", var_count, "s" if var_count != 1 else ""
+        )
 
         # Reset log level to the original value
         self.logger.setLevel(log_level)
