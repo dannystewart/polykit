@@ -6,7 +6,15 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.9.0] (2025-04-07)
+
+**Polykit's development status has changed from Beta to Production/Stable!** 🎉
+
+Polykit has been around long enough (in some shape or form) that I consider it stable enough for use. It's not the kind of project I think will ever hit 1.0 because of its constant evolution, but I'm trying to take minor version bumps more seriously for breaking changes. This means 0.9.0 and 0.10.0 could come out the same day if changes are severe enough, but at least nothing should break in between (hopefully).
+
 ### Added
+
+- Updating to version 0.9.0 due to breaking changes (see below).
 
 - `PolyLog`
   - Adds `LogLevelOverride` context manager for temporarily changing log levels, making it easier to control verbosity in specific code blocks.
@@ -16,6 +24,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ### Changed
 
+- Platform utilities have moved to the `core` module. `polykit_setup` must now be imported from `polykit.core` rather than `polykit.platform`.
+
 - `PolyEnv`
   - Improves environment variable debugging with counters, better secret detection, and helpful summary messages.
 
@@ -23,22 +33,19 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
   - Enhances README with a snazzy table of contents, feature section links, and clearer descriptions that won't put you to sleep.
   - Updates library introduction docs with detailed sections on features and use cases—now with 100% more examples!
 
-- **BREAKING CHANGE:**
-  - Platform utilities have moved to the `core` module. `polykit_setup` must now be imported from `polykit.core` rather than `polykit.platform`.
-
 ### Fixed
 
 - `PolyEnv`
   - Fixes missing variable errors in `print_all_values` method with try/except handling. No more crashes when variables play hide and seek.
   - Replaces print statements with proper `logger.debug` calls. Printing is so 1990s.
 
-## [0.7.4] (2025-04-06)
+## 0.7.4 (2025-04-06)
 
 ### Changed
 
 - Simplifies Walking Man's wave animation. (Waving with both arms made it look like he was doing finger guns!)
 
-## [0.7.3] (2025-04-06)
+## 0.7.3 (2025-04-06)
 
 ### Added
 
@@ -48,7 +55,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Improves README structure for better clarity and navigation.
 
-## [0.7.2] (2025-04-06)
+## 0.7.2 (2025-04-06)
 
 ### Added
 
@@ -64,7 +71,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 - Improves Walking Man's boundary handling for more accurate position updates.
 - Enhances character alignment during movement by refining spacing logic.
 
-## [0.7.1] (2025-04-05)
+## 0.7.1 (2025-04-05)
 
 ### Added
 
@@ -79,7 +86,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Updates type hints for the `delete` method in the `files` module to ensure consistency and correctness by using `PathList`.
 
-## [0.7.0] (2025-04-05)
+## 0.7.0 (2025-04-05)
 
 ### Added
 
@@ -99,10 +106,6 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 - Condenses the module docstring in `__init__.py` for clarity.
 - Removes an outdated note on version handling requirements in argument parsing.
 
-### Fixed
-
-- Updates license information in the README to reflect the MIT license.
-
 ### Removed
 
 - Removes deprecated features from the codebase and documentation.
@@ -112,9 +115,5 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.7.4...HEAD
-[0.7.4]: https://github.com/dannystewart/polykit/compare/v0.7.3...v0.7.4
-[0.7.3]: https://github.com/dannystewart/polykit/compare/v0.7.2...v0.7.3
-[0.7.2]: https://github.com/dannystewart/polykit/compare/v0.7.1...v0.7.2
-[0.7.1]: https://github.com/dannystewart/polykit/compare/v0.7.0...v0.7.1
-[0.7.0]: https://github.com/dannystewart/polykit/releases/tag/v0.7.0
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/dannystewart/polykit/releases/tag/v0.9.0
