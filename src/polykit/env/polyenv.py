@@ -413,9 +413,12 @@ class PolyEnv(metaclass=Singleton):
         """
         values = self.get_all_values(include_secrets=True)
         for name, value in values.items():
-            if self.vars[name].secret and not include_secrets:
-                value = "****"
-            print(f"{name}: {value}")
+            try:
+                if self.vars[name].secret and not include_secrets:
+                    value = "****"
+                print(f"{name}: {value}")
+            except KeyError:
+                continue
 
     @staticmethod
     def validate_bool(value: str) -> bool:
