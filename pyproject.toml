@@ -1,6 +1,6 @@
 [project]
 name = "polykit"
-version = "0.7.4"
+version = "0.7.5.dev"
 description = "Python toolkit"
 authors = [{ name = "Danny Stewart", email = "danny@stewart.cc" }]
 readme = "README.md"
