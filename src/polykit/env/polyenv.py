@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from polykit.core import Singleton
 from polykit.env.types import PolyVar
 from polykit.log import PolyLog
+from polykit.log.polylog import LogLevelOverride
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -412,29 +413,24 @@ class PolyEnv(metaclass=Singleton):
             include_secrets: Whether to include variables marked as secret.
         """
         # Temporarily set log level to DEBUG since this was explicitly requested
-        log_level = self.log_level
-        self.logger.setLevel("DEBUG")
+        with LogLevelOverride(self.logger, "DEBUG"):
+            # Get all values including secrets so we can check which ones are secret
+            values = self.get_all_values(include_secrets=True)
+            var_count = 0
 
-        # Get all values including secrets so we can check which ones are secret
-        values = self.get_all_values(include_secrets=True)
-        var_count = 0
+            for name, value in values.items():
+                try:
+                    # Mask secret values if needed
+                    if name in self.vars and self.vars[name].secret and not include_secrets:
+                        value = "****"
+                    self.logger.debug("%s: %s", name, value)
+                    var_count += 1
+                except KeyError:
+                    continue
 
-        for name, value in values.items():
-            try:
-                # Mask secret values if needed
-                if name in self.vars and self.vars[name].secret and not include_secrets:
-                    value = "****"
-                self.logger.debug("%s: %s", name, value)
-                var_count += 1
-            except KeyError:
-                continue
-
-        self.logger.debug(
-            "Displayed %s environment variable%s.", var_count, "s" if var_count != 1 else ""
-        )
-
-        # Reset log level to the original value
-        self.logger.setLevel(log_level)
+            self.logger.debug(
+                "Displayed %s environment variable%s.", var_count, "s" if var_count != 1 else ""
+            )
 
     @staticmethod
     def validate_bool(value: str) -> bool:
