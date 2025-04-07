@@ -35,6 +35,7 @@ Singletons are deceptively difficult to implement correctly. This implementation
 from __future__ import annotations
 
 from .decorators import async_retry_on_exception, retry_on_exception, with_retries
+from .detect import platform_check
 from .is_literal import is_literal
 from .setup import polykit_setup
 from .singleton import Singleton
