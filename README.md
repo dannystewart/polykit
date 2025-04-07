@@ -5,34 +5,29 @@
 [![PyPI downloads](https://img.shields.io/pypi/dm/polykit.svg)](https://pypi.org/project/polykit/)
 [![License](https://img.shields.io/pypi/l/polykit.svg)](https://github.com/dannystewart/polykit/blob/main/LICENSE)
 
-Every developer has a collection of utilities they've refined over years of solving the same problems again and again. Polykit is that collection—polished, perfected, and packaged for your enjoyment.
+Every developer has a collection of utilities they've refined over the years. Polykit is mine.
 
-"*Another* utility library?" I already hear you asking. But don't close the tab just yet! What sets Polykit apart isn't just the functionality it provides but the thought behind each implementation. These are tools born from years of solving real-world problems, used in production but refined as a passion.
+"*Another* utility library?" I can already hear you rolling your eyes. But don't close the tab yet! What sets Polykit apart isn't just the functionality but the thought behind each implementation. These are tools born from solving real-world problems, used in production but refined as passion.
 
-If you're managing environment variables, handling paths across different operating systems, formatting text for human consumption, building command-line interfaces, or just want a really nice logger, Polykit provides elegant solutions that just work, often in ways you didn't realize you needed until you experience them.
+If you're managing environment variables, handling paths across different operating systems, formatting text for human consumption, building command-line interfaces, or just want a *really* nice logger, Polykit provides elegant solutions that just work, often in ways you didn't realize you needed until you experience them.
 
 Polykit doesn't try to be everything to everyone. Instead, it focuses on doing common tasks extraordinarily well, with an emphasis on developer happiness and code that's a pleasure to use.
 
 ## Features
 
-### `PolyLog`: Sophisticated Logging with Personality
+### `PolyLog`: Easy, Elegant Logging
 
-Forget everything you know about boring, hard-to-configure logging systems. `PolyLog` is more than just another logger—it makes your application's internal dialogue clear, informative, and a pleasure to read. It's the first thing I add to any new project.
+`PolyLog` is more than just another boring, hard-to-configure logger—it makes your application's internal dialogue clear and informative, and it looks beautiful doing it. It's the first thing I add to any new project.
 
 - **Context-Aware**: Automatically detects caller class and module names.
 - **Time-Intelligent**: Formats datetime objects into human-readable strings.
 - **Visually Distinct**: Color-coded by log level for instant visual priority assessment.
-- **Exception-Friendly**: Built-in context managers and decorators for elegant error handling.
 - **Configurable**: From minimalist to detailed logging formats with a single parameter.
 - **Production-Ready**: Rotating file handlers, thread safety, and proper log level management.
 
 ```python
 # Create a smart, context-aware logger
 logger = PolyLog.get_logger()  # Automatically detects class/module name!
-
-# Rich, informative logs with just the right amount of detail
-logger.info("Processing %s items in background task.", count)
-logger.warning("API rate limit at %s%%, consider throttling requests.", usage)
 
 # Datetime objects automatically formatted into human-readable text
 logger.info("Next maintenance scheduled for %s.", datetime.now() + timedelta(days=7))
@@ -45,20 +40,17 @@ with PolyLog.catch(logger, "Failed during data processing"):
 
 ---
 
-### `PolyEnv`: Environment Variables, Elevated
+### `PolyEnv`: Demystify Environment Variables
 
-Environment configuration shouldn't be a source of frustration. `PolyEnv` transforms environment variables from a necessary evil into a clear, declarative part of your application.
+Environment variables shouldn't be a source of confusion and frustration, which is why I wrote `PolyEnv`—to make them a clear, declarative part of your application.
 
 - **Hierarchical Loading**: Automatically loads from multiple `.env` files with smart precedence rules.
 - **Type Conversion**: Transforms environment strings to Python types (`int`, `bool`, etc.) automatically.
-- **Smart Boolean Handling**: Understands various truthy/falsey formats (`yes`, `1`, `true`, `on`, etc.).
-- **Attribute Access**: Clean `env.VARIABLE_NAME` syntax with full IDE autocompletion support.
-- **Validation Framework**: Ensure all required variables are present before your app runs.
+- **Attribute Access**: Clean `env.VARIABLE_NAME` syntax with customizable attribute names for easy access.
+- **Validation**: Ensure all required variables are present before your app runs.
 - **Secret Protection**: Mask sensitive values in logs and debug output.
-- **Sensible Defaults**: Set fallback values that make sense for your application.
 
 ```python
-# Create your environment manager
 env = PolyEnv()
 
 # Declare your configuration needs
@@ -68,7 +60,6 @@ env.add_bool("ENABLE_CACHE", default=True)
 env.add_var("UPLOAD_DIR", default="/tmp/uploads")
 
 # Access variables with clean, IDE-friendly syntax
-api_key = env.API_KEY
 max_conn = env.MAX_CONNECTIONS  # Automatically converted to int
 if env.ENABLE_CACHE:
     cache_dir = Path(env.UPLOAD_DIR) / "cache"
@@ -85,17 +76,13 @@ except ValueError as e:
 
 ### `PolyPath`: Navigate File Systems with Confidence
 
-`PolyPath` brings sanity to file management across operating systems and eliminates an entire class of cross-platform headaches:
+`PolyPath` brings sanity to file management and eliminates an entire class of cross-platform headaches:
 
-- **Cross-Platform Consistency**: Write once, run anywhere with the right paths for each OS.
-- **Automatic Directory Creation**: Parent directories are created as needed, eliminating boilerplate `mkdir` calls.
-- **Environment-Aware**: Respects platform conventions and environment variables.
 - **User Directory Integration**: Seamless access to Documents, Downloads, Pictures and more.
-- **macOS App Domain Support**: Proper bundle identifiers (com.developer.appname) for macOS conventions.
 - **Clean, Intuitive API**: Methods like `from_config()` and `from_cache()` make code self-documenting.
+- **macOS App Domain Support**: Proper bundle identifiers (com.developer.appname) for macOS conventions.
 
 ```python
-# Create a path manager for your app
 paths = PolyPath("my_awesome_app", app_author="YourName")
 
 # Access platform-specific directories with a consistent API
@@ -104,12 +91,9 @@ cache_dir = paths.from_cache("api_responses")      # ~/Library/Caches/my_awesome
 log_path = paths.from_log("debug.log")             # Appropriate log location on any platform
 
 # Work with user directories naturally
-docs = paths.from_documents("Reports", "2023")     # ~/Documents/Reports/2023
+docs = paths.from_documents("Reports", "2023")     # ~/Documents/Reports/2025
 music = paths.from_music("Playlists")              # ~/Music/Playlists
 downloads = paths.from_downloads("temp.zip")       # ~/Downloads/temp.zip
-
-# Parent directories are automatically created when needed
-paths.from_data("databases").mkdir(exist_ok=True)  # No need for parents=True
 ```
 
 ---
@@ -119,12 +103,10 @@ paths.from_data("databases").mkdir(exist_ok=True)  # No need for parents=True
 `PolyFile` brings elegance and safety to everyday file operations:
 
 - **Intuitive Class Methods**: Access functionality through clean, descriptive methods without instantiation.
-- **Trash-Aware Deletion**: Files go to the recycle bin instead of disappearing forever.
+- **Delete to Trash**: Files go to the recycle bin instead of disappearing forever.
 - **Natural Sorting**: "file10.txt" come after "file2.txt", not before.
 - **Smart Filtering**: Combine extension filters, exclusion patterns, and recursion options.
 - **Duplicate Detection**: Find identical files with efficient SHA-256 hashing.
-- **Overwrite Protection**: Prevent accidental data loss with built-in safeguards.
-- **Logger Integration**: All operations can report their status through your logger (hopefully `PolyLog`!).
 
 ```python
 # Find files with smart filtering and natural sorting
@@ -153,15 +135,12 @@ for hash_value, file_list in dupes.items():
 
 ### `PolyDiff`: Elegant File Comparison
 
-`PolyDiff` makes text and file comparison clean and intuitive by bringing the power of unified diff to your Python applications with an API that's both powerful and pleasant to use:
+`PolyDiff` makes text and file comparison clean and intuitive:
 
 - **Visual Clarity**: Color-coded output makes changes immediately apparent.
 - **Multiple Output Styles**: Choose between colored, simple, or minimal output formats.
 - **Structured Results**: Get programmatic access to additions, deletions, and full changes.
-- **Content or File Comparison**: Compare files directly or arbitrary text content.
 - **Context-Aware**: Includes filenames and surrounding lines for better understanding.
-- **Logger Integration**: Output changes through your logger (and you know which one to use).
-- **Clean Formatting**: Consistent spacing and alignment for better readability.
 
 ```python
 # Compare two files with colorized output
@@ -185,23 +164,12 @@ if changes.has_changes:
 
 `PolyArgs` transforms the standard `argparse` experience into something you'll actually enjoy:
 
-- **Write Once, Use Twice**: Maintain comprehensive module documentation while keeping help text concise with `lines=1` to show only the first paragraph.
+- **Built Around `argparse`:** No need to learn new methods or adapt your existing implementation. `PolyArgs` is a drop-in replacement.
+- **Write Once, Use Twice**: Maintain comprehensive module documentation while keeping help text concise with `lines=1` to include a set number of paragraphs with formatting preserved.
 - **Intelligent Column Widths**: Automatically calculates optimal formatting based on your arguments.
 - **Version Integration**: Automatically adds `--version` that reports detailed package information.
-- **Consistent Text Formatting**: Help text with proper capitalization and paragraph structure.
 
 ```python
-# Use your full module docstring but only show the first paragraph in help text
-"""Process and analyze data files with advanced filtering options.
-
-This module provides tools for loading, filtering, and transforming data
-from various file formats. It supports CSV, JSON, and XML inputs.
-
-Examples:
-    process.py --input data.csv --output results.json
-    process.py --filter "created_at > 2023-01-01" --format pretty
-"""
-
 # Only the first paragraph appears in help text!
 parser = PolyArgs(description=__doc__, lines=1)
 
@@ -221,10 +189,8 @@ args = parser.parse_args()
 
 - **Multi-Source Intelligence**: Check versions against PyPI, GitHub, GitLab, or any Git repository.
 - **Dev Environment Awareness**: Detects when you're running from source or in editable mode.
-- **Update Awareness**: Easily compare installed versions against latest available releases.
 - **Smart Package Detection**: Determine package names from running scripts and entry points.
 - **Rich Version Information**: Get structured data about versions, sources, and update status.
-- **No Configuration**: Works out-of-the-box with sensible defaults for most scenarios.
 
 ```python
 # Quick version check with smart detection
@@ -233,16 +199,9 @@ info = checker.check_package("requests")
 
 print(info)  # "requests v2.28.1 (pypi)"
 
-# Check for updates against PyPI
+# Check for updates against PyPI (or GitHub, or anything else)
 if info.update_available:
     print(f"Update available: v{info.latest}")
-
-# Check against GitHub releases
-github_info = checker.check_package(
-    "fastapi",
-    source=PackageSource.GITHUB,
-    owner="tiangolo"
-)
 
 # Detect development installations
 if checker.is_development_version("my_package"):
@@ -250,30 +209,26 @@ if checker.is_development_version("my_package"):
 
 # Automatic package detection for CLI tools
 current_package = VersionChecker.get_caller_package_name()
-version_info = checker.check_package(current_package)
 ```
 
 ---
 
 ### `Text` and `Time`: The Swiss Army Knives of Formatting
 
-Stop wrestling with text manipulation and datetime formatting. Polykit's `Text` and `Time` utility classes handle everything from pluralization to timezone-aware parsing, solving real-world text and time challenges and hardened against some of the nastiest edge cases. Why spend months solving these problems when you don't have to?
+Polykit's `Text` and `Time` utility classes handle everything from pluralization to timezone-aware parsing, solving real-world text and time challenges and hardened against some of the nastiest edge cases.
 
 - **Smart Text Handling**: Truncate, format, and manipulate text with intelligent defaults.
-- **No More Pluralization Bugs**: Automatically handle singular/plural forms for cleaner messages.
 - **Edge Case Mastery**: Handles tricky scenarios like nested code blocks and special characters with grace and reliability.
-- **Battle-Tested**: The `split_message()` function alone represents nearly a year of refinement through production use. It can survive almost anything—and it has.
 - **Human-Readable Times**: Parse and format dates and times in natural language.
-- **Timezone Intelligence**: Automatic timezone detection and handling.
+- **Battle-Tested**: The `split_message()` function alone represents nearly a year of refinement through production use. It can survive almost anything—and it has.
 
 ```python
 # Smart pluralization that just works
-print(f"Found {Text.plural('file', 5, with_count=True)}")  # "Found 5 files"
+print(f"Found {Text.plural('file', 5, with_count=True)}")        # "Found 5 files"
 print(f"Processing {Text.plural('class', 1, with_count=True)}")  # "Processing 1 class"
 
 # Intelligent truncation with context preservation
-long_text = "This is a very long text that needs to be shortened while preserving meaning..."
-print(Text.truncate(long_text, chars=50))  # Ends at sentence or word boundary
+print(Text.truncate(long_text, chars=50))          # Ends at sentence or word boundary
 print(Text.truncate(long_text, from_middle=True))  # Preserves start and end
 
 # Terminal colors made simple
@@ -285,12 +240,14 @@ meeting = Time.parse("3pm tomorrow")
 deadline = Time.parse("Friday at 5")
 
 # Format datetimes in a natural way
-print(Time.get_pretty_time(meeting))  # "tomorrow at 3:00 PM"
+print(Time.get_pretty_time(meeting))   # "tomorrow at 3:00 PM"
 print(Time.get_pretty_time(deadline))  # "Friday at 5:00 PM"
 
 # Convert durations to readable text
 print(Time.convert_sec_to_interval(3725))  # "1 hour, 2 minutes and 5 seconds"
 ```
+
+Why spend months solving these problems when somebody else has put in the time (lots and lots of time) solving them for you?
 
 ---
 
@@ -303,9 +260,8 @@ Polykit also has a few more tricks up its sleeve for common development challeng
 Singletons are deceptively difficult to implement correctly, but `Singleton` handles it all:
 
 - **Truly Thread-Safe**: Properly handles race conditions during instantiation with class-level locks.
-- **IDE-Friendly**: Designed to preserve method visibility and code intelligence in IDEs.
 - **No Boilerplate**: Implement the pattern with a single metaclass declaration.
-- **Transparent Usage**: No special methods needed to access the singleton instance.
+- **IDE-Friendly**: Designed to preserve method visibility and code intelligence in IDEs.
 - **Type-Hinting Compatible**: Works seamlessly with static type checkers and modern Python typing.
 
 #### And even more:
@@ -331,7 +287,7 @@ When you use Polykit, you're benefiting from:
 
 Everything you see here was created to solve genuine problems in day-to-day development, so it prioritizes developer experience with IDE-friendly interfaces, meaningful error messages, sensible defaults, and comprehensive (if still evolving) documentation. Every detail has been considered from the perspective of the person who will actually use these tools (because that person was me!).
 
-Polykit strives to be intuitive, handle complexity behind clean interfaces, and integrate seamlessly with each other and with your existing code. It's a toolkit from a developer who refuses to accept "good enough" and always goes for "really f*cking good." Part of that means the work is never finished—Polykit is still being actively developed, with new tools added and existing tools refined on a regular basis.
+Polykit strives to be intuitive, handle complexity behind clean interfaces, and integrate seamlessly with each other and your existing code. It's a toolkit from a developer who refuses to accept "good enough" and always goes for "really f*cking good." And the work is never finished—Polykit is still being actively developed, with tools being added and refined on a regular basis.
 
 I'd love it if you gave Polykit a try, and I'd love even more if it helps you like it's helped me! If you're ready to bring some joy to your Python development, you know the way:
 

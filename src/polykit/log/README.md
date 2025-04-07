@@ -1,7 +1,5 @@
 # PolyLog
 
-**The logical choice for Python logging.** 🖖
-
 PolyLog is a powerful, colorful, and intuitive logging library for Python that makes beautiful logs easy.
 
 ## Features
