@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Added
+
+- `PolyLog`
+  - Adds `LogLevelOverride` context manager for temporarily changing log levels, making it easier to control verbosity in specific code blocks.
+
+- `PolyEnv`
+  - Adds `print_all_values` method for more easily displaying currently stored environment variables, with smart handling of secret values.
+
+### Changed
+
+- `PolyEnv`
+  - Improves environment variable debugging with counters, better secret detection, and helpful summary messages.
+
+- **Documentation**
+  - Enhances README with a snazzy table of contents, feature section links, and clearer descriptions that won't put you to sleep.
+  - Updates library introduction docs with detailed sections on features and use cases—now with 100% more examples!
+
+- **BREAKING CHANGE:**
+  - Platform utilities have moved to the `core` module. `polykit_setup` must now be imported from `polykit.core` rather than `polykit.platform`.
+
+### Fixed
+
+- `PolyEnv`
+  - Fixes missing variable errors in `print_all_values` method with try/except handling. No more crashes when variables play hide and seek.
+  - Replaces print statements with proper `logger.debug` calls. Printing is so 1990s.
+
 ## [0.7.4] (2025-04-06)
 
 ### Changed
