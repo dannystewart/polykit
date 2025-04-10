@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.9.1] (2025-04-09)
+
+### Changed
+
+- Improves platform detection by switching to more compatible `platform.system()` method instead of `os.uname()`, making the application run reliably across different operating systems.
+- Enhances macOS compatibility by normalizing "macOS" and "Darwin" references.
+
 ## [0.9.0] (2025-04-07)
 
 **Polykit's development status has changed from Beta to Production/Stable!** 🎉
@@ -115,5 +122,6 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.9.0...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/dannystewart/polykit/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/dannystewart/polykit/releases/tag/v0.9.0
