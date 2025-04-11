@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Changed
+
+- Renames `recurse` parameter to `recursive` in the `PolyFile.list` method for better readability and consistency with Python naming conventions. Your files will now be recursively listed in a more Pythonic way.
+
 ## [0.9.1] (2025-04-09)
 
 ### Changed

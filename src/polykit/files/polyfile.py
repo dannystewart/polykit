@@ -32,7 +32,7 @@ class PolyFile:
         cls,
         path: Path,  # noqa: A002
         extensions: str | list[str] | None = None,
-        recurse: bool = False,
+        recursive: bool = False,
         exclude: str | list[str] | None = None,
         hidden: bool = False,
         sort_key: Callable[..., Any] | None = None,
@@ -44,7 +44,7 @@ class PolyFile:
         Args:
             path: The directory to search.
             extensions: The file extensions to include. If None, all files will be included.
-            recurse: Whether to search recursively.
+            recursive: Whether to search recursively.
             exclude: Glob patterns to exclude.
             hidden: Whether to include hidden files.
             sort_key: A function to use for sorting the files.
@@ -65,7 +65,7 @@ class PolyFile:
 
         files_filtered: PathList = []
         for pattern in glob_patterns:
-            files = path.rglob(pattern) if recurse else path.glob(pattern)
+            files = path.rglob(pattern) if recursive else path.glob(pattern)
             try:
                 files_filtered.extend(
                     file

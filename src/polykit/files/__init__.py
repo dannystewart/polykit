@@ -10,7 +10,7 @@ from pathlib import Path
 image_files = PolyFile.list(
     Path("~/Pictures"),
     extensions=["jpg", "png"],
-    recurse=True,
+    recursive=True,
     exclude=["*thumbnail*"],
     hidden=False,
 )
