@@ -5,8 +5,8 @@ from contextlib import AbstractContextManager, nullcontext
 from threading import Event, Thread
 from typing import TYPE_CHECKING, ClassVar
 
+from polykit.cli import handle_interrupt
 from polykit.formatters import color as colorize
-from polykit.shell import handle_interrupt
 
 if TYPE_CHECKING:
     from types import TracebackType
