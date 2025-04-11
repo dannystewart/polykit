@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.10.0] (2025-04-11)
+
 ### Changed
 
 - **BREAKING:** Relocates shell functionality to CLI package, moving `interrupt.py` and `permissions.py` from `shell/` to `cli/` package for better organizational clarity and to eliminate ongoing confusion between CLI and shell modules.
@@ -127,6 +129,7 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.9.1...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/dannystewart/polykit/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/dannystewart/polykit/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/dannystewart/polykit/releases/tag/v0.9.0
