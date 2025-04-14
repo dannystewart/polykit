@@ -8,7 +8,9 @@ Polykit doesn't try to be everything to everyone. Instead, it focuses on doing c
 
 ## Features
 
-### [`PolyLog`](https://github.com/dannystewart/polykit/tree/main/src/polykit/log): Easy, Elegant Logging
+Here's some of what Polykit has to offer:
+
+### [`PolyLog`](https://github.com/dannystewart/polykit/tree/main/src/polykit/log): Beautiful, Context-Aware Logging
 
 `PolyLog` is more than just another boring, hard-to-configure logger—it makes your application's internal dialogue clear and informative, and it looks beautiful doing it. It's the first thing I add to any new project.
 
@@ -30,8 +32,6 @@ logger.info("Next maintenance scheduled for %s.", datetime.now() + timedelta(day
 with PolyLog.catch(logger, "Failed during data processing"):
     process_complex_data()  # Any exceptions are beautifully logged
 ```
-
----
 
 ### [`PolyEnv`](https://github.com/dannystewart/polykit/tree/main/src/polykit/env): Demystify Environment Variables
 
@@ -65,8 +65,6 @@ except ValueError as e:
     print(f"Configuration error: {e}")
 ```
 
----
-
 ### [`PolyPath`](https://github.com/dannystewart/polykit/tree/main/src/polykit/paths): Navigate File Systems with Confidence
 
 `PolyPath` brings sanity to file management and eliminates an entire class of cross-platform headaches:
@@ -90,8 +88,6 @@ docs = paths.from_documents("Reports", "2023")  # ~/Documents/Reports/2025
 music = paths.from_music("Playlists")  # ~/Music/Playlists
 downloads = paths.from_downloads("temp.zip")  # ~/Downloads/temp.zip
 ```
-
----
 
 ### [`PolyFile`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polyfile.py): File Operations Simplified
 
@@ -126,8 +122,6 @@ for hash_value, file_list in dupes.items():
     PolyFile.delete(file_list[1:])
 ```
 
----
-
 ### [`PolyDiff`](https://github.com/dannystewart/polykit/blob/main/src/polykit/files/polydiff.py): Elegant File Comparison
 
 `PolyDiff` makes text and file comparison clean and intuitive:
@@ -153,8 +147,6 @@ if changes.has_changes:
         process(added_line)
 ```
 
----
-
 ### [`PolyArgs`](https://github.com/dannystewart/polykit/blob/main/src/polykit/cli/polyargs.py): Command-Line Interfaces That Look Professional
 
 `PolyArgs` transforms the standard `argparse` experience into something you'll actually enjoy:
@@ -175,8 +167,6 @@ parser.add_argument("--verbose", "-v", action="store_true", help="Enable detaile
 
 args = parser.parse_args()
 ```
-
----
 
 ### [`VersionChecker`](https://github.com/dannystewart/polykit/blob/main/src/polykit/packages/packages.py): Package Version Intelligence
 
@@ -205,8 +195,6 @@ if checker.is_development_version("my_package"):
 # Automatic package detection for CLI tools
 current_package = VersionChecker.get_caller_package_name()
 ```
-
----
 
 ### [`Text`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/text.py) and [`Time`](https://github.com/dannystewart/polykit/blob/main/src/polykit/formatters/time.py): The Swiss Army Knives of Formatting
 
@@ -244,8 +232,6 @@ print(Time.convert_sec_to_interval(3725))  # "1 hour, 2 minutes and 5 seconds"
 
 Why spend months solving these problems when somebody else has put in the time (lots and lots of time) solving them for you?
 
----
-
 ### Honorable Mention
 
 Polykit also has a few more tricks up its sleeve for common development challenges.
@@ -268,8 +254,6 @@ Singletons are deceptively difficult to implement correctly, but `Singleton` han
 - Use stylish loading indicators like spinners with the `with_spinner()` context manager…
 - …or use Walking Man `<('-'<)` (honestly, he alone is worth the download).
 
----
-
 ## Why Polykit?
 
 When you use Polykit, you're benefiting from:
@@ -290,7 +274,7 @@ I'd love it if you gave Polykit a try, and I'd love even more if it helps you li
 pip install polykit
 ```
 
-### License
+## License
 
 Polykit is licensed under the [LGPL-3.0 license](https://github.com/dannystewart/polykit/blob/main/LICENSE). Contributions and feedback are welcome!
 """  # noqa: D212, D415, W505
