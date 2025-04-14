@@ -6,7 +6,17 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
-*No documentation yet, but you can use the link above to see what's changing.*
+### Changed
+
+- Improves documentation readability by wrapping example code blocks in Markdown code fences for better syntax highlighting.
+- Simplifies module docstrings with more concise formatting.
+- Enhances README organization with better section hierarchy and more descriptive component explanations.
+- Renames shadowed variables for better clarity.
+
+### Fixed
+
+- Removes unused imports.
+- Fixes incorrect license references to correctly show LGPLv3.
 
 ## [0.10.1] (2025-04-13)
 
