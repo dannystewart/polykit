@@ -1,6 +1,4 @@
-r"""# PolyPath
-
-PolyPath simplifies working with application and user directories across different operating systems, providing consistent access to standard locations while respecting platform conventions.
+r"""**PolyPath** simplifies working with application and user directories across different operating systems, providing consistent access to standard locations while respecting platform conventions.
 
 ## Platform-specific paths
 

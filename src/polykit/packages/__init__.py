@@ -1,6 +1,4 @@
-"""## VersionChecker: Package Version Intelligence
-
-Managing package versions shouldn't require detective work. VersionChecker gives you complete visibility into your Python dependencies:
+"""Managing package versions shouldn't require detective work. **VersionChecker** gives you complete visibility into your Python dependencies:
 
 ```python
 from polykit.packages import VersionChecker, PackageSource

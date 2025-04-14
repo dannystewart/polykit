@@ -1,6 +1,4 @@
-"""## Text & Time: The Swiss Army Knives of Formatting
-
-Stop wrestling with text manipulation and datetime formatting. Polykit's Text and Time utilities handle everything from pluralization to timezone-aware parsing:
+"""Stop wrestling with text manipulation and datetime formatting. Polykit's **Text** and **Time** utilities handle everything from pluralization to timezone-aware parsing:
 
 ### Text: Powerful Text Formatting and Manipulation
 

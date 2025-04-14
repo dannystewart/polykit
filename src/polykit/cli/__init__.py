@@ -1,6 +1,4 @@
-"""## PolyArgs: Command-Line Interfaces That Look Professional
-
-Building command-line tools shouldn't require fighting with formatting. PolyArgs transforms the standard argparse experience into something you'll actually enjoy:
+"""Building command-line tools shouldn't require fighting with formatting. **PolyArgs** transforms the standard argparse experience into something you'll actually enjoy:
 
 ```python
 from polykit.cli import PolyArgs

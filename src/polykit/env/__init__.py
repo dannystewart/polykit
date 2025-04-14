@@ -1,6 +1,4 @@
-"""# PolyEnv
-
-PolyEnv is an environment variable manager for Python applications. It handles loading from multiple `.env` files, type conversion, validation, and provides an elegant interface for accessing your environment configuration.
+"""**PolyEnv** is an environment variable manager for Python applications. It handles loading from multiple `.env` files, type conversion, validation, and provides an elegant interface for accessing your environment configuration.
 
 ## Features
 

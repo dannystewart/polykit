@@ -1,6 +1,4 @@
-"""## PolyFile: File Operations Simplified
-
-Stop writing the same file handling code in every project. PolyFile brings elegance and safety to everyday file operations:
+"""Stop writing the same file handling code in every project. **PolyFile** brings elegance and safety to everyday file operations:
 
 ```python
 from polykit.files import PolyFile

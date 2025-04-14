@@ -1,6 +1,6 @@
 # PolyLog
 
-PolyLog is a powerful, colorful, and intuitive logging library for Python that makes beautiful logs easy.
+PolyLog is the logical choice for Python logging: a powerful, colorful, and intuitive library that makes beautiful logs easy.
 
 ## Features
 
@@ -11,16 +11,10 @@ PolyLog is a powerful, colorful, and intuitive logging library for Python that m
 - **File logging:** Easily add rotating file handlers with sensible defaults.
 - **Thread-safe:** Designed for reliable logging in multi-threaded applications.
 
-## Installation
-
-```bash
-pip install polylog
-```
-
 ## Quick Start
 
 ```python
-from polylog import PolyLog
+from polykit.log import PolyLog
 
 # Create a basic logger
 logger = PolyLog.get_logger("MyApp")
