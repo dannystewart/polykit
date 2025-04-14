@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.10.1] (2025-04-13)
+
+### Added
+
+- Upgrades documentation to a beautiful new [Tokyo Night](https://github.com/dannystewart/pdoc-tokyo-night) theme, created by yours truly, replacing the basic dark theme with improved typography, visual hierarchy, and enhanced syntax highlighting for a more polished, professional appearance.
+
+### Changed
+
+- Formats pre-commit config YAML for consistency.
+- Updates `ruff.toml` with new configuration version and file-specific ignores.
+
 ## [0.10.0] (2025-04-11)
 
 ### Changed
@@ -129,7 +140,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.10.0...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.10.1...HEAD
+[0.10.1]: https://github.com/dannystewart/polykit/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/dannystewart/polykit/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/dannystewart/polykit/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/dannystewart/polykit/releases/tag/v0.9.0
