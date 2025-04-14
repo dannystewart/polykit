@@ -292,7 +292,7 @@ pip install polykit
 
 ### License
 
-Polykit is licensed under the [MIT license](https://github.com/dannystewart/polykit/blob/main/LICENSE). Contributions and feedback are welcome!
+Polykit is licensed under the [LGPL-3.0 license](https://github.com/dannystewart/polykit/blob/main/LICENSE). Contributions and feedback are welcome!
 """  # noqa: D212, D415, W505
 
 from __future__ import annotations

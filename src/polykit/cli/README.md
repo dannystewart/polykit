@@ -82,7 +82,3 @@ Walking Man is a special friend who brings joy to tedious waiting times. But lik
 - Popping up infrequently is part of his magic ✨
 
 Walking Man is most effective when he shows up just when you've forgotten about him, making you smile exactly when you needed it most.
-
-## License
-
-Walking Man roams free under the MIT license! Use him wherever you like and add a little joy to your codebase!
