@@ -227,13 +227,13 @@ class PolyEnv(metaclass=Singleton):
             secret=secret,
         )
 
-    def add_vars(self, *vars: PolyVar) -> None:  # noqa: A002
+    def add_vars(self, *env_vars: PolyVar) -> None:  # noqa: A002
         """Add multiple environment variables at once.
 
         Args:
-            *vars: PolyVar instances to add.
+            *env_vars: PolyVar instances to add.
         """
-        for var in vars:
+        for var in env_vars:
             self.add_var(
                 name=var.name,
                 required=var.required,

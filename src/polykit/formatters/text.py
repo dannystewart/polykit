@@ -89,8 +89,8 @@ class Text(StrEnum):
 
         text = text.replace("\\", "\\\\")  # Handle actual backslashes first
 
-        def escape_chars(text: str) -> str:
-            escape_chars = [
+        def escape(esc_text: str) -> str:
+            esc_chars = [
                 "\\.",
                 "_",
                 "-",
@@ -110,7 +110,7 @@ class Text(StrEnum):
                 "[",
                 "]",
             ]
-            return re.sub(rf"(?<!\\)([{re.escape(''.join(escape_chars))}])", r"\\\1", text)
+            return re.sub(rf"(?<!\\)([{re.escape(''.join(esc_chars))}])", r"\\\1", esc_text)
 
         pattern = r"(```.*?```|`[^`\n]*`)|([^`]+|`)"
         escaped_text = []
@@ -122,7 +122,7 @@ class Text(StrEnum):
                 if match.group(1).startswith("```") and match.group(1).endswith("```"):
                     inside_code_block = not inside_code_block
             else:  # This is non-code block text
-                escaped_text.append(escape_chars(match.group(2)))
+                escaped_text.append(escape(match.group(2)))
 
         return "".join(escaped_text)
 

@@ -418,13 +418,13 @@ class VersionChecker:
                 return False
 
     @staticmethod
-    def has_dev_version_markers(version: str) -> bool:
+    def has_dev_version_markers(version_str: str) -> bool:
         """Check if a version string contains development markers.
 
         Returns:
             True if development markers are found, False otherwise.
         """
-        return any(marker in version for marker in ["dev", "a", "b", "rc"])
+        return any(marker in version_str for marker in ["dev", "a", "b", "rc"])
 
     @staticmethod
     def get_version_info(package_name: str) -> VersionInfo:
@@ -437,7 +437,7 @@ class VersionChecker:
             VersionInfo object with version details.
         """
         try:
-            version = importlib.metadata.version(package_name)
+            package_version = importlib.metadata.version(package_name)
             is_pypi = True
 
             try:  # Get the package location
@@ -448,7 +448,7 @@ class VersionChecker:
                     VersionChecker.is_editable_install(package_location)
                     or VersionChecker.has_dev_markers_in_path(package_location)
                     or VersionChecker.has_dev_files_in_ancestry(package_location)
-                    or VersionChecker.has_dev_version_markers(version)
+                    or VersionChecker.has_dev_version_markers(package_version)
                     or VersionChecker.is_in_same_directory_tree(
                         Path(sys.argv[0]).resolve(), package_location.resolve()
                     )
@@ -458,7 +458,7 @@ class VersionChecker:
             except Exception:  # If an error occurs during detection, assume it's a dev version
                 is_pypi = False
 
-            return VersionInfo(package_name, version, is_development=not is_pypi)
+            return VersionInfo(package_name, package_version, is_development=not is_pypi)
 
         # If package metadata isn't found, assume it's a dev version not properly installed
         except importlib.metadata.PackageNotFoundError:
