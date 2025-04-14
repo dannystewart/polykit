@@ -31,17 +31,19 @@ Platform-specific paths:
         documents: C:\\Users\\<user>\\Documents
 
 Examples:
-    Basic usage:
+    ```python
+    # Basic usage
         paths = PolyPath("myapp")
         config_file = paths.from_config("settings.json")
         cache_dir = paths.from_cache("responses")
 
-    With author and domain (recommended for macOS):
+    # With author and domain (recommended for macOS)
         paths = PolyPath(
             app_name="MyApp",
             app_author="DeveloperName",
             app_domain_prefix="com.developername",
         )
+    ```
 """
 
 from __future__ import annotations

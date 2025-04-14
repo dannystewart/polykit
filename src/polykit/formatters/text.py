@@ -463,6 +463,7 @@ class Text(StrEnum):
             capitalize: Capitalize the result.
 
         Examples:
+            ```python
             format_number(2) -> "2"
             format_number(2, "cat") -> "cats"
             format_number(2, "cat", with_count=True) -> "2 cats"
@@ -470,6 +471,7 @@ class Text(StrEnum):
             format_number(2, "cat", as_word=True) -> "two cats"
             format_number(2, as_ordinal=True) -> "2nd"
             format_number(2, "cat", as_ordinal=True) -> "2nd cat"
+            ```
         """
         number_words = {
             0: "zero",
@@ -537,10 +539,12 @@ class Text(StrEnum):
             A string of joined IDs.
 
         Examples:
+            ```
             join_ids({1, 2, 3}) -> '1, 2, 3'
             join_ids([1, '2', 3.0]) -> '1, 2, 3.0'
             join_ids(123) -> '123'
             join_ids(range(3)) -> '0, 1, 2'
+            ```
         """
         # If input is not iterable, convert to a single-item list
         if not isinstance(ids, Iterable) or isinstance(ids, str):

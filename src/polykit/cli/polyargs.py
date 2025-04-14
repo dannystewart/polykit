@@ -23,11 +23,13 @@ class PolyArgs(argparse.ArgumentParser):
         version_flags: List of flags to use for the version argument. Defaults to ['--version'].
 
     Example:
+        ```python
         # to automatically determine the optimal argument width
         parser = PolyArgs(description=__doc__)
 
         # or to set fixed widths
         parser = PolyArgs(description=__doc__, arg_width=24, max_width=120)
+        ```
     """
 
     DEFAULT_MAX_WIDTH: ClassVar[int] = 100

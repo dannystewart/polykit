@@ -207,8 +207,10 @@ class PolyLog(metaclass=Singleton):
             reraise: Whether to re-raise the exception after logging.
 
         Example:
+            ```python
             with PolyLog.catch(logger, "Error processing data"):
                 # code that might raise an exception
+            ```
         """
         try:
             yield
@@ -234,9 +236,11 @@ class PolyLog(metaclass=Singleton):
             reraise: Whether to re-raise the exception after logging.
 
         Example:
+            ```python
             @PolyLog.decorate(logger, "Error in data processing")
             def process_data():
                 # code that might raise an exception
+            ```
         """
 
         def decorator(func: Callable[..., T]) -> Callable[..., T]:
@@ -258,9 +262,11 @@ class LogLevelOverride:
     context. It can be useful for debugging or temporarily silencing log messages.
 
     Example:
+        ```python
         with LogLevelOverride(logger, logging.ERROR):
             logger.info("This will not be logged.")
             logger.error("This will be logged.")
+        ```
     """
 
     def __init__(self, logger: logging.Logger, new_level: int | str):
