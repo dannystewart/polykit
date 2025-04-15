@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Added
+
+- Adds `PolyEnv` support directly to `PolyLog`, allowing log level to be easily determined from environment variables, and opening the door for further integration and environment-specific configuration down the line.
+
 ### Changed
 
 - Improves documentation readability by wrapping example code blocks in Markdown code fences for better syntax highlighting.

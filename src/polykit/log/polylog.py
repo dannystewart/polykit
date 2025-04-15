@@ -20,6 +20,8 @@ from polykit.log.types import LogLevel
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from polykit.env.polyenv import PolyEnv
+
 T = TypeVar("T")
 
 
@@ -55,6 +57,7 @@ class PolyLog(metaclass=Singleton):
         color: bool = True,
         log_file: Path | None = None,
         time_aware: bool = False,
+        env: PolyEnv | None = None,
     ) -> logging.Logger:
         """Get a configured logger instance.
 
@@ -71,6 +74,8 @@ class PolyLog(metaclass=Singleton):
                       addition to the console. Defaults to None, which means no file logging.
             time_aware: If True, returns a TimeAwareLogger that automatically formats datetime
                         objects in log messages. Defaults to False.
+            env: An optional PolyEnv instance. Useful for easily parsing log level, but additional
+                 environment-specific functionality may be added in future. Defaults to None.
 
         Returns:
             A configured standard Logger or TimeAwareLogger instance.
@@ -79,7 +84,7 @@ class PolyLog(metaclass=Singleton):
         logger = logging.getLogger(logger_name)
 
         if not logger.handlers:
-            log_level = LogLevel.get_level(level)
+            log_level = env.log_level if env is not None else LogLevel.get_level(level)
             logger.setLevel(log_level)
 
             log_formatter = CustomFormatter(simple=simple, color=color, show_context=show_context)
