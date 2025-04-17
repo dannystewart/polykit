@@ -355,7 +355,13 @@ class Text(StrEnum):
 
     @staticmethod
     def plural(word: str, count: int, with_count: bool = False) -> str:
-        """Pluralize a word based on the count of items."""
+        """Pluralize a word based on the count of items.
+
+        Args:
+            word: The word to pluralize.
+            count: The number of items, which determines the pluralization.
+            with_count: Whether to include the count number before the pluralized word.
+        """
         if count == 1:
             return f"1 {word}" if with_count else word
         if with_count:
@@ -454,6 +460,9 @@ class Text(StrEnum):
     ) -> str:
         """Format a number with various options for text representation.
 
+        NOTE: Setting `as_word` and `as_ordinal` together will do both, giving you words like
+        "twond" and "threerd". This is not a bug, it's a feature. It's literally what you asked for.
+
         Args:
             number: The number to format.
             word: Optional word to append (will be pluralized if needed).
@@ -467,10 +476,17 @@ class Text(StrEnum):
             format_number(2) -> "2"
             format_number(2, "cat") -> "cats"
             format_number(2, "cat", with_count=True) -> "2 cats"
+
+            # As word
             format_number(2, as_word=True) -> "two"
             format_number(2, "cat", as_word=True) -> "two cats"
+
+            # As ordinal
             format_number(2, as_ordinal=True) -> "2nd"
             format_number(2, "cat", as_ordinal=True) -> "2nd cat"
+
+            # And yes...
+            format_number(2, as_word=True, as_ordinal=True) -> "twond"
             ```
         """
         number_words = {
@@ -486,7 +502,11 @@ class Text(StrEnum):
             9: "nine",
         }
 
-        if as_ordinal:  # Convert number to appropriate form
+        # Combine word numbers with ordinals because it's hilarious and you literally asked for it
+        if as_word and as_ordinal and number in number_words:
+            ordinal_suffix = Text.ordinal_num(number).replace(str(number), "")
+            num_str = f"{number_words[number]}{ordinal_suffix}"  # e.g. "twond", "threerd"
+        elif as_ordinal:
             num_str = Text.ordinal_num(number)
         elif as_word and number in number_words:
             num_str = number_words[number]
@@ -554,10 +574,16 @@ class Text(StrEnum):
         return separator.join(str(join_id) for join_id in ids)
 
     @staticmethod
-    def clean_newlines(text: str) -> str:
-        """Clean up excessive newlines in text."""
+    def clean_newlines(text: str, leave_one: bool = True) -> str:
+        """Clean up excessive newlines in text.
+
+        Args:
+            text: The text to clean.
+            leave_one: If True, leaves one newline between paragraphs.
+                       Otherwise leaves no blank lines. Defaults to True.
+        """
         while "\n\n\n" in text:
-            text = text.replace("\n\n\n", "\n\n")
+            text = text.replace("\n\n\n", "\n\n" if leave_one else "\n")
         return text
 
     @staticmethod
