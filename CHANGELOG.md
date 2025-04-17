@@ -12,13 +12,15 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ### Changed
 
+- Improves documentation for Text class methods with detailed docstrings, additional examples, and new parameters.
 - Improves documentation readability by wrapping example code blocks in Markdown code fences for better syntax highlighting.
 - Simplifies module docstrings with more concise formatting.
 - Enhances README organization with better section hierarchy and more descriptive component explanations.
-- Renames shadowed variables for better clarity.
+- Renames shadowed variables to improve code clarity and prevent potential bugs.
 
 ### Fixed
 
+- Corrects pluralization logic for time units to handle zero and negative values properly.
 - Removes unused imports.
 - Fixes incorrect license references to correctly show LGPLv3.
 
