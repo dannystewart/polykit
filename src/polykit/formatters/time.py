@@ -223,9 +223,9 @@ class Time:
 
         parts = []
         if hours:
-            parts.append(f"{hours} hour{'s' if hours > 1 else ''}")
+            parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
         if minutes or not parts:
-            parts.append(f"{minutes} minute{'s' if minutes > 1 else ''}")
+            parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
 
         return " and ".join(parts)
 
@@ -246,13 +246,13 @@ class Time:
 
         parts = []
         if days:
-            parts.append(f"{days} day{'s' if days > 1 else ''}")
+            parts.append(f"{days} day{'s' if days != 1 else ''}")
         if hours:
-            parts.append(f"{hours} hour{'s' if hours > 1 else ''}")
+            parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
         if minutes:
-            parts.append(f"{minutes} minute{'s' if minutes > 1 else ''}")
+            parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
         if seconds or not parts:
-            parts.append(f"{seconds} second{'s' if seconds > 1 else ''}")
+            parts.append(f"{seconds} second{'s' if seconds != 1 else ''}")
 
         if omit_one:
             parts = [p.replace("1 ", "") if p.startswith("1 ") else p for p in parts]
