@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.10.2] (2025-04-18)
+
 ### Added
 
 - Adds `PolyEnv` support directly to `PolyLog`, allowing log level to be easily determined from environment variables, and opening the door for further integration and environment-specific configuration down the line.
@@ -158,7 +160,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.10.1...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.10.2...HEAD
+[0.10.2]: https://github.com/dannystewart/polykit/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/dannystewart/polykit/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/dannystewart/polykit/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/dannystewart/polykit/compare/v0.9.0...v0.9.1
