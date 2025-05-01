@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.11.1] (2025-05-01)
+
+### Changed
+
+- Updates package dependencies to their latest versions, including packaging (24.2 → 25.0) and termcolor (3.0.1 → 3.1.0), plus dev dependencies.
+
 ## [0.11.0] (2025-05-01)
 
 Tiny update, but with a parameter name change in `PolyFile`.
@@ -168,7 +174,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.0...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.1...HEAD
+[0.11.1]: https://github.com/dannystewart/polykit/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/dannystewart/polykit/compare/v0.10.2...v0.11.0
 [0.10.2]: https://github.com/dannystewart/polykit/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/dannystewart/polykit/compare/v0.10.0...v0.10.1
