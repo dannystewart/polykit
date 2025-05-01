@@ -34,7 +34,7 @@ class PolyFile:
         extensions: str | list[str] | None = None,
         recursive: bool = False,
         exclude: str | list[str] | None = None,
-        hidden: bool = False,
+        include_dotfiles: bool = False,
         sort_key: Callable[..., Any] | None = None,
         reverse: bool = False,
         logger: Logger | None = None,
@@ -46,7 +46,7 @@ class PolyFile:
             extensions: The file extensions to include. If None, all files will be included.
             recursive: Whether to search recursively.
             exclude: Glob patterns to exclude.
-            hidden: Whether to include hidden files.
+            include_dotfiles: Whether to include files hidden using a dot prefix in the name.
             sort_key: A function to use for sorting the files.
             reverse: Whether to reverse the sort order.
             logger: Optional logger for operation information.
@@ -71,7 +71,7 @@ class PolyFile:
                     file
                     for file in files
                     if file.is_file()
-                    and (hidden or not file.name.startswith("."))
+                    and (include_dotfiles or not file.name.startswith("."))
                     and not (exclude and any(file.match(pattern) for pattern in exclude))
                 )
             except FileNotFoundError:
