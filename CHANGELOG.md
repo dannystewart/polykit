@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.11.0] (2025-05-01)
+
+Tiny update, but with a parameter name change in `PolyFile`.
+
+### Changed
+
+- **BREAKING:** Renames the `hidden` parameter in the `list` method in `PolyFile` to `include_dotfiles` to make the parameter more self-documenting by clearly illustrating what it does (include) and how it defines "hidden" (dotfiles).
+
 ## [0.10.2] (2025-04-18)
 
 ### Added
@@ -160,7 +168,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.10.2...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/dannystewart/polykit/compare/v0.10.2...v0.11.0
 [0.10.2]: https://github.com/dannystewart/polykit/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/dannystewart/polykit/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/dannystewart/polykit/compare/v0.9.1...v0.10.0
