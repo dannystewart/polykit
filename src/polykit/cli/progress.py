@@ -117,14 +117,14 @@ def halo_progress(
 
 
 @contextmanager
-def conversion_list_context(file_name: str) -> Generator[None, None, None]:
+def conversion_list_context(file_name: str | Path) -> Generator[None, None, None]:
     """Context manager to print a message at the start and end of an operation.
 
     Args:
         file_name: The name of the file being converted.
     """
     try:
-        print(f"Converting {file_name} ... ", end="")
+        print(f"Converting {file_name!s} ... ", end="")
         yield
     finally:
         print(colorize("done!", "green"))
