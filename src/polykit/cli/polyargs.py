@@ -12,6 +12,7 @@ class PolyArgs(argparse.ArgumentParser):
     """Drop-in replacement for ArgumentParser with easier adjustment of column widths.
 
     Args:
+        lines: Number of lines (paragraphs) to include in the description. Defaults to 0 (all).
         arg_width: The width of the argument column in the help text. Defaults to 'auto',
                    which automatically determines the optimal width based on arguments.
         max_width: The maximum width of the help text.
