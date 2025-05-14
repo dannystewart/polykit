@@ -114,17 +114,3 @@ def halo_progress(
         spinner.succeed(colorize(end_message, success_color))
     elif show:
         print_color(end_message, success_color)
-
-
-@contextmanager
-def conversion_list_context(file_name: str | Path) -> Generator[None, None, None]:
-    """Context manager to print a message at the start and end of an operation.
-
-    Args:
-        file_name: The name of the file being converted.
-    """
-    try:
-        print(f"Converting {file_name!s} ... ", end="")
-        yield
-    finally:
-        print(colorize("done!", "green"))

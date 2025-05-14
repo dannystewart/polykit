@@ -117,5 +117,5 @@ from .confirm import confirm_action, get_single_char_input
 from .interrupt import async_handle_interrupt, async_with_handle_interrupt, handle_interrupt
 from .permissions import acquire_sudo, is_root_user
 from .polyargs import PolyArgs
-from .progress import conversion_list_context, halo_progress, with_spinner
+from .progress import halo_progress, with_spinner
 from .walking_man import WalkingMan, conditional_walking_man, walking_man
