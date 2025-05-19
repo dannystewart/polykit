@@ -20,7 +20,7 @@ class PolyArgs(argparse.ArgumentParser):
                        argparse limitations the help text won't begin earlier than column 26.
         max_arg_width: Maximum width for argument column when using 'auto' mode.
         padding: Additional padding to add to the calculated width in 'auto' mode.
-        add_version: If True, automatically adds a version argument using polykit.
+        add_version: If True, automatically adds a version argument using Polykit. Defaults to True.
         version_flags: List of flags to use for the version argument. Defaults to ['--version'].
 
     Example:
