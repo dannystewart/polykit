@@ -13,6 +13,26 @@ If you're managing environment variables, handling paths across different operat
 
 Polykit doesn't try to be everything to everyone. Instead, it focuses on doing common tasks extraordinarily well, with an emphasis on developer happiness and code that's a pleasure to use.
 
+## Why Polykit?
+
+When you use Polykit, you're benefiting from:
+
+- **Reliability** that comes from components used in real production environments.
+- **Developer-centric design** that prioritizes clean APIs and intuitive interfaces.
+- **Attention to edge cases** that others often overlook or ignore.
+- **Consistent design philosophy** across all components for a cohesive experience.
+- **Modern Python practices** including comprehensive type hints and up-to-date language features.
+
+Everything you see here was created to solve genuine problems in day-to-day development, so it prioritizes developer experience with IDE-friendly interfaces, meaningful error messages, sensible defaults, and comprehensive (if still evolving) documentation. Every detail has been considered from the perspective of the person who will actually use these tools (because that person was me!).
+
+Polykit strives to be intuitive, handle complexity behind clean interfaces, and integrate seamlessly with each other and your existing code. It's a toolkit from a developer who refuses to accept "good enough" and always goes for "really f*cking good." And the work is never finished—Polykit is still being actively developed, with tools being added and refined on a regular basis.
+
+I'd love it if you gave Polykit a try, and I'd love even more if it helps you like it's helped me! If you're ready to bring some joy to your Python development, you know the way:
+
+```bash
+pip install polykit
+```
+
 ## Features
 
 Here's some of what Polykit has to offer:
@@ -288,26 +308,6 @@ Singletons are deceptively difficult to implement correctly, but `Singleton` han
 - Get user confirmation with a single keypress using `confirm_action()`.
 - Use stylish loading indicators like spinners with the `with_spinner()` context manager…
 - …or use Walking Man `<('-'<)` (honestly, he alone is worth the download).
-
-## Why Polykit?
-
-When you use Polykit, you're benefiting from:
-
-- **Reliability** that comes from components used in real production environments.
-- **Developer-centric design** that prioritizes clean APIs and intuitive interfaces.
-- **Attention to edge cases** that others often overlook or ignore.
-- **Consistent design philosophy** across all components for a cohesive experience.
-- **Modern Python practices** including comprehensive type hints and up-to-date language features.
-
-Everything you see here was created to solve genuine problems in day-to-day development, so it prioritizes developer experience with IDE-friendly interfaces, meaningful error messages, sensible defaults, and comprehensive (if still evolving) documentation. Every detail has been considered from the perspective of the person who will actually use these tools (because that person was me!).
-
-Polykit strives to be intuitive, handle complexity behind clean interfaces, and integrate seamlessly with each other and your existing code. It's a toolkit from a developer who refuses to accept "good enough" and always goes for "really f*cking good." And the work is never finished—Polykit is still being actively developed, with tools being added and refined on a regular basis.
-
-I'd love it if you gave Polykit a try, and I'd love even more if it helps you like it's helped me! If you're ready to bring some joy to your Python development, you know the way:
-
-```bash
-pip install polykit
-```
 
 ## License
 
