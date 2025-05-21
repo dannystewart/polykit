@@ -106,11 +106,9 @@ def async_retry_on_exception(
         logger: Logger for logging retries. If None, print to stdout instead.
     """
 
-    def decorator(
-        func: Callable[..., Coroutine[Any, Any, T]],
-    ) -> Callable[..., Coroutine[Any, Any, T]]:
+    def decorator(func: Callable[P, Coroutine[Any, Any, T]]) -> Callable[P, Coroutine[Any, Any, T]]:
         @wraps(func)
-        async def wrapper(*args: Any, **kwargs: Any) -> T:
+        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
             """Wrap the function with retry logic."""
             nonlocal tries, delay
             while tries > 1:
