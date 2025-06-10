@@ -6,11 +6,38 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.11.2] (2025-06-10)
+
+### Added
+
+- Exposes additional `polykit` modules at package level, including `PolyArgs`, `PolyEnv`, `PolyFile`, `PolyPath`, and `Text` and `Time` formatters for more concise imports.
+- Adds improved text formatting to the help formatter in `PolyArgs` with intelligent line break preservation for lists, indented text, and better handling of intentional formatting.
+
+### Changed
+
+- Clarifies that the `add_version` parameter defaults to True in `PolyArgs`.
+- Adds documentation for the `lines` parameter in `PolyArgs` class docstring.
+- Updates multiple dependencies:
+  - Poetry from 2.1.2 to 2.1.3
+  - `charset-normalizer` from 3.4.1 to 3.4.2
+  - `identify` from 2.6.10 to 2.6.12
+  - `mypy` from 1.15.0 to 1.16.0
+  - `pdoc` from 15.0.3 to 15.0.4
+  - `platformdirs` from 4.3.7 to 4.3.8
+  - `requests` from 2.32.3 to 2.32.4
+  - `ruff` from 0.11.7 to 0.11.13
+  - `typing-extensions` from 4.13.2 to 4.14.0
+- `virtualenv` from 20.30.0 to 20.31.2
+
+### Removed
+
+- Removes the `conversion_list_context` context manager from the `progress` module as it was designed for a specific use case and wasn't broadly applicable.
+
 ## [0.11.1] (2025-05-01)
 
 ### Changed
 
-- Updates package dependencies to their latest versions, including packaging (24.2 → 25.0) and termcolor (3.0.1 → 3.1.0), plus dev dependencies.
+- Updates package dependencies to their latest versions, including `packaging` (24.2 → 25.0) and `termcolor` (3.0.1 → 3.1.0), plus dev dependencies.
 
 ## [0.11.0] (2025-05-01)
 
@@ -28,7 +55,7 @@ Tiny update, but with a parameter name change in `PolyFile`.
 
 ### Changed
 
-- Improves documentation for Text class methods with detailed docstrings, additional examples, and new parameters.
+- Improves documentation for `Text` class methods with detailed docstrings, additional examples, and new parameters.
 - Improves documentation readability by wrapping example code blocks in Markdown code fences for better syntax highlighting.
 - Simplifies module docstrings with more concise formatting.
 - Enhances README organization with better section hierarchy and more descriptive component explanations.
@@ -174,7 +201,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.1...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.2...HEAD
+[0.11.2]: https://github.com/dannystewart/polykit/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/dannystewart/polykit/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/dannystewart/polykit/compare/v0.10.2...v0.11.0
 [0.10.2]: https://github.com/dannystewart/polykit/compare/v0.10.1...v0.10.2
