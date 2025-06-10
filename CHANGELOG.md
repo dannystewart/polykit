@@ -12,11 +12,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Exposes additional `polykit` modules at package level, including `PolyArgs`, `PolyEnv`, `PolyFile`, `PolyPath`, and `Text` and `Time` formatters for more concise imports.
 - Adds improved text formatting to the help formatter in `PolyArgs` with intelligent line break preservation for lists, indented text, and better handling of intentional formatting.
+- Adds documentation for the `lines` parameter in `PolyArgs` class docstring and clarifies that the `add_version` parameter defaults to True.
 
 ### Changed
 
-- Clarifies that the `add_version` parameter defaults to True in `PolyArgs`.
-- Adds documentation for the `lines` parameter in `PolyArgs` class docstring.
 - Updates multiple dependencies:
   - Poetry from 2.1.2 to 2.1.3
   - `charset-normalizer` from 3.4.1 to 3.4.2
