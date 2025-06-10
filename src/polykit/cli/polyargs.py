@@ -118,8 +118,7 @@ class PolyArgs(argparse.ArgumentParser):
         # Remove leading/trailing whitespace and normalize line breaks
         text = text.strip().replace("\r\n", "\n")
 
-        # Replace single line breaks with spaces (within paragraphs)
-        # But preserve paragraph breaks (double line breaks)
+        # Replace single line breaks but preserve paragraph breaks
         text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)
 
         # Normalize multiple consecutive line breaks to exactly two
@@ -194,19 +193,91 @@ class CustomHelpFormatter(argparse.HelpFormatter):
         self.custom_max_help_position = max_help_position
 
     def _format_text(self, text: str) -> str:
-        """Override to handle paragraph breaks in description and epilog text."""
-        # Split text into paragraphs
+        """Override to handle paragraph breaks in description and epilog text.
+
+        This method tries to be smart about when to preserve line breaks vs. when to reflow text:
+        - Preserves line breaks that appear intentional (lists, indented text, short lines)
+        - Reflows text that appears to be automatically wrapped at a fixed width
+        """
+        # Split text into paragraphs (separated by double newlines)
         paragraphs = text.split("\n\n")
         result = []
 
         # Process each paragraph with textwrap
         for paragraph in paragraphs:
-            # Wrap each paragraph to the appropriate width
-            wrapped = textwrap.fill(paragraph, self._width)
-            result.append(wrapped)
+            # Remove leading/trailing whitespace from the paragraph
+            paragraph = paragraph.strip()
+            if not paragraph:
+                continue
+
+            # Split paragraph into lines to analyze the structure
+            lines = paragraph.split("\n")
+
+            # Decide if this paragraph should be reflowed or preserve line breaks
+            should_preserve_breaks = self._should_preserve_line_breaks(lines)
+
+            if should_preserve_breaks:
+                # Preserve line breaks but still wrap individual long lines
+                wrapped_lines = []
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        # Empty line within paragraph - preserve it
+                        wrapped_lines.append("")
+                    else:
+                        # Wrap this line if it's too long
+                        wrapped = textwrap.fill(line, self._width)
+                        wrapped_lines.append(wrapped)
+
+                # Join the wrapped lines back together with single newlines
+                formatted_paragraph = "\n".join(wrapped_lines)
+            else:
+                # Reflow the entire paragraph by joining all lines with spaces and then wrapping
+                reflowed_text = " ".join(line.strip() for line in lines if line.strip())
+                formatted_paragraph = textwrap.fill(reflowed_text, self._width)
+
+            result.append(formatted_paragraph)
 
         # Join paragraphs with double newlines and add a newline at the end
         return "\n\n".join(result) + "\n"
+
+    def _should_preserve_line_breaks(self, lines: list[str]) -> bool:
+        """Heuristic to determine if line breaks in a paragraph should be preserved.
+
+        Indicators of intentional line breaks include:
+        - Lines starting with list markers
+        - Lines with significant indentation (code, examples)
+        - Very short lines (likely intentional breaks)
+        - Lines that look like commands, URLs, or code
+
+        Returns True if the line breaks appear intentional, or False if the text appears to be
+        auto-wrapped and should be reflowed.
+        """
+        if len(lines) <= 1:
+            return True  # Single line or empty, no breaks to consider
+
+        # Count lines that suggest intentional formatting
+        intentional_indicators = 0
+
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            if (
+                re.match(r"^\s*[-*+•]\s", line)
+                or re.match(r"^\s*\d+\.\s", line)
+                or len(line) - len(line.lstrip()) >= 2
+                or len(line) < 40
+                or any(
+                    indicator in line.lower()
+                    for indicator in ["--", "http", "://", ".py", ".txt", ".conf"]
+                )
+            ):
+                intentional_indicators += 1
+
+        # If more than 30% of lines have intentional indicators, preserve breaks
+        return intentional_indicators / len([line for line in lines if line.strip()]) > 0.3
 
     def _split_lines(self, text: str, width: int) -> list[str]:
         return textwrap.wrap(text, width)
