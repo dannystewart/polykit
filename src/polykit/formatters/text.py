@@ -460,33 +460,33 @@ class Text(StrEnum):
     ) -> str:
         """Format a number with various options for text representation.
 
-        NOTE: Setting `as_word` and `as_ordinal` together will do both, giving you words like
-        "twond" and "threerd". This is not a bug, it's a feature. It's literally what you asked for.
-
         Args:
             number: The number to format.
             word: Optional word to append (will be pluralized if needed).
-            as_word: Convert numbers 0-9 to words ('one', 'two', etc.).
-            as_ordinal: Convert to ordinal form ('1st', '2nd', etc.).
+            as_word: Convert numbers 0-9 to words ("one", "two", etc.).
+            as_ordinal: Convert to ordinal form ("1st", "2nd", etc.).
             with_count: Include the number with the word.
             capitalize: Capitalize the result.
 
+        NOTE: Setting BOTH `as_word` AND `as_ordinal` WILL work, giving you words like "twond" and
+        "threerd". This is not a bug, it's a feature. It's literally what you asked for.
+
         Examples:
             ```python
-            format_number(2) -> "2"
-            format_number(2, "cat") -> "cats"
-            format_number(2, "cat", with_count=True) -> "2 cats"
+            format_number(2)                                 -> 2
+            format_number(2, "cat")                          -> cats
+            format_number(2, "cat", with_count=True)         -> 2 cats
 
             # As word
-            format_number(2, as_word=True) -> "two"
-            format_number(2, "cat", as_word=True) -> "two cats"
+            format_number(2, as_word=True)                   -> two
+            format_number(2, "cat", as_word=True)            -> two cats
 
             # As ordinal
-            format_number(2, as_ordinal=True) -> "2nd"
-            format_number(2, "cat", as_ordinal=True) -> "2nd cat"
+            format_number(2, as_ordinal=True)                -> 2nd
+            format_number(2, "cat", as_ordinal=True)         -> 2nd cat
 
             # And yes...
-            format_number(2, as_word=True, as_ordinal=True) -> "twond"
+            format_number(2, as_word=True, as_ordinal=True)  -> twond
             ```
         """
         number_words = {
@@ -559,7 +559,7 @@ class Text(StrEnum):
             A string of joined IDs.
 
         Examples:
-            ```
+            ```python
             join_ids({1, 2, 3}) -> '1, 2, 3'
             join_ids([1, '2', 3.0]) -> '1, 2, 3.0'
             join_ids(123) -> '123'
