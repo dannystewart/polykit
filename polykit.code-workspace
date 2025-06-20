@@ -10,6 +10,11 @@
       "workspace"
     ],
     "cSpell.words": [
+      "polyargs",
+      "polyenv",
+      "polyfile",
+      "polylog",
+      "polypath",
       "threerd",
       "twond"
     ],
@@ -42,6 +47,8 @@
         "file": "code-style.md"
       }
     ],
-    "mypy-type-checker.args": ["--config-file=mypy.ini"]
+    "mypy-type-checker.args": [
+      "--config-file=mypy.ini"
+    ]
   }
 }
