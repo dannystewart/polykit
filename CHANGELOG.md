@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.11.3] (2025-06-20)
+
+### Added
+
+- Now includes the number count by default in `Text.plural` (e.g. "2 cats" rather than "cats"), making it more intuitive for most use cases.
+
+### Changed
+
+- Improves documentation for the `Text.format_number` method. Read it.
+
 ## [0.11.2] (2025-06-10)
 
 ### Added
@@ -200,7 +210,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.2...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.3...HEAD
+[0.11.3]: https://github.com/dannystewart/polykit/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/dannystewart/polykit/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/dannystewart/polykit/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/dannystewart/polykit/compare/v0.10.2...v0.11.0
