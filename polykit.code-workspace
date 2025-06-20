@@ -9,6 +9,10 @@
       "imports",
       "workspace"
     ],
+    "cSpell.words": [
+      "threerd",
+      "twond"
+    ],
     "files.exclude": {
       "**/*.egg-info": true,
       "**/*.pyi": false,
