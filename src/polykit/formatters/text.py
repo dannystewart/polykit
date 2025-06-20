@@ -428,7 +428,7 @@ class Text(StrEnum):
 
         word = number_words.get(number, str(number))
         if word_to_pluralize:
-            word_to_pluralize = Text.plural(word_to_pluralize, number)
+            word_to_pluralize = Text.plural(word_to_pluralize, number, with_count=False)
             result = f"{word} {word_to_pluralize}"
         else:
             result = word
