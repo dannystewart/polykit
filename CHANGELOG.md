@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.11.4] (2025-06-20)
+
+### Fixed
+
+- Fixes the `num_to_word` method by passing `with_count=False` when calling `Text.plural` to match the change in its method signature.
+
 ## [0.11.3] (2025-06-20)
 
 ### Added
@@ -210,7 +216,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.3...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.4...HEAD
+[0.11.4]: https://github.com/dannystewart/polykit/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/dannystewart/polykit/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/dannystewart/polykit/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/dannystewart/polykit/compare/v0.11.0...v0.11.1
