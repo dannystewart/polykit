@@ -354,13 +354,13 @@ class Text(StrEnum):
         return space_index if space_index != -1 else limit  # Use limit if no space is found
 
     @staticmethod
-    def plural(word: str, count: int, with_count: bool = False) -> str:
+    def plural(word: str, count: int, with_count: bool = True) -> str:
         """Pluralize a word based on the count of items.
 
         Args:
             word: The word to pluralize.
             count: The number of items, which determines the pluralization.
-            with_count: Whether to include the count number before the pluralized word.
+            with_count: Whether to include the count number before the word. Defaults to True.
         """
         if count == 1:
             return f"1 {word}" if with_count else word
