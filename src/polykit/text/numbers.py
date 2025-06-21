@@ -84,9 +84,9 @@ class TextNumbers:
         number: int,
         word: str | None = None,
         *,
+        with_count: bool = True,
         as_word: bool = False,
         as_ordinal: bool = False,
-        with_count: bool = False,
         capitalize: bool = False,
     ) -> str:
         """Format a number with various options for text representation.
@@ -94,10 +94,10 @@ class TextNumbers:
         Args:
             number: The number to format.
             word: Optional word to append (will be pluralized if needed).
-            as_word: Convert numbers 0-9 to words ("one", "two", etc.).
-            as_ordinal: Convert to ordinal form ("1st", "2nd", etc.).
-            with_count: Include the number with the word.
-            capitalize: Capitalize the result.
+            with_count: Include the number with the word. Defaults to True.
+            as_word: Convert numbers 0-9 to words ("one", "two", etc.). Defaults to False.
+            as_ordinal: Convert to ordinal form ("1st", "2nd", etc.). Defaults to False.
+            capitalize: Capitalize the result. Defaults to False.
 
         NOTE: Setting BOTH `as_word` AND `as_ordinal` WILL work, giving you words like "twond" and
         "threerd". This is not a bug, it's a feature. It's literally what you asked for.
