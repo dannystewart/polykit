@@ -80,7 +80,7 @@ class TextNumbers:
         return f"{n}{suffix}"
 
     @staticmethod
-    def format_number(
+    def format(
         number: int,
         word: str | None = None,
         *,
