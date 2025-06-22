@@ -59,7 +59,7 @@ class TextNumbers:
 
         word = number_words.get(number, str(number))
         if word_to_pluralize:
-            word_to_pluralize = TextNumbers.plural(word_to_pluralize, number)
+            word_to_pluralize = TextNumbers.plural(word_to_pluralize, number, with_count=False)
             result = f"{word} {word_to_pluralize}"
         else:
             result = word
@@ -148,7 +148,7 @@ class TextNumbers:
             if as_ordinal:
                 result = f"{num_str} {word}"
             else:
-                pluralized = TextNumbers.plural(word, number)
+                pluralized = TextNumbers.plural(word, number, with_count=False)
                 result = f"{num_str} {pluralized}" if with_count else pluralized
         else:
             result = num_str

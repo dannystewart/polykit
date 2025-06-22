@@ -517,7 +517,7 @@ class Text(StrEnum):
             if as_ordinal:
                 result = f"{num_str} {word}"
             else:
-                pluralized = Text.plural(word, number)
+                pluralized = Text.plural(word, number, with_count=False)
                 result = f"{num_str} {pluralized}" if with_count else pluralized
         else:
             result = num_str
