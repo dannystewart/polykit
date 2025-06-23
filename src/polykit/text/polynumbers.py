@@ -86,6 +86,7 @@ class PolyNumbers:
         as_word: bool = False,
         as_ordinal: bool = False,
         capitalize: bool = False,
+        commas: bool = True,
     ) -> str:
         """Format a number with various options for text representation.
 
@@ -96,26 +97,32 @@ class PolyNumbers:
             as_word: Convert numbers 0-9 to words ("one", "two", etc.). Defaults to False.
             as_ordinal: Convert to ordinal form ("1st", "2nd", etc.). Defaults to False.
             capitalize: Capitalize the result. Defaults to False.
+            commas: Add thousands separators to numbers. Defaults to True.
 
         NOTE: Setting BOTH `as_word` AND `as_ordinal` WILL work, giving you words like "twond" and
         "threerd". This is not a bug, it's a feature. It's literally what you asked for.
 
         Examples:
             ```python
-            format_number(2)                                 -> 2
-            format_number(2, "cat")                          -> cats
-            format_number(2, "cat", with_count=True)         -> 2 cats
+            PolyNumbers.format(2)                                   -> 2
+            PolyNumbers.format(2, "cat")                            -> cats
+            PolyNumbers.format(2, "cat", with_count=True)           -> 2 cats
 
             # As word
-            format_number(2, as_word=True)                   -> two
-            format_number(2, "cat", as_word=True)            -> two cats
+            PolyNumbers.format(2, as_word=True)                     -> two
+            PolyNumbers.format(2, "cat", as_word=True)              -> two cats
 
             # As ordinal
-            format_number(2, as_ordinal=True)                -> 2nd
-            format_number(2, "cat", as_ordinal=True)         -> 2nd cat
+            PolyNumbers.format(2, as_ordinal=True)                  -> 2nd
+            PolyNumbers.format(2, "cat", as_ordinal=True)           -> 2nd cat
+
+            # With commas
+            PolyNumbers.format(1000, commas=True)                   -> 1,000
+            PolyNumbers.format(1234567, "file", commas=True)        -> 1,234,567 files
+            PolyNumbers.format(1000, as_ordinal=True, commas=True)  -> 1,000th
 
             # And yes...
-            format_number(2, as_word=True, as_ordinal=True)  -> twond
+            PolyNumbers.format(2, as_word=True, as_ordinal=True)  -> twond
             ```
         """
         number_words = {
@@ -136,11 +143,16 @@ class PolyNumbers:
             ordinal_suffix = PolyNumbers.ordinal(number).replace(str(number), "")
             num_str = f"{number_words[number]}{ordinal_suffix}"  # e.g. "twond", "threerd"
         elif as_ordinal:
-            num_str = PolyNumbers.ordinal(number)
+            if commas:  # Format number with commas, then add ordinal suffix
+                formatted_number = f"{number:,}"
+                ordinal_suffix = PolyNumbers.ordinal(number).replace(str(number), "")
+                num_str = f"{formatted_number}{ordinal_suffix}"
+            else:
+                num_str = PolyNumbers.ordinal(number)
         elif as_word and number in number_words:
             num_str = number_words[number]
         else:
-            num_str = str(number)
+            num_str = f"{number:,}" if commas else str(number)
 
         if word:  # Handle word if provided
             if as_ordinal:
