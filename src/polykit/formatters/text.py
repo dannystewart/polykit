@@ -7,16 +7,22 @@ from enum import StrEnum
 from typing import Any
 
 from polykit.colors import COLOR_MAP, STYLE_MAP, Colors
+from polykit.core.deprecate import deprecated
 from polykit.formatters.types import SMART_QUOTES_TABLE, TextColor, TextStyle
 
 
 class Text(StrEnum):
-    """Text formatting types with escape and cleaning utility methods."""
+    """Text formatting types with escape and cleaning utility methods.
+
+    NOTE: This class is deprecated. You should use the new separate text classes instead, including
+    PolyColors, PolyMoji, PolyNumbers, PolySplit, PolyText, PolyTruncate, and PolyTime.
+    """
 
     MARKDOWN = "Markdown"
     MARKDOWN_V2 = "MarkdownV2"
     HTML = "HTML"
 
+    @deprecated("Use PolyColors.color instead.")
     @staticmethod
     def color(
         text: Any,
@@ -54,6 +60,7 @@ class Text(StrEnum):
         result += f"{text}{Colors.RESET}"
         return result
 
+    @deprecated("Use PolyColors.print instead.")
     @staticmethod
     def print_color(
         text: Any,
@@ -71,12 +78,14 @@ class Text(StrEnum):
         """
         print(Text.color(str(text), color, style), end=end)
 
+    @deprecated("Use PolyText.escape instead.")
     def escape(self, text: str) -> str:
         """Escape special characters based on the current text type."""
         if self is Text.MARKDOWN or self is Text.MARKDOWN_V2:
             return self._escape_markdown(text)
         return self._escape_html(text) if self is Text.HTML else text
 
+    @deprecated("Use PolyText.clean instead.")
     def clean(self, text: str) -> str:
         """Remove all formatting based on the current text type."""
         if self is Text.MARKDOWN or self is Text.MARKDOWN_V2:
@@ -148,6 +157,7 @@ class Text(StrEnum):
     def _strip_html(self, text: str) -> str:
         return text if self != Text.HTML else re.sub(r"<[^>]*>", "", text)
 
+    @deprecated("Use PolyText.escape_html instead.")
     @staticmethod
     def html_escape(text: str) -> str:
         """Use the escape method directly from the HTML library."""
@@ -155,6 +165,7 @@ class Text(StrEnum):
 
         return html.escape(text)
 
+    @deprecated("Use PolySplit.split_message instead.")
     @staticmethod
     def split_message(message: str, max_length: int = 4096) -> list[str]:
         """Split a message into smaller parts for Telegram, handling Markdown and code blocks.
@@ -246,6 +257,7 @@ class Text(StrEnum):
     def _is_balanced_code_blocks(text: str) -> bool:
         return text.count("```") % 2 == 0
 
+    @deprecated("Use PolyTruncate.truncate instead.")
     @staticmethod
     def truncate(
         text: str,
@@ -353,6 +365,7 @@ class Text(StrEnum):
         space_index = text.rfind(" ", 0, limit)
         return space_index if space_index != -1 else limit  # Use limit if no space is found
 
+    @deprecated("Use PolyNumbers.plural instead.")
     @staticmethod
     def plural(word: str, count: int, with_count: bool = True) -> str:
         """Pluralize a word based on the count of items.
@@ -370,6 +383,7 @@ class Text(StrEnum):
             return f"{count} {word}s"
         return f"{word}es" if word.endswith("s") else f"{word}s"
 
+    @deprecated("Use PolyNumbers.plural instead.")
     @staticmethod
     def pluralize(*args: Any, **kwargs: Any) -> str:
         """Pluralize (for backward compatibility; use `Text.plural` now)."""
@@ -380,6 +394,7 @@ class Text(StrEnum):
         )
         return Text.plural(*args, **kwargs)
 
+    @deprecated("Use PolyTime.format_duration instead.")
     @staticmethod
     def format_duration(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
         """Print a formatted time duration."""
@@ -399,6 +414,7 @@ class Text(StrEnum):
             return f"{hour_str} and {min_str}"
         return f"{hour_str}, {min_str} and {sec_str}"
 
+    @deprecated("Use PolyNumbers.num_to_word instead.")
     @staticmethod
     def num_to_word(
         number: int, word_to_pluralize: str | None = None, capitalize: bool = False
@@ -435,6 +451,7 @@ class Text(StrEnum):
 
         return result.capitalize() if capitalize else result
 
+    @deprecated("Use PolyNumbers.ordinal instead.")
     @staticmethod
     def ordinal_num(n: int) -> str:
         """Convert an integer into its ordinal representation.
@@ -448,6 +465,7 @@ class Text(StrEnum):
         suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
         return f"{n}{suffix}"
 
+    @deprecated("Use PolyNumbers.format instead.")
     @staticmethod
     def format_number(
         number: int,
@@ -524,11 +542,13 @@ class Text(StrEnum):
 
         return result.capitalize() if capitalize else result
 
+    @deprecated("Use PolyText.straighten_quotes instead.")
     @staticmethod
     def straighten_quotes(text: str) -> str:
         """Replace smart quotes with straight quotes."""
         return text.translate(SMART_QUOTES_TABLE)
 
+    @deprecated("Use PolyText.normalize instead.")
     @staticmethod
     def normalize(text: str) -> str:
         """Normalize text by stripping whitespace, multiple spaces, and normalizing quotes."""
@@ -536,6 +556,7 @@ class Text(StrEnum):
         text = text.strip()
         return " ".join(text.split())
 
+    @deprecated("Use PolyNumbers.list_ids instead.")
     @staticmethod
     def list_ids(ids: list[int] | list[str]) -> str:
         """Format a list of IDs as a string with commas and 'and'."""
@@ -547,6 +568,7 @@ class Text(StrEnum):
             return f"{ids[0]} and {ids[1]}"
         return ", ".join(map(str, ids[:-1])) + ", and " + str(ids[-1])
 
+    @deprecated("Use PolyNumbers.join_ids instead.")
     @staticmethod
     def join_ids(ids: Any, separator: str = ", ") -> str:
         """Join any iterable of IDs into a string.
@@ -573,6 +595,7 @@ class Text(StrEnum):
         # Convert all elements to strings and join
         return separator.join(str(join_id) for join_id in ids)
 
+    @deprecated("Use PolyText.clean_newlines instead.")
     @staticmethod
     def clean_newlines(text: str, leave_one: bool = True) -> str:
         """Clean up excessive newlines in text.
@@ -586,6 +609,7 @@ class Text(StrEnum):
             text = text.replace("\n\n\n", "\n\n" if leave_one else "\n")
         return text
 
+    @deprecated("Use PolyNumbers.parse_ratio_input instead.")
     @staticmethod
     def parse_ratio_input(user_input: str) -> float:
         """Parse user input for a ratio value from a percentage, ratio, or multiplier.
@@ -642,6 +666,7 @@ class Text(StrEnum):
 
         return ratio_value
 
+    @deprecated("Use PolyMoji.starts_with_emoji instead.")
     @staticmethod
     def starts_with_emoji(text: str) -> bool:
         """Check if a string starts with an emoji."""
@@ -661,6 +686,7 @@ class Text(StrEnum):
             ]
         )
 
+    @deprecated("Use PolyMoji.extract_first_emoji instead.")
     @staticmethod
     def extract_first_emoji(text: str) -> str:
         """Extract the first emoji from a string."""

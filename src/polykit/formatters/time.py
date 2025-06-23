@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 
 from tzlocal import get_localzone
 
+from polykit.core.deprecate import deprecated
 from polykit.core.singleton import Singleton
 
 
@@ -25,6 +26,7 @@ class Time:
         "Sunday",  # 6
     ]
 
+    @deprecated("Use PolyTime.parse instead.")
     @staticmethod
     def parse(time_str: str, ref_time: datetime | None = None) -> datetime | None:
         """Parse a time string into a timezone-aware datetime, relative to the reference time.
@@ -133,6 +135,7 @@ class Time:
 
         return time
 
+    @deprecated("Use PolyTime.get_pretty_time instead.")
     @staticmethod
     def get_pretty_time(time: datetime | timedelta, **kwargs: Any) -> str:
         """Given a timestamp, return a pretty string representation of the time.
@@ -149,6 +152,7 @@ class Time:
             return Time._format_datetime(time, **kwargs)
         return Time._format_timedelta(time)
 
+    @deprecated("Use PolyTime.parse instead.")
     @staticmethod
     def _parse_simple(time_str: str, ref_time: datetime) -> datetime | None:
         """Parse common time formats using simple string manipulation."""
@@ -197,6 +201,7 @@ class Time:
         seconds = total_seconds % 60
         return f"{hours}h {minutes}m {seconds}s"
 
+    @deprecated("Use PolyTime.convert_to_12h instead.")
     @staticmethod
     def convert_to_12h(hour: int, minutes: int = 0) -> str:
         """Convert 24-hour time to 12-hour time format with AM/PM, including minutes.
@@ -216,6 +221,7 @@ class Time:
 
         return f"{hour}:{minutes_formatted} {period}"
 
+    @deprecated("Use PolyTime.convert_min_to_interval instead.")
     @staticmethod
     def convert_min_to_interval(interval: int) -> str:
         """Convert a time interval in minutes to a human-readable interval string."""
@@ -229,6 +235,7 @@ class Time:
 
         return " and ".join(parts)
 
+    @deprecated("Use PolyTime.convert_sec_to_interval instead.")
     @staticmethod
     def convert_sec_to_interval(interval: int, omit_one: bool = False) -> str:
         """Convert a time interval in seconds to a human-readable interval string.
@@ -259,6 +266,7 @@ class Time:
 
         return " and ".join(parts)
 
+    @deprecated("Use PolyTime.add_time_to_datetime instead.")
     @staticmethod
     def add_time_to_datetime(
         original_datetime: datetime,
@@ -276,6 +284,7 @@ class Time:
         """
         return original_datetime + timedelta(hours=hours, minutes=minutes, seconds=seconds)
 
+    @deprecated("Use PolyTime.ensure_tz instead.")
     @staticmethod
     def ensure_tz(dt: datetime) -> datetime:
         """Ensure datetime has the correct timezone."""
@@ -283,6 +292,7 @@ class Time:
             return dt.replace(tzinfo=TZ)
         return dt.astimezone(TZ)
 
+    @deprecated("Use PolyTime.ensure_future instead.")
     @staticmethod
     def ensure_future(dt: datetime, ref_time: datetime, force_future: bool = True) -> datetime:
         """Ensure the datetime is in the future relative to the reference time."""
@@ -290,6 +300,7 @@ class Time:
             return dt + timedelta(days=1)
         return dt
 
+    @deprecated("Use PolyTime.get_day_number instead.")
     @staticmethod
     def get_day_number(day: str) -> int:
         """Convert day name to day number (0-6, where Monday is 0)."""
