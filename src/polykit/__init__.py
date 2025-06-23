@@ -284,7 +284,7 @@ from __future__ import annotations
 from .cli.polyargs import PolyArgs
 from .env.polyenv import PolyEnv
 from .files.polyfile import PolyFile
-from .formatters.text import Text
-from .formatters.time import TZ, Time
 from .log.polylog import PolyLog
 from .paths.polypath import PolyPath
+from .text import PolyColors, PolyMoji, PolyNumbers, PolySplit, PolyText, PolyTruncate
+from .time import TZ, PolyTime
