@@ -1,16 +1,16 @@
 """Stop wrestling with text manipulation and datetime formatting. Polykit's **Text** and **Time** utilities handle everything from pluralization to timezone-aware parsing:
 
 ```python
-from polykit.formatters import Text
+from polykit.text import PolyText
 
 # Smart pluralization that just works
-print(f"Found {Text.plural('file', 5, with_count=True)}")  # "Found 5 files"
-print(f"Processing {Text.plural('class', 1, with_count=True)}")  # "Processing 1 class"
+print(f"Found {PolyText.plural('file', 5, with_count=True)}")  # "Found 5 files"
+print(f"Processing {PolyText.plural('class', 1, with_count=True)}")  # "Processing 1 class"
 
 # Intelligent truncation with context preservation
 long_text = "This is a very long text that needs to be shortened while preserving meaning..."
-print(Text.truncate(long_text, chars=50))  # Ends at sentence or word boundary
-print(Text.truncate(long_text, from_middle=True))  # Preserves start and end
+print(PolyTruncate.truncate(long_text, chars=50))  # Ends at sentence or word boundary
+print(PolyTruncate.truncate(long_text, from_middle=True))  # Preserves start and end
 
 # Terminal colors made simple
 Text.print_color("Success!", color="green", style=["bold"])
@@ -34,13 +34,18 @@ These utilities solve real-world text and time challenges and have been hardened
 
 from __future__ import annotations
 
-from .colors import TextColors
-from .emoji import TextEmoji
-from .numbers import TextNumbers
-from .smart_truncate import SmartTruncate
-from .split import TextSplit
-from .text import Text
-from .truncate import TextTruncate
+from .polycolors import PolyColors
+from .polymoji import PolyMoji
+from .polynumbers import PolyNumbers
+from .polysplit import PolySplit
+from .polytext import PolyText
+from .polytruncate import PolyTruncate
 
-color = TextColors.color
-print_color = TextColors.print_color
+color = PolyColors.color
+print_color = PolyColors.print_color
+truncate = PolyTruncate.truncate
+split = PolySplit.split_message
+plural = PolyNumbers.plural
+num_to_word = PolyNumbers.to_word
+ordinal = PolyNumbers.ordinal
+format_number = PolyNumbers.format

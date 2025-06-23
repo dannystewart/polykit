@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from typing import Any
 
 
-class TextNumbers:
+class PolyNumbers:
     """Text utilities for working with numbers and pluralization.
 
     Provides methods for intelligent pluralization of words based on counts, converting numbers to
@@ -31,9 +31,7 @@ class TextNumbers:
         return f"{word}es" if word.endswith("s") else f"{word}s"
 
     @staticmethod
-    def num_to_word(
-        number: int, word_to_pluralize: str | None = None, capitalize: bool = False
-    ) -> str:
+    def to_word(number: int, word_to_pluralize: str | None = None, capitalize: bool = False) -> str:
         """Convert numbers 1-9 into their word equivalents. Pluralize and capitalize if needed.
 
         Args:
@@ -59,7 +57,7 @@ class TextNumbers:
 
         word = number_words.get(number, str(number))
         if word_to_pluralize:
-            word_to_pluralize = TextNumbers.plural(word_to_pluralize, number, with_count=False)
+            word_to_pluralize = PolyNumbers.plural(word_to_pluralize, number, with_count=False)
             result = f"{word} {word_to_pluralize}"
         else:
             result = word
@@ -67,7 +65,7 @@ class TextNumbers:
         return result.capitalize() if capitalize else result
 
     @staticmethod
-    def ordinal_num(n: int) -> str:
+    def ordinal(n: int) -> str:
         """Convert an integer into its ordinal representation.
 
         Args:
@@ -135,10 +133,10 @@ class TextNumbers:
 
         # Combine word numbers with ordinals because it's hilarious and you literally asked for it
         if as_word and as_ordinal and number in number_words:
-            ordinal_suffix = TextNumbers.ordinal_num(number).replace(str(number), "")
+            ordinal_suffix = PolyNumbers.ordinal(number).replace(str(number), "")
             num_str = f"{number_words[number]}{ordinal_suffix}"  # e.g. "twond", "threerd"
         elif as_ordinal:
-            num_str = TextNumbers.ordinal_num(number)
+            num_str = PolyNumbers.ordinal(number)
         elif as_word and number in number_words:
             num_str = number_words[number]
         else:
@@ -148,7 +146,7 @@ class TextNumbers:
             if as_ordinal:
                 result = f"{num_str} {word}"
             else:
-                pluralized = TextNumbers.plural(word, number, with_count=False)
+                pluralized = PolyNumbers.plural(word, number, with_count=False)
                 result = f"{num_str} {pluralized}" if with_count else pluralized
         else:
             result = num_str

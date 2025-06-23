@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-class TextEmoji:
+class PolyMoji:
     """Unicode emoji detection and extraction utilities.
 
     Provides methods for identifying emoji characters within text strings, checking if text starts
@@ -38,9 +38,9 @@ class TextEmoji:
         if not text:
             return False
 
-        return TextEmoji.is_emoji(text[0])
+        return PolyMoji.is_emoji(text[0])
 
     @staticmethod
     def extract_first_emoji(text: str) -> str:
         """Extract the first emoji from a string."""
-        return "" if not text or not TextEmoji.starts_with_emoji(text) else text[0]
+        return "" if not text or not PolyMoji.starts_with_emoji(text) else text[0]

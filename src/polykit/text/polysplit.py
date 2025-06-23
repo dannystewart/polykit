@@ -4,7 +4,7 @@ import re
 from typing import Any
 
 
-class TextSplit:
+class PolySplit:
     """Intelligent text splitting and message segmentation utilities.
 
     Provides sophisticated methods for splitting long text into smaller chunks while preserving
@@ -36,21 +36,21 @@ class TextSplit:
         code_block_language = ""
 
         for pattern in split_points.values():
-            split_point = TextSplit._find_split_point(message, pattern, max_length)
+            split_point = PolySplit._find_split_point(message, pattern, max_length)
             if split_point:
                 break
 
         if not split_point:
-            split_point, code_block_language = TextSplit._split_by_code_blocks(message, max_length)
+            split_point, code_block_language = PolySplit._split_by_code_blocks(message, max_length)
 
         part1 = message[:split_point].rstrip()
         part2 = message[split_point:].lstrip()
 
-        if not TextSplit._is_balanced_code_blocks(part1):
+        if not PolySplit._is_balanced_code_blocks(part1):
             part1 += "```"
             part2 = f"```{code_block_language}\n{part2}"
 
-        return [part1, *TextSplit.split_message(part2, max_length)]
+        return [part1, *PolySplit.split_message(part2, max_length)]
 
     @staticmethod
     def _find_split_point(text: str, pattern: re.Pattern[Any], max_len: int) -> int | None:
@@ -80,7 +80,7 @@ class TextSplit:
             if index < max_len:
                 split_point = index + 3  # Include the ```
                 # Only use this point if it results in balanced code blocks
-                if TextSplit._is_balanced_code_blocks(text[:split_point]):
+                if PolySplit._is_balanced_code_blocks(text[:split_point]):
                     break
         else:  # No suitable code block split found
             split_point = max_len

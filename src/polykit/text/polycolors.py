@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from polykit.text.types import TextColor, TextStyle
 
 
-class TextColors:
+class PolyColors:
     """Terminal text colorization and styling utilities.
 
     Provides methods for applying ANSI color codes and text styles (bold, italic, underline, etc.)
@@ -69,4 +69,4 @@ class TextColors:
             style: A list of attributes to apply to the text (e.g. ['bold', 'underline']).
             end: The string to append after the last value. Defaults to "\n".
         """
-        print(TextColors.color(str(text), color, style), end=end)
+        print(PolyColors.color(str(text), color, style), end=end)

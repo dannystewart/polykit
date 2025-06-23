@@ -6,7 +6,7 @@ from enum import StrEnum
 from polykit.text.types import SMART_QUOTES_TABLE
 
 
-class Text(StrEnum):
+class PolyText(StrEnum):
     """Text format handling and markup language utilities.
 
     Provides enumerated text format types (Markdown, HTML) with methods for escaping special
@@ -21,18 +21,18 @@ class Text(StrEnum):
 
     def escape(self, text: str) -> str:
         """Escape special characters based on the current text type."""
-        if self is Text.MARKDOWN or self is Text.MARKDOWN_V2:
+        if self is PolyText.MARKDOWN or self is PolyText.MARKDOWN_V2:
             return self._escape_markdown(text)
-        return self._escape_html(text) if self is Text.HTML else text
+        return self._escape_html(text) if self is PolyText.HTML else text
 
     def clean(self, text: str) -> str:
         """Remove all formatting based on the current text type."""
-        if self is Text.MARKDOWN or self is Text.MARKDOWN_V2:
+        if self is PolyText.MARKDOWN or self is PolyText.MARKDOWN_V2:
             return self._strip_markdown(text)
-        return self._strip_html(text) if self is Text.HTML else text
+        return self._strip_html(text) if self is PolyText.HTML else text
 
     def _escape_markdown(self, text: str) -> str:
-        if self not in {Text.MARKDOWN, Text.MARKDOWN_V2}:
+        if self not in {PolyText.MARKDOWN, PolyText.MARKDOWN_V2}:
             return text
 
         text = text.replace("\\", "\\\\")  # Handle actual backslashes first
@@ -75,14 +75,14 @@ class Text(StrEnum):
         return "".join(escaped_text)
 
     def _strip_markdown(self, text: str) -> str:
-        if self not in {Text.MARKDOWN, Text.MARKDOWN_V2}:
+        if self not in {PolyText.MARKDOWN, PolyText.MARKDOWN_V2}:
             return text
 
         escape_chars = "_*[]()~`>#+-=|{}.!"
         return re.sub(rf"([\\{escape_chars}])", r"", text)
 
     def _escape_html(self, text: str) -> str:
-        if self != Text.HTML:
+        if self != PolyText.HTML:
             return text
 
         return (
@@ -94,7 +94,7 @@ class Text(StrEnum):
         )
 
     def _strip_html(self, text: str) -> str:
-        return text if self != Text.HTML else re.sub(r"<[^>]*>", "", text)
+        return text if self != PolyText.HTML else re.sub(r"<[^>]*>", "", text)
 
     @staticmethod
     def html_escape(text: str) -> str:
@@ -111,7 +111,7 @@ class Text(StrEnum):
     @staticmethod
     def normalize(text: str) -> str:
         """Normalize text by stripping whitespace, multiple spaces, and normalizing quotes."""
-        text = Text.straighten_quotes(text)
+        text = PolyText.straighten_quotes(text)
         text = text.strip()
         return " ".join(text.split())
 
