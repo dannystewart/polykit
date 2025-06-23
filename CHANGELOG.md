@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Added
+
+- Replaces monolith `Text` class with specialized utility classes with more consistent naming for text and time manipulation:
+  - `PolyText`, `PolyColors`, `PolyMoji`, `PolyNumbers`, `PolySplit`, `PolyTruncate`, and `PolyTime`
+- Adds direct access to commonly used functions in the package's root namespace:
+  - `truncate`, `split`, `plural`, `to_word`, `ordinal`, and `format` (from `PolyNumbers`)
+
+### Changed
+
+- Changes the default behavior of pluralization methods to include the count with the word by default.
+- Renames `format_number` method to `format` for better clarity and less redundancy when importing or calling via `PolyNumbers.format`.
+- Updates dependencies to their latest versions:
+  - `mypy` from 1.16.0 to 1.16.1
+  - `ruff` from 0.11.13 to 0.12.0
+  - `pygments` from 2.19.1 to 2.19.2
+  - `certifi` from 2025.4.26 to 2025.6.15
+  - `urllib3` from 2.4.0 to 2.5.0
+
+### Deprecated
+
+- Deprecates all methods in the `Text` and `Time` classes, pointing to corresponding methods in the new text and time classes.
+
+### Fixed
+
+- Fixes pluralization behavior by explicitly setting `with_count=False` parameter in internal method calls to ensure consistent output format.
+
 ## [0.11.4] (2025-06-20)
 
 ### Fixed
