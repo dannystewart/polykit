@@ -7,10 +7,10 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, TypeVar
 
-from polykit.formatters import color
+from polykit.text import color
 
 if TYPE_CHECKING:
-    from polykit.formatters.types import TextColor
+    from polykit.text.types import TextColor
 
 T = TypeVar("T")
 

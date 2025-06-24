@@ -6,12 +6,12 @@ from threading import Event, Thread
 from typing import TYPE_CHECKING, ClassVar
 
 from polykit.cli import handle_interrupt
-from polykit.formatters import color as colorize
+from polykit.text import color as colorize
 
 if TYPE_CHECKING:
     from types import TracebackType
 
-    from polykit.formatters.types import TextColor
+    from polykit.text.types import TextColor
 
 
 class WalkingMan:

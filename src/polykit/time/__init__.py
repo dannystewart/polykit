@@ -1,7 +1,7 @@
 """Stop wrestling with datetime formatting. Polykit's **Time** utilities handle everything from parsing to timezone-aware logging:
 
 ```python
-from polykit.formatters import Time
+from polykit.time import PolyTime
 
 # Parse human-friendly time expressions
 meeting = Time.parse("3pm tomorrow")

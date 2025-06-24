@@ -37,7 +37,7 @@ def platform_check(platform_name: str = "Darwin", exit_on_mismatch: bool = True)
     is_correct_platform = current_platform == platform_name
 
     if not is_correct_platform and exit_on_mismatch:
-        from polykit.formatters import print_color
+        from polykit.text import print_color
 
         message = f"This can only be run on {os_display_name}. Aborting."
         print_color(message, "red")

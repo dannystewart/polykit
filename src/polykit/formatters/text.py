@@ -8,7 +8,7 @@ from typing import Any
 
 from polykit.colors import COLOR_MAP, STYLE_MAP, Colors
 from polykit.core.deprecate import deprecated
-from polykit.formatters.types import SMART_QUOTES_TABLE, TextColor, TextStyle
+from polykit.text.types import SMART_QUOTES_TABLE, TextColor, TextStyle
 
 
 class Text(StrEnum):

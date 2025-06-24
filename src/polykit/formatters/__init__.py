@@ -3,7 +3,7 @@
 ### Text: Powerful Text Formatting and Manipulation
 
 ```python
-from polykit.formatters import Text
+from polykit.text import Text
 
 # Smart pluralization that just works
 print(f"Found {Text.plural('file', 5, with_count=True)}")  # "Found 5 files"
@@ -28,7 +28,7 @@ for part in parts:
 ### Time: Human-Friendly Datetime Handling
 
 ```python
-from polykit.formatters import Time
+from polykit.time import PolyTime
 
 # Parse human-friendly time expressions
 meeting = Time.parse("3pm tomorrow")

@@ -25,7 +25,7 @@ class TimeAwareLogger(logging.Logger):
 
     @staticmethod
     def _format_args(*args: Any) -> list[Any]:
-        from polykit.formatters import get_pretty_time
+        from polykit.time import get_pretty_time
 
         return [get_pretty_time(arg) if isinstance(arg, datetime) else arg for arg in args]
 
