@@ -6,12 +6,17 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.12.0b1] (2025-06-25)
+
+**NOTE:** This is a major breaking release with several modules deprecated and split into new modules. Functionality remains the same, but imports will need to be updated. Things are mostly in place but I'm considering this a beta until I can finish testing with my own scripts.
+
 ### Added
 
 - Replaces monolith `Text` class with specialized utility classes with more consistent naming for text and time manipulation:
   - `PolyText`, `PolyColors`, `PolyMoji`, `PolyNumbers`, `PolySplit`, `PolyTruncate`, and `PolyTime`
 - Adds direct access to commonly used functions in the package's root namespace:
   - `truncate`, `split`, `plural`, `to_word`, `ordinal`, and `format` (from `PolyNumbers`)
+- Adds thousands separator option to number formatting with new `commas` parameter in `PolyNumbers.format` method.
 
 ### Changed
 
@@ -21,6 +26,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
   - `mypy` from 1.16.0 to 1.16.1
   - `ruff` from 0.11.13 to 0.12.0
   - `pygments` from 2.19.1 to 2.19.2
+  - `python-dotenv` from 1.1.0 to 1.1.1
   - `certifi` from 2025.4.26 to 2025.6.15
   - `urllib3` from 2.4.0 to 2.5.0
 
@@ -242,7 +248,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.11.4...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.12.0b1...HEAD
+[0.12.0b1]: https://github.com/dannystewart/polykit/compare/v0.11.4...v0.12.0b1
 [0.11.4]: https://github.com/dannystewart/polykit/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/dannystewart/polykit/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/dannystewart/polykit/compare/v0.11.1...v0.11.2
