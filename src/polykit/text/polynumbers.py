@@ -14,21 +14,48 @@ class PolyNumbers:
     """
 
     @staticmethod
-    def plural(word: str, count: int, with_count: bool = True) -> str:
+    def plural(word: str, count: int, with_count: bool = True, capitalize: bool = False) -> str:
         """Pluralize a word based on the count of items.
 
         Args:
             word: The word to pluralize.
             count: The number of items, which determines the pluralization.
             with_count: Whether to include the count number before the word. Defaults to True.
+            capitalize: Whether to capitalize the result. Defaults to False.
+
+        Returns:
+            The pluralized word with optional count and capitalization.
         """
+        # Handle negative counts
+        if count < 0:
+            count = abs(count)
+
         if count == 1:
-            return f"1 {word}" if with_count else word
-        if with_count:
-            if word.endswith("s"):
-                return f"{count} {word}es"
-            return f"{count} {word}s"
-        return f"{word}es" if word.endswith("s") else f"{word}s"
+            result_word = word
+        # PROPER pluralization rules
+        elif word.endswith("y") and len(word) > 1 and word[-2] not in "aeiou":
+            # city → cities, but boy → boys
+            result_word = word[:-1] + "ies"
+        elif word.endswith(("s", "x", "z", "ch", "sh")):
+            # class → classes, box → boxes, buzz → buzzes, church → churches
+            result_word = word + "es"
+        elif word.endswith("o") and len(word) > 1 and word[-2] not in "aeiou":
+            # potato → potatoes, but radio → radios
+            result_word = word + "es"
+        elif word.endswith("f"):
+            # leaf → leaves
+            result_word = word[:-1] + "ves"
+        elif word.endswith("fe"):
+            # knife → knives
+            result_word = word[:-2] + "ves"
+        else:
+            # Default: add 's'
+            result_word = word + "s"
+
+        # Build final result
+        final_result = f"{count} {result_word}" if with_count else result_word
+
+        return final_result.capitalize() if capitalize else final_result
 
     @staticmethod
     def to_word(number: int, word_to_pluralize: str | None = None, capitalize: bool = False) -> str:
