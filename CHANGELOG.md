@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.12.0] (2025-07-07)
+
+Releasing beta [0.12.0b1] after additional testing. Please note the breaking changes made from 0.11. You will receive deprecation warnings when calling things that have been restructured, and they will eventually be removed.
+
+### Added
+
+- Adds enhanced plural method with more comprehensive English pluralization rules compared to the previous approach, including special case handling for words ending in 'y', 's', 'x', 'z', 'ch', 'sh', 'o', 'f', and 'fe', as well as support for negative numbers.
+
 ## [0.12.0b1] (2025-06-25)
 
 **NOTE:** This is a major breaking release with several modules deprecated and split into new modules. Functionality remains the same, but imports will need to be updated. Things are mostly in place but I'm considering this a beta until I can finish testing with my own scripts.
@@ -248,7 +256,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.12.0b1...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/dannystewart/polykit/compare/v0.12.0b1...v0.12.0
 [0.12.0b1]: https://github.com/dannystewart/polykit/compare/v0.11.4...v0.12.0b1
 [0.11.4]: https://github.com/dannystewart/polykit/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/dannystewart/polykit/compare/v0.11.2...v0.11.3
