@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.13.0] (2025-07-11)
+
+More breaking changes in this one.
+
+### Added
+
+- Adds optional parameters to `log_traceback` function, making it more flexible in various error handling scenarios.
+
+### Changed
+
+- Renames `PolyNumbers` to `PolyNum` for consistency and brevity.
+- Removes `capitalize` parameter from all methods in `PolyNum`. You should use standard string capitalization with `.capitalize()` going forward.
+- Updates dependencies to their latest versions:
+  - certifi from 2025.6.15 to 2025.7.9
+  - ruff from 0.12.0 to 0.12.3
+  - typing-extensions from 4.14.0 to 4.14.1
+
+### Removed
+
+- Removes the deprecated `formatters` package and its modules (`text.py`, `time.py`, `types.py`) that contained the old `Text` and `Time` utility classes.
+
+### Fixed
+
+- Fixes `log_traceback` to properly handle being used directly as `sys.excepthook` by checking for None parameters and falling back to `sys.exc_info()`.
+
 ## [0.12.0] (2025-07-07)
 
 Releasing beta [0.12.0b1] after additional testing. Please note the breaking changes made from 0.11. You will receive deprecation warnings when calling things that have been restructured, and they will eventually be removed.
@@ -16,7 +41,7 @@ Releasing beta [0.12.0b1] after additional testing. Please note the breaking cha
 
 ## [0.12.0b1] (2025-06-25)
 
-**NOTE:** This is a major breaking release with several modules deprecated and split into new modules. Functionality remains the same, but imports will need to be updated. Things are mostly in place but I'm considering this a beta until I can finish testing with my own scripts.
+__NOTE:__ This is a major breaking release with several modules deprecated and split into new modules. Functionality remains the same, but imports will need to be updated. Things are mostly in place but I'm considering this a beta until I can finish testing with my own scripts.
 
 ### Added
 
@@ -100,7 +125,7 @@ Tiny update, but with a parameter name change in `PolyFile`.
 
 ### Changed
 
-- **BREAKING:** Renames the `hidden` parameter in the `list` method in `PolyFile` to `include_dotfiles` to make the parameter more self-documenting by clearly illustrating what it does (include) and how it defines "hidden" (dotfiles).
+- __BREAKING:__ Renames the `hidden` parameter in the `list` method in `PolyFile` to `include_dotfiles` to make the parameter more self-documenting by clearly illustrating what it does (include) and how it defines "hidden" (dotfiles).
 
 ## [0.10.2] (2025-04-18)
 
@@ -137,8 +162,8 @@ Tiny update, but with a parameter name change in `PolyFile`.
 
 ### Changed
 
-- **BREAKING:** Relocates shell functionality to CLI package, moving `interrupt.py` and `permissions.py` from `shell/` to `cli/` package for better organizational clarity and to eliminate ongoing confusion between CLI and shell modules.
-- **BREAKING:** Renames `recurse` parameter to `recursive` in the `PolyFile.list` method for better readability and consistency with Python naming conventions. Your files will now be recursively listed in a more Pythonic way.
+- __BREAKING:__ Relocates shell functionality to CLI package, moving `interrupt.py` and `permissions.py` from `shell/` to `cli/` package for better organizational clarity and to eliminate ongoing confusion between CLI and shell modules.
+- __BREAKING:__ Renames `recurse` parameter to `recursive` in the `PolyFile.list` method for better readability and consistency with Python naming conventions. Your files will now be recursively listed in a more Pythonic way.
 
 ## [0.9.1] (2025-04-09)
 
@@ -149,7 +174,7 @@ Tiny update, but with a parameter name change in `PolyFile`.
 
 ## [0.9.0] (2025-04-07)
 
-**Polykit's development status has changed from Beta to Production/Stable!** 🎉
+__Polykit's development status has changed from Beta to Production/Stable!__ 🎉
 
 Polykit has been around long enough (in some shape or form) that I consider it stable enough for use. It's not the kind of project I think will ever hit 1.0 because of its constant evolution, but I'm trying to take minor version bumps more seriously for breaking changes. This means 0.9.0 and 0.10.0 could come out the same day if changes are severe enough, but at least nothing should break in between (hopefully).
 
@@ -170,7 +195,7 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 - `PolyEnv`
   - Improves environment variable debugging with counters, better secret detection, and helpful summary messages.
 
-- **Documentation**
+- __Documentation__
   - Enhances README with a snazzy table of contents, feature section links, and clearer descriptions that won't put you to sleep.
   - Updates library introduction docs with detailed sections on features and use cases—now with 100% more examples!
 
@@ -200,7 +225,7 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 
 ### Added
 
-#### `<('-')>` **Walking Man 2.0: The Waving Man Update!**  `<('-')/`
+#### `<('-')>` __Walking Man 2.0: The Waving Man Update!__  `<('-')/`
 
 - Introduces a middle position state for Walking Man, for smoother turns and improved alignment.
 - Adds a waving animation for Walking Man, triggered after multiple rotations, complete with new character frames and logic.
@@ -256,9 +281,9 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.12.0...HEAD
-[0.12.0]: https://github.com/dannystewart/polykit/compare/v0.12.0b1...v0.12.0
-[0.12.0b1]: https://github.com/dannystewart/polykit/compare/v0.11.4...v0.12.0b1
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/dannystewart/polykit/compare/v0.12.0...v0.13.0
+[0.12.0]: https://github.com/dannystewart/polykit/compare/v0.11.4...v0.12.0
 [0.11.4]: https://github.com/dannystewart/polykit/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/dannystewart/polykit/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/dannystewart/polykit/compare/v0.11.1...v0.11.2
