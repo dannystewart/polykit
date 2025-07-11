@@ -18,9 +18,9 @@ except ImportError:
 
 
 def log_traceback(
-    exc_type: type[BaseException] | None,
-    exc_value: BaseException | None,
-    exc_tb: types.TracebackType | None,
+    exc_type: type[BaseException] | None = None,
+    exc_value: BaseException | None = None,
+    exc_tb: types.TracebackType | None = None,
     trim_levels: int = 0,
 ) -> None:
     """Log a traceback, optionally trimming unwanted levels."""
