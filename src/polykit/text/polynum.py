@@ -60,8 +60,7 @@ class PolyNum:
         elif word.endswith("fe"):
             # knife → knives
             result_word = word[:-2] + "ves"
-        else:
-            # Default: add 's'
+        else:  # Default: add 's'
             result_word = word + "s"
 
         # Build final result
