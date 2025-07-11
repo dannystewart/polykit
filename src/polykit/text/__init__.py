@@ -36,7 +36,7 @@ from __future__ import annotations
 
 from .polycolors import PolyColors
 from .polymoji import PolyMoji
-from .polynumbers import PolyNumbers
+from .polynum import PolyNum
 from .polysplit import PolySplit
 from .polytext import PolyText
 from .polytruncate import PolyTruncate
@@ -45,7 +45,7 @@ color = PolyColors.color
 print_color = PolyColors.print_color
 truncate = PolyTruncate.truncate
 split = PolySplit.split_message
-plural = PolyNumbers.plural
-num_to_word = PolyNumbers.to_word
-ordinal = PolyNumbers.ordinal
-format_number = PolyNumbers.format
+plural = PolyNum.plural
+num_to_word = PolyNum.to_word
+ordinal = PolyNum.ordinal
+format_number = PolyNum.format
