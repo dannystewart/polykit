@@ -24,6 +24,8 @@ def log_traceback(
     trim_levels: int = 0,
 ) -> None:
     """Log a traceback, optionally trimming unwanted levels."""
+    if exc_type is None or exc_value is None or exc_tb is None:
+        exc_type, exc_value, exc_tb = sys.exc_info()
 
     # Trim traceback to set number of levels
     for _ in range(trim_levels):

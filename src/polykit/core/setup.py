@@ -19,7 +19,7 @@ def polykit_setup() -> VersionInfo:
     from polykit.log import PolyLog
 
     # Configure exception handling
-    sys.excepthook = lambda exctype, value, tb: log_traceback((exctype, value, tb))
+    sys.excepthook = log_traceback
 
     # Automatically determine package name
     package_name = VersionChecker.get_caller_package_name()
