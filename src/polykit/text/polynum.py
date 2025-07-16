@@ -38,33 +38,13 @@ class PolyNum:
         Returns:
             The pluralized word with optional count.
         """
-        # Handle negative counts
-        if count < 0:
-            count = abs(count)
-        # Single-item case
         if count == 1:
-            result_word = word
-        # Apply proper pluralization rules
-        elif word.endswith("y") and len(word) > 1 and word[-2] not in "aeiou":
-            # city → cities, but boy → boys
-            result_word = word[:-1] + "ies"
-        elif word.endswith(("s", "x", "z", "ch", "sh")):
-            # class → classes, box → boxes, buzz → buzzes, church → churches
-            result_word = word + "es"
-        elif word.endswith("o") and len(word) > 1 and word[-2] not in "aeiou":
-            # potato → potatoes, but radio → radios
-            result_word = word + "es"
-        elif word.endswith("f"):
-            # leaf → leaves
-            result_word = word[:-1] + "ves"
-        elif word.endswith("fe"):
-            # knife → knives
-            result_word = word[:-2] + "ves"
-        else:  # Default: add 's'
-            result_word = word + "s"
-
-        # Build final result
-        return f"{count} {result_word}" if with_count else result_word
+            return f"1 {word}" if with_count else word
+        if with_count:
+            if word.endswith("s"):
+                return f"{count} {word}es"
+            return f"{count} {word}s"
+        return f"{word}es" if word.endswith("s") else f"{word}s"
 
     @staticmethod
     def to_word(number: int) -> str:
