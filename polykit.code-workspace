@@ -49,6 +49,15 @@
     ],
     "mypy-type-checker.args": [
       "--config-file=mypy.ini"
-    ]
+    ],
+    "peacock.color": "#8611d4",
+    "workbench.colorCustomizations": {
+      "sash.hoverBorder": "#a02aee",
+      "statusBar.background": "#8611d4",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#a02aee",
+      "statusBarItem.remoteBackground": "#8611d4",
+      "statusBarItem.remoteForeground": "#e7e7e7"
+    }
   }
 }
