@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import warnings
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from functools import partial
 from typing import Any, ClassVar
 from zoneinfo import ZoneInfo
@@ -154,19 +154,24 @@ class PolyTime:
         return f"{hour_str}, {min_str} and {sec_str}"
 
     @staticmethod
-    def get_pretty_time(time: datetime | timedelta, **kwargs: Any) -> str:
+    def get_pretty_time(time: datetime | date | timedelta, **kwargs: Any) -> str:
         """Given a timestamp, return a pretty string representation of the time.
 
         Args:
-            time: The timestamp to convert.
+            time: The timestamp to convert (datetime, date, or timedelta).
             **kwargs: Additional keyword arguments to pass to the formatting function.
                 - capitalize: If True, the first letter of the string will be capitalized.
                 - time_only: If True, only the time will be returned, not the date.
+                - date_only: If True, only the date will be returned, not the time.
                 - weekday: If True, the weekday will be included in the date format.
                 - compact: If True, use a more compact format for dates within 7 days.
         """
         if isinstance(time, datetime):
             return PolyTime._format_datetime(time, **kwargs)
+        if isinstance(time, date):
+            # Convert date to datetime at midnight for consistent processing
+            dt = datetime.combine(time, datetime.min.time().replace(tzinfo=TZ))
+            return PolyTime._format_datetime(dt, date_only=True, **kwargs)
         return PolyTime._format_timedelta(time)
 
     @staticmethod
@@ -183,6 +188,7 @@ class PolyTime:
         time: datetime,
         capitalize: bool = False,
         time_only: bool = False,
+        date_only: bool = False,
         weekday: bool = False,
         compact: bool = False,
     ) -> str:
@@ -194,18 +200,19 @@ class PolyTime:
         days_difference = (time.date() - now.date()).days
 
         if days_difference == 0:
-            result = f"today at {time.strftime('%-I:%M %p')}"
+            result = "today" if date_only else f"today at {time.strftime('%-I:%M %p')}"
         elif days_difference == -1:
-            result = f"yesterday at {time.strftime('%-I:%M %p')}"
+            result = "yesterday" if date_only else f"yesterday at {time.strftime('%-I:%M %p')}"
         elif days_difference == 1:
-            result = f"tomorrow at {time.strftime('%-I:%M %p')}"
+            result = "tomorrow" if date_only else f"tomorrow at {time.strftime('%-I:%M %p')}"
         elif compact and 1 < abs(days_difference) <= 7:
-            result = time.strftime("%A at %-I:%M %p")
+            result = time.strftime("%A") if date_only else time.strftime("%A at %-I:%M %p")
         else:
             result = time.strftime("%A, %B %d") if weekday or compact else time.strftime("%B %d")
             if abs(days_difference) > 365:
                 result += time.strftime(", %Y")
-            result += f" at {time.strftime('%-I:%M %p')}"
+            if not date_only:
+                result += f" at {time.strftime('%-I:%M %p')}"
 
         return result.capitalize() if capitalize else result
 
@@ -349,4 +356,5 @@ TZ = TimeZoneManager().get_timezone()
 get_pretty_time = partial(PolyTime.get_pretty_time)
 get_capitalized_time = partial(PolyTime.get_pretty_time, capitalize=True)
 get_time_only = partial(PolyTime.get_pretty_time, time_only=True)
+get_date_only = partial(PolyTime.get_pretty_time, date_only=True)
 get_weekday_time = partial(PolyTime.get_pretty_time, weekday=True)
