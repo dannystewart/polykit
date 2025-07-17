@@ -83,6 +83,11 @@ class PolyNum:
     ) -> str:
         """Format a number with various options for text representation.
 
+        This method provides a flexible way to format numbers with optional word and ordinal
+        representations, as well as the ability to include or exclude the number itself. It's
+        recommended NOT to use this method solely for pluralization. It's simpler to just use
+        `PolyNum.plural` directly, unless you need additional formatting options.
+
         Args:
             number: The number to format.
             word: Optional word to append (will be pluralized if needed).
