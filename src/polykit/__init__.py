@@ -227,8 +227,8 @@ Polykit's `Text` and `Time` utility classes handle everything from pluralization
 
 ```python
 # Smart pluralization that just works
-print(f"Found {Text.plural('file', 5, with_count=True)}")  # "Found 5 files"
-print(f"Processing {Text.plural('class', 1, with_count=True)}")  # "Processing 1 class"
+print(f"Found {Text.plural('file', 5, show_num=True)}")  # "Found 5 files"
+print(f"Processing {Text.plural('class', 1, show_num=True)}")  # "Processing 1 class"
 
 # Intelligent truncation with context preservation
 print(Text.truncate(long_text, chars=50))  # Ends at sentence or word boundary

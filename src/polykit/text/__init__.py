@@ -4,8 +4,8 @@
 from polykit.text import PolyText
 
 # Smart pluralization that just works
-print(f"Found {PolyText.plural('file', 5, with_count=True)}")  # "Found 5 files"
-print(f"Processing {PolyText.plural('class', 1, with_count=True)}")  # "Processing 1 class"
+print(f"Found {PolyText.plural('file', 5, show_num=True)}")  # "Found 5 files"
+print(f"Processing {PolyText.plural('class', 1, show_num=True)}")  # "Processing 1 class"
 
 # Intelligent truncation with context preservation
 long_text = "This is a very long text that needs to be shortened while preserving meaning..."

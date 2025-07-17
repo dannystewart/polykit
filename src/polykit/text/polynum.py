@@ -27,20 +27,20 @@ class PolyNum:
     }
 
     @staticmethod
-    def plural(word: str, count: int, with_count: bool = True) -> str:
+    def plural(word: str, count: int, show_num: bool = True) -> str:
         """Pluralize a word based on the count of items.
 
         Args:
             word: The word to pluralize.
             count: The number of items, which determines the pluralization.
-            with_count: Whether to include the count number before the word. Defaults to True.
+            show_num: Whether to include the count number before the word. Defaults to True.
 
         Returns:
             The pluralized word with optional count.
         """
         if count == 1:
-            return f"1 {word}" if with_count else word
-        if with_count:
+            return f"1 {word}" if show_num else word
+        if show_num:
             if word.endswith("s"):
                 return f"{count} {word}es"
             return f"{count} {word}s"
@@ -76,7 +76,7 @@ class PolyNum:
         number: int,
         word: str | None = None,
         *,
-        with_count: bool = True,
+        show_num: bool = True,
         as_word: bool = False,
         as_ordinal: bool = False,
         commas: bool = True,
@@ -86,7 +86,7 @@ class PolyNum:
         Args:
             number: The number to format.
             word: Optional word to append (will be pluralized if needed).
-            with_count: Include the number with the word. Defaults to True.
+            show_num: Include the number with the word. Defaults to True.
             as_word: Convert numbers 0-9 to words ("one", "two", etc.). Defaults to False.
             as_ordinal: Convert to ordinal form ("1st", "2nd", etc.). Defaults to False.
             commas: Add thousands separators to numbers. Defaults to True.
@@ -98,7 +98,7 @@ class PolyNum:
             ```python
             PolyNum.format(2)                                   -> 2
             PolyNum.format(2, "cat")                            -> cats
-            PolyNum.format(2, "cat", with_count=True)           -> 2 cats
+            PolyNum.format(2, "cat", show_num=True)           -> 2 cats
 
             # As word
             PolyNum.format(2, as_word=True)                     -> two
@@ -138,8 +138,8 @@ class PolyNum:
             if as_ordinal:
                 result = f"{num_str} {word}"
             else:
-                pluralized = PolyNum.plural(word, number, with_count=False)
-                result = f"{num_str} {pluralized}" if with_count else pluralized
+                pluralized = PolyNum.plural(word, number, show_num=False)
+                result = f"{num_str} {pluralized}" if show_num else pluralized
         else:
             result = num_str
 

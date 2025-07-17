@@ -137,9 +137,9 @@ class PolyTime:
     @staticmethod
     def format_duration(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
         """Print a formatted time duration."""
-        sec_str = PolyNum.plural("second", seconds, with_count=True)
-        min_str = PolyNum.plural("minute", minutes, with_count=True)
-        hour_str = PolyNum.plural("hour", hours, with_count=True)
+        sec_str = PolyNum.plural("second", seconds, show_num=True)
+        min_str = PolyNum.plural("minute", minutes, show_num=True)
+        hour_str = PolyNum.plural("hour", hours, show_num=True)
 
         if hours == 0:
             if minutes == 0 and seconds == 0:
