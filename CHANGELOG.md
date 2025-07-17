@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Added
+
+- Adds support for date objects in `get_pretty_time`, allowing date-only formatting, and introduces the `get_date_only` convenience function.
+- Adds Peacock color customizations with a purple theme for better visual identification of the workspace.
+
+### Changed
+
+- **BREAKING:** Renames parameter `with_count` to `show_num` in plural methods for better clarity across `PolyNum` and `PolyTime` classes.
+- Reverts the more complicated pluralization logic in `PolyNum` to fix issues like "photoes." Turns out the simpler approach is best.
+- Adds usage guidance for `PolyNum.format` method, recommending the use of the simpler `PolyNum.plural` method if pluralization is all you need.
+
 ## [0.13.0] (2025-07-11)
 
 More breaking changes in this one.
@@ -41,7 +52,7 @@ Releasing beta [0.12.0b1] after additional testing. Please note the breaking cha
 
 ## [0.12.0b1] (2025-06-25)
 
-__NOTE:__ This is a major breaking release with several modules deprecated and split into new modules. Functionality remains the same, but imports will need to be updated. Things are mostly in place but I'm considering this a beta until I can finish testing with my own scripts.
+**NOTE:** This is a major breaking release with several modules deprecated and split into new modules. Functionality remains the same, but imports will need to be updated. Things are mostly in place but I'm considering this a beta until I can finish testing with my own scripts.
 
 ### Added
 
@@ -125,7 +136,7 @@ Tiny update, but with a parameter name change in `PolyFile`.
 
 ### Changed
 
-- __BREAKING:__ Renames the `hidden` parameter in the `list` method in `PolyFile` to `include_dotfiles` to make the parameter more self-documenting by clearly illustrating what it does (include) and how it defines "hidden" (dotfiles).
+- **BREAKING:** Renames the `hidden` parameter in the `list` method in `PolyFile` to `include_dotfiles` to make the parameter more self-documenting by clearly illustrating what it does (include) and how it defines "hidden" (dotfiles).
 
 ## [0.10.2] (2025-04-18)
 
@@ -162,8 +173,8 @@ Tiny update, but with a parameter name change in `PolyFile`.
 
 ### Changed
 
-- __BREAKING:__ Relocates shell functionality to CLI package, moving `interrupt.py` and `permissions.py` from `shell/` to `cli/` package for better organizational clarity and to eliminate ongoing confusion between CLI and shell modules.
-- __BREAKING:__ Renames `recurse` parameter to `recursive` in the `PolyFile.list` method for better readability and consistency with Python naming conventions. Your files will now be recursively listed in a more Pythonic way.
+- **BREAKING:** Relocates shell functionality to CLI package, moving `interrupt.py` and `permissions.py` from `shell/` to `cli/` package for better organizational clarity and to eliminate ongoing confusion between CLI and shell modules.
+- **BREAKING:** Renames `recurse` parameter to `recursive` in the `PolyFile.list` method for better readability and consistency with Python naming conventions. Your files will now be recursively listed in a more Pythonic way.
 
 ## [0.9.1] (2025-04-09)
 
@@ -174,7 +185,7 @@ Tiny update, but with a parameter name change in `PolyFile`.
 
 ## [0.9.0] (2025-04-07)
 
-__Polykit's development status has changed from Beta to Production/Stable!__ 🎉
+**Polykit's development status has changed from Beta to Production/Stable!** 🎉
 
 Polykit has been around long enough (in some shape or form) that I consider it stable enough for use. It's not the kind of project I think will ever hit 1.0 because of its constant evolution, but I'm trying to take minor version bumps more seriously for breaking changes. This means 0.9.0 and 0.10.0 could come out the same day if changes are severe enough, but at least nothing should break in between (hopefully).
 
@@ -195,7 +206,7 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 - `PolyEnv`
   - Improves environment variable debugging with counters, better secret detection, and helpful summary messages.
 
-- __Documentation__
+- **Documentation**
   - Enhances README with a snazzy table of contents, feature section links, and clearer descriptions that won't put you to sleep.
   - Updates library introduction docs with detailed sections on features and use cases—now with 100% more examples!
 
@@ -225,7 +236,7 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 
 ### Added
 
-#### `<('-')>` __Walking Man 2.0: The Waving Man Update!__  `<('-')/`
+#### `<('-')>` **Walking Man 2.0: The Waving Man Update!**  `<('-')/`
 
 - Introduces a middle position state for Walking Man, for smoother turns and improved alignment.
 - Adds a waving animation for Walking Man, triggered after multiple rotations, complete with new character frames and logic.
