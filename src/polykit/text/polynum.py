@@ -27,13 +27,14 @@ class PolyNum:
     }
 
     @staticmethod
-    def plural(word: str, count: int, show_num: bool = True) -> str:
+    def plural(word: str, count: int, show_num: bool = True, commas: bool = True) -> str:
         """Pluralize a word based on the count of items.
 
         Args:
             word: The word to pluralize.
             count: The number of items, which determines the pluralization.
             show_num: Whether to include the count number before the word. Defaults to True.
+            commas: Whether to add commas to the count number. Defaults to True.
 
         Returns:
             The pluralized word with optional count.
@@ -42,8 +43,8 @@ class PolyNum:
             return f"1 {word}" if show_num else word
         if show_num:
             if word.endswith("s"):
-                return f"{count} {word}es"
-            return f"{count} {word}s"
+                return f"{count:,} {word}es" if commas else f"{count} {word}es"
+            return f"{count:,} {word}s" if commas else f"{count} {word}s"
         return f"{word}es" if word.endswith("s") else f"{word}s"
 
     @staticmethod
