@@ -81,9 +81,11 @@ class PolyArgs(argparse.ArgumentParser):
         # Process the help text if it exists and keep_caps is False
         if "help" in kwargs and kwargs["help"] and not keep_caps:
             help_text = kwargs["help"]
-            # Only lowercase the first character, preserving the rest
-            if help_text and len(help_text) > 0:
-                kwargs["help"] = help_text[0].lower() + help_text[1:]
+            # Lowercase the first character unless specified or looks like an acronym
+            if len(help_text) >= 2 and help_text[0].isupper() and help_text[1].isupper():
+                kwargs["help"] = help_text  # Keep as-is
+            else:
+                kwargs["help"] = help_text[0].lower() + help_text[1:]  # Lowercase first letter
 
         # Call the ArgumentParser's add_argument method
         return super().add_argument(*args, **kwargs)
