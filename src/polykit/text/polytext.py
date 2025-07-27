@@ -99,7 +99,7 @@ class PolyText(StrEnum):
     def _strip_html(self, text: str) -> str:
         return text if self != PolyText.HTML else re.sub(r"<[^>]*>", "", text)
 
-    @deprecated("Use Markup class instead.")
+    @deprecated("Use html.escape directly from the html library instead!")
     @staticmethod
     def html_escape(text: str) -> str:
         """Use the escape method directly from the HTML library."""
