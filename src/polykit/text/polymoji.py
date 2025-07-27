@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from polykit.core.deprecate import deprecated
+
 
 class PolyMoji:
     """Unicode emoji detection and extraction utilities.
@@ -10,6 +12,7 @@ class PolyMoji:
     processing workflows.
     """
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def is_emoji(char: str) -> bool:
         """Check if a string is an emoji."""
@@ -32,6 +35,7 @@ class PolyMoji:
             or 0x2B00 <= code <= 0x2BFF  # Additional symbols
         )
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def starts_with_emoji(text: str) -> bool:
         """Check if a string starts with an emoji."""
@@ -40,6 +44,7 @@ class PolyMoji:
 
         return PolyMoji.is_emoji(text[0])
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def extract_first_emoji(text: str) -> str:
         """Extract the first emoji from a string."""

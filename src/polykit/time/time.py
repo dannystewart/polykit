@@ -9,10 +9,10 @@ from zoneinfo import ZoneInfo
 from tzlocal import get_localzone
 
 from polykit.core.singleton import Singleton
-from polykit.text.polynum import PolyNum
+from polykit.text import Text
 
 
-class PolyTime:
+class Time:
     """Time parser and formatter for various formats and relative time interpretations."""
 
     # Days of the week, for converting name to number
@@ -48,15 +48,15 @@ class PolyTime:
         # Handle special cases and try custom parser first
         if normalized == "now":
             return now
-        if parsed := PolyTime._parse_simple(normalized, now):
+        if parsed := Time._parse_simple(normalized, now):
             return parsed
 
         try:  # Fall back to dateutil parser if available
             from dateutil import parser
 
             parsed = parser.parse(time_str, fuzzy=True, default=now)
-            return PolyTime.ensure_future(
-                PolyTime.ensure_tz(parsed), now, force_future="today" not in normalized
+            return Time.ensure_future(
+                Time.ensure_tz(parsed), now, force_future="today" not in normalized
             )
         except (ValueError, ImportError):
             return None
@@ -87,7 +87,7 @@ class PolyTime:
                         or (hour == current_hour - 12 and minute > now.minute)
                     ):  # Time is still upcoming today
                         hour += 12
-                return PolyTime.adjust_for_tomorrow_if_needed(now, hour, minute)
+                return Time.adjust_for_tomorrow_if_needed(now, hour, minute)
 
         return None
 
@@ -99,13 +99,13 @@ class PolyTime:
                 hour = int(parts[0])
                 minute = int(parts[1])
                 if 0 <= hour < 24 and 0 <= minute < 60:
-                    return PolyTime.adjust_for_tomorrow_if_needed(now, hour, minute)
+                    return Time.adjust_for_tomorrow_if_needed(now, hour, minute)
 
         if time_str.isdigit() and len(time_str) == 4:  # Otherwise, try without colon
             hour = int(time_str[:2])
             minute = int(time_str[2:])
             if 0 <= hour < 24 and 0 <= minute < 60:
-                return PolyTime.adjust_for_tomorrow_if_needed(now, hour, minute)
+                return Time.adjust_for_tomorrow_if_needed(now, hour, minute)
 
         return None
 
@@ -127,7 +127,7 @@ class PolyTime:
 
         # Use the current time if no time was provided, and ensure timezone
         time = time or now
-        time = PolyTime.ensure_tz(time)
+        time = Time.ensure_tz(time)
 
         if time <= now:  # If the time is in the past, move it to tomorrow
             time += timedelta(days=1)
@@ -137,9 +137,9 @@ class PolyTime:
     @staticmethod
     def format_duration(hours: int = 0, minutes: int = 0, seconds: int = 0) -> str:
         """Print a formatted time duration."""
-        sec_str = PolyNum.plural("second", seconds, show_num=True)
-        min_str = PolyNum.plural("minute", minutes, show_num=True)
-        hour_str = PolyNum.plural("hour", hours, show_num=True)
+        sec_str = Text.plural("second", seconds, show_num=True)
+        min_str = Text.plural("minute", minutes, show_num=True)
+        hour_str = Text.plural("hour", hours, show_num=True)
 
         if hours == 0:
             if minutes == 0 and seconds == 0:
@@ -167,19 +167,19 @@ class PolyTime:
                 - compact: If True, use a more compact format for dates within 7 days.
         """
         if isinstance(time, datetime):
-            return PolyTime._format_datetime(time, **kwargs)
+            return Time._format_datetime(time, **kwargs)
         if isinstance(time, date):
             # Convert date to datetime at midnight for consistent processing
             dt = datetime.combine(time, datetime.min.time().replace(tzinfo=TZ))
-            return PolyTime._format_datetime(dt, date_only=True, **kwargs)
-        return PolyTime._format_timedelta(time)
+            return Time._format_datetime(dt, date_only=True, **kwargs)
+        return Time._format_timedelta(time)
 
     @staticmethod
     def _parse_simple(time_str: str, ref_time: datetime) -> datetime | None:
         """Parse common time formats using simple string manipulation."""
-        if time := PolyTime._parse_12_hour(ref_time, time_str):
+        if time := Time._parse_12_hour(ref_time, time_str):
             return time
-        if time := PolyTime._parse_24_hour(ref_time, time_str):
+        if time := Time._parse_24_hour(ref_time, time_str):
             return time
         return None
 
@@ -320,7 +320,7 @@ class PolyTime:
     @staticmethod
     def get_day_number(day: str) -> int:
         """Convert day name to day number (0-6, where Monday is 0)."""
-        return PolyTime.DAYS.index(day)
+        return Time.DAYS.index(day)
 
 
 class TimeZoneManager(metaclass=Singleton):
@@ -353,8 +353,8 @@ class TimeZoneManager(metaclass=Singleton):
 TZ = TimeZoneManager().get_timezone()
 
 # Partial functions for common use cases
-get_pretty_time = partial(PolyTime.get_pretty_time)
-get_capitalized_time = partial(PolyTime.get_pretty_time, capitalize=True)
-get_time_only = partial(PolyTime.get_pretty_time, time_only=True)
-get_date_only = partial(PolyTime.get_pretty_time, date_only=True)
-get_weekday_time = partial(PolyTime.get_pretty_time, weekday=True)
+get_pretty_time = partial(Time.get_pretty_time)
+get_capitalized_time = partial(Time.get_pretty_time, capitalize=True)
+get_time_only = partial(Time.get_pretty_time, time_only=True)
+get_date_only = partial(Time.get_pretty_time, date_only=True)
+get_weekday_time = partial(Time.get_pretty_time, weekday=True)

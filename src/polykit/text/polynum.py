@@ -4,6 +4,8 @@ import re
 from collections.abc import Iterable
 from typing import Any, ClassVar
 
+from polykit.core.deprecate import deprecated
+
 
 class PolyNum:
     """Text utilities for working with numbers and pluralization.
@@ -26,6 +28,7 @@ class PolyNum:
         9: "nine",
     }
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def plural(word: str, count: int, show_num: bool = True, commas: bool = True) -> str:
         """Pluralize a word based on the count of items.
@@ -47,6 +50,7 @@ class PolyNum:
             return f"{count:,} {word}s" if commas else f"{count} {word}s"
         return f"{word}es" if word.endswith("s") else f"{word}s"
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def to_word(number: int) -> str:
         """Convert numbers 1-9 into their word equivalents.
@@ -59,6 +63,7 @@ class PolyNum:
         """
         return PolyNum.NUM_WORDS.get(number, str(number))
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def ordinal(n: int) -> str:
         """Convert an integer into its ordinal representation.
@@ -72,6 +77,7 @@ class PolyNum:
         suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
         return f"{n}{suffix}"
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def format(
         number: int,
@@ -151,6 +157,7 @@ class PolyNum:
 
         return result
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def list_ids(ids: list[int] | list[str]) -> str:
         """Format a list of IDs as a string with commas and 'and'."""
@@ -162,6 +169,7 @@ class PolyNum:
             return f"{ids[0]} and {ids[1]}"
         return ", ".join(map(str, ids[:-1])) + ", and " + str(ids[-1])
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def join_ids(ids: Any, separator: str = ", ") -> str:
         """Join any iterable of IDs into a string.
@@ -188,6 +196,7 @@ class PolyNum:
         # Convert all elements to strings and join
         return separator.join(str(join_id) for join_id in ids)
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def parse_ratio_input(user_input: str) -> float:
         """Parse user input for a ratio value from a percentage, ratio, or multiplier.

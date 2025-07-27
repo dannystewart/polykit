@@ -1,11 +1,11 @@
 """Stop wrestling with text manipulation and datetime formatting. Polykit's **Text** and **Time** utilities handle everything from pluralization to timezone-aware parsing:
 
 ```python
-from polykit.text import PolyText
+from polykit.text import Text
 
 # Smart pluralization that just works
-print(f"Found {PolyText.plural('file', 5, show_num=True)}")  # "Found 5 files"
-print(f"Processing {PolyText.plural('class', 1, show_num=True)}")  # "Processing 1 class"
+print(f"Found {Text.plural('file', 5, show_num=True)}")  # "Found 5 files"
+print(f"Processing {Text.plural('class', 1, show_num=True)}")  # "Processing 1 class"
 
 # Intelligent truncation with context preservation
 long_text = "This is a very long text that needs to be shortened while preserving meaning..."
@@ -34,18 +34,15 @@ These utilities solve real-world text and time challenges and have been hardened
 
 from __future__ import annotations
 
-from .polycolors import PolyColors
-from .polymoji import PolyMoji
-from .polynum import PolyNum
-from .polysplit import PolySplit
-from .polytext import PolyText
-from .polytruncate import PolyTruncate
+from .markup import Markup
+from .text import Text
+from .truncate import Truncate
 
-color = PolyColors.color
-print_color = PolyColors.print_color
-truncate = PolyTruncate.truncate
-split = PolySplit.split_message
-plural = PolyNum.plural
-num_to_word = PolyNum.to_word
-ordinal = PolyNum.ordinal
-format_number = PolyNum.format
+color = Text.color
+print_color = Text.print_color
+truncate = Truncate.truncate
+split = Text.split
+plural = Text.plural
+num_to_word = Text.to_word
+ordinal = Text.ordinal
+format_number = Text.format_number

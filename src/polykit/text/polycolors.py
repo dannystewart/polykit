@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING, Any
 
+from polykit.core.deprecate import deprecated
 from polykit.text.types import COLOR_MAP, STYLE_MAP, Colors
 
 if TYPE_CHECKING:
@@ -17,6 +18,7 @@ class PolyColors:
     capabilities with automatic color reset handling.
     """
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def color(
         text: Any,
@@ -54,6 +56,7 @@ class PolyColors:
         result += f"{text}{Colors.RESET}"
         return result
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def print_color(
         text: Any,

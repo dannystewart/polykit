@@ -3,6 +3,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from polykit.core.deprecate import deprecated
+
 
 class PolySplit:
     """Intelligent text splitting and message segmentation utilities.
@@ -13,6 +15,7 @@ class PolySplit:
     maintained across multiple messages.
     """
 
+    @deprecated("Use Text class instead.")
     @staticmethod
     def split_message(message: str, max_length: int = 4096) -> list[str]:
         """Split a message into smaller parts for Telegram, handling Markdown and code blocks.

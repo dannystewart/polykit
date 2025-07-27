@@ -3,12 +3,11 @@ from __future__ import annotations
 import re
 from typing import ClassVar
 
-from polykit.core.deprecate import deprecated
-from polykit.text.polymoji import PolyMoji
-from polykit.text.types import CHAR_WIDTHS
+from .text import Text
+from .types import CHAR_WIDTHS
 
 
-class PolyTruncate:
+class Truncate:
     """Flexible text truncation with intelligent boundary detection.
 
     Provides sophisticated text truncation methods that can truncate from the beginning, end, or
@@ -25,7 +24,6 @@ class PolyTruncate:
     # Default width for characters not in the mapping
     DEFAULT_WIDTH: ClassVar[float] = 1.0
 
-    @deprecated("Use Truncate class instead.")
     @staticmethod
     def truncate(
         text: str,
@@ -69,9 +67,9 @@ class PolyTruncate:
             return text
 
         if strict:  # In strict mode, truncate the text exactly to the specified limit
-            truncated_text = PolyTruncate._truncate_strict(text, chars, from_middle)
+            truncated_text = Truncate._truncate_strict(text, chars, from_middle)
         else:  # In non-strict mode, truncate at sentence or word boundaries
-            truncated_text = PolyTruncate._truncate_at_boundaries(
+            truncated_text = Truncate._truncate_at_boundaries(
                 text, chars, from_middle, strip_punctuation, condensed
             )
 
@@ -98,9 +96,9 @@ class PolyTruncate:
     ) -> str:
         # Truncate from the middle or end, attempting to preserve whole sentences or words
         if from_middle:
-            truncated_text = PolyTruncate._truncate_from_middle(chars, text, condensed)
+            truncated_text = Truncate._truncate_from_middle(chars, text, condensed)
         else:  # For standard (non-middle) truncation, find the optimal single truncation point
-            split_index = PolyTruncate._find_index(text, chars)
+            split_index = Truncate._find_index(text, chars)
             truncated_text = f"{text[:split_index].rstrip()}..."
 
         # Clean up and ensure it doesn't end with punctuation
@@ -122,8 +120,8 @@ class PolyTruncate:
         first_half_limit = chars // 2  # Calculate limit for first and second half
         second_half_limit = chars - first_half_limit
         # Find truncation points for both halves and combine with an ellipsis in between
-        first_half_index = PolyTruncate._find_index(text, first_half_limit)
-        second_half_index = len(text) - PolyTruncate._find_index(text[::-1], second_half_limit)
+        first_half_index = Truncate._find_index(text, first_half_limit)
+        second_half_index = len(text) - Truncate._find_index(text[::-1], second_half_limit)
         result = f"{text[:first_half_index]}{separator}{text[second_half_index:]}"
 
         return result.rstrip() if result.endswith(tuple(".?!")) else f"{result.rstrip()}..."
@@ -139,7 +137,6 @@ class PolyTruncate:
         space_index = text.rfind(" ", 0, limit)
         return space_index if space_index != -1 else limit  # Use limit if no space is found
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def calculate_visual_width(cls, text: str) -> float:
         """Calculate the estimated visual width of text for proportional fonts.
@@ -152,13 +149,12 @@ class PolyTruncate:
         """
         total_width = 0.0
         for char in text:
-            if PolyMoji.is_emoji(char):
+            if Text.is_emoji(char):
                 total_width += 2.0
             else:
                 total_width += CHAR_WIDTHS.get(char, cls.DEFAULT_WIDTH)
         return total_width
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def truncate_by_width(
         cls,
@@ -212,7 +208,6 @@ class PolyTruncate:
 
         return text[:truncate_pos].rstrip() + ellipsis
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def truncate_to_char_equivalent(
         cls,
@@ -237,7 +232,6 @@ class PolyTruncate:
         target_width = float(char_count)
         return cls.truncate_by_width(text, target_width, ellipsis, preserve_words)
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def get_adjustment_factor(cls, text: str, char_count: int) -> float:
         """Get the adjustment factor for a piece of text.
@@ -258,7 +252,6 @@ class PolyTruncate:
         expected_width = float(char_count)
         return actual_width / expected_width
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def analyze_text_width(cls, text: str) -> dict[str, float]:
         """Analyze text width characteristics for debugging.
@@ -289,7 +282,6 @@ class PolyTruncate:
             "width_factor": width_factor,
         }
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def normalize_text_for_display(cls, text: str, replace_linebreaks: bool = True) -> str:
         """Normalize text for single-line display.
@@ -314,7 +306,6 @@ class PolyTruncate:
         # Strip leading/trailing whitespace
         return text.strip()
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def calculate_available_content_width(
         cls, target_line_width: float, prefix: str, suffix: str
@@ -336,7 +327,6 @@ class PolyTruncate:
         # Ensure we have at least some space for content
         return max(available, 5.0)
 
-    @deprecated("Use Truncate class instead.")
     @classmethod
     def truncate_to_fit_line(
         cls,

@@ -25,9 +25,9 @@ These utilities solve real-world time challenges and have been hardened against 
 
 from __future__ import annotations
 
-from .polytime import (
+from .time import (
     TZ,
-    PolyTime,
+    Time,
     TimeZoneManager,
     get_capitalized_time,
     get_pretty_time,

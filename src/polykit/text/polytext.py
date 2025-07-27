@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from enum import StrEnum
 
+from polykit.core.deprecate import deprecated
 from polykit.text.types import SMART_QUOTES_TABLE
 
 
@@ -19,12 +20,14 @@ class PolyText(StrEnum):
     MARKDOWN_V2 = "MarkdownV2"
     HTML = "HTML"
 
+    @deprecated("Use Markup class instead.")
     def escape(self, text: str) -> str:
         """Escape special characters based on the current text type."""
         if self is PolyText.MARKDOWN or self is PolyText.MARKDOWN_V2:
             return self._escape_markdown(text)
         return self._escape_html(text) if self is PolyText.HTML else text
 
+    @deprecated("Use Markup class instead.")
     def clean(self, text: str) -> str:
         """Remove all formatting based on the current text type."""
         if self is PolyText.MARKDOWN or self is PolyText.MARKDOWN_V2:
@@ -96,6 +99,7 @@ class PolyText(StrEnum):
     def _strip_html(self, text: str) -> str:
         return text if self != PolyText.HTML else re.sub(r"<[^>]*>", "", text)
 
+    @deprecated("Use Markup class instead.")
     @staticmethod
     def html_escape(text: str) -> str:
         """Use the escape method directly from the HTML library."""
@@ -103,11 +107,13 @@ class PolyText(StrEnum):
 
         return html.escape(text)
 
+    @deprecated("Use Markup class instead.")
     @staticmethod
     def straighten_quotes(text: str) -> str:
         """Replace smart quotes with straight quotes."""
         return text.translate(SMART_QUOTES_TABLE)
 
+    @deprecated("Use Markup class instead.")
     @staticmethod
     def normalize(text: str) -> str:
         """Normalize text by stripping whitespace, multiple spaces, and normalizing quotes."""
@@ -115,6 +121,7 @@ class PolyText(StrEnum):
         text = text.strip()
         return " ".join(text.split())
 
+    @deprecated("Use Markup class instead.")
     @staticmethod
     def clean_newlines(text: str, leave_one: bool = True) -> str:
         """Clean up excessive newlines in text.
