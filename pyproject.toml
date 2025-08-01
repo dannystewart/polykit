@@ -33,10 +33,10 @@ classifiers = [
 ]
 
 [tool.poetry.group.dev.dependencies]
-mypy = ">=1.17.0"
+mypy = ">=1.17.1"
 pdoc = ">=15.0.4"
 pre-commit = ">=4.2.0"
-ruff = ">=0.12.5"
+ruff = ">=0.12.7"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
