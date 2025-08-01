@@ -6,16 +6,28 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.14.0] (2025-08-01)
+
+More breaking changes in this one, reverting the new split class approach to the original approach in 0.12.0 and earlier.
+
 ### Added
 
+- Adds comma formatting option to the `plural` method in `PolyNum` class, with a new `commas` parameter (enabled by default).
 - Adds support for date objects in `get_pretty_time`, allowing date-only formatting, and introduces the `get_date_only` convenience function.
 - Adds Peacock color customizations with a purple theme for better visual identification of the workspace.
 
+### Fixed
+
+- Fixes help text processing in `PolyArgs` to preserve uppercase in acronyms, preventing "API" from becoming "aPI" in help messages.
+
 ### Changed
 
+- **BREAKING:** Deprecates `PolyText`, `PolyColors`, `PolyMoji`, `PolyNum`, `PolySplit`, and `PolyTruncate` classes and returns to the previous structure with the `Text` and `Time` classes, plus the addition of the `Markup` class so that `Text` can be a normal class instead of a `StrEnum`. Backward compatibility is maintained for now. I realized that the previous attempt at separation caused more headaches than it avoided and is not worth applying that level of granular separation. I'm sorry, mostly to myself, who now has to undo all this across all my other scripts.
 - **BREAKING:** Renames parameter `with_count` to `show_num` in plural methods for better clarity across `PolyNum` and `PolyTime` classes.
 - Reverts the more complicated pluralization logic in `PolyNum` to fix issues like "photoes." Turns out the simpler approach is best.
 - Adds usage guidance for `PolyNum.format` method, recommending the use of the simpler `PolyNum.plural` method if pluralization is all you need.
+- Deprecates the `html_escape` method, recommending the use of `html.escape` from the standard library instead.
+- Updates development dependencies including `mypy` (1.17.0 to 1.17.1), `ruff` (0.12.5 to 0.12.7), `distlib`, `virtualenv`, and `certifi`.
 
 ## [0.13.0] (2025-07-11)
 
@@ -292,7 +304,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.13.0...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/dannystewart/polykit/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/dannystewart/polykit/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/dannystewart/polykit/compare/v0.11.4...v0.12.0
 [0.11.4]: https://github.com/dannystewart/polykit/compare/v0.11.3...v0.11.4
