@@ -61,7 +61,7 @@ def with_spinner(
 def halo_progress(
     item: str | Path | None = None,
     start_message: str = "Processing",
-    end_message: str = "Processed",
+    end_message: str | None = "Processed",
     fail_message: str = "Failed",
     text_color: TextColor = "cyan",
     success_color: TextColor = "green",
@@ -74,7 +74,8 @@ def halo_progress(
     Args:
         item: The name of the item being processed. Accepts string or Path.
         start_message: The start message to display.
-        end_message: The end message to display.
+        end_message: The end message to display. Can also be None, in which case the spinner is
+                     cleared at the end with no message displayed. Good for cleaner output.
         fail_message: The fail message to display.
         text_color: The color of the spinner text. Defaults to 'cyan'.
         success_color: The color of the success message. Defaults to 'green'.
@@ -93,7 +94,8 @@ def halo_progress(
     """
     if item:
         start_message = f"{start_message} {item}"
-        end_message = f"{end_message} {item}"
+        if end_message is not None:
+            end_message = f"{end_message} {item}"
         fail_message = f"{fail_message} {item}"
 
     if show:
@@ -111,6 +113,9 @@ def halo_progress(
             print_color(f"{fail_message}: {e}", fail_color)
         raise
     if spinner and show:
-        spinner.succeed(colorize(end_message, success_color))
-    elif show:
+        if end_message is not None:
+            spinner.succeed(colorize(end_message, success_color))
+        else:
+            spinner.stop()
+    elif show and end_message is not None:
         print_color(end_message, success_color)
