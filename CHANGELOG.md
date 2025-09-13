@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.14.1] (2025-09-13)
+
+### Added
+
+- Makes `end_message` in `halo_progress` optional by passing `None`, which will clear the spinner without a message for cleaner output when a completion message is not needed.
+
+### Changed
+
+- Updates project dependencies including `platformdirs` (4.3.8 → 4.4.0), `requests` (2.32.4 → 2.32.5), `ruff` (0.12.9 → 0.12.11), and `typing-extensions` (4.14.1 → 4.15.0).
+
 ## [0.14.0] (2025-08-01)
 
 More breaking changes in this one, reverting the new split class approach to the original approach in 0.12.0 and earlier.
@@ -304,7 +314,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.0...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.1...HEAD
+[0.14.1]: https://github.com/dannystewart/polykit/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/dannystewart/polykit/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/dannystewart/polykit/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/dannystewart/polykit/compare/v0.11.4...v0.12.0
