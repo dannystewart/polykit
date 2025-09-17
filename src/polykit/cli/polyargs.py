@@ -75,6 +75,35 @@ class PolyArgs(argparse.ArgumentParser):
         if self.add_version and any(flag in args for flag in self.version_flags):
             self._user_added_version = True
 
+        # Process help text capitalization
+        self._process_help_capitalization(kwargs)
+
+        # Call the ArgumentParser's add_argument method
+        return super().add_argument(*args, **kwargs)
+
+    def add_subparsers(self, **kwargs: Any) -> Any:
+        """Override add_subparsers to return a SubParsersAction that handles capitalization."""
+        # Process help text capitalization for the subparsers group
+        self._process_help_capitalization(kwargs)
+
+        # Get the standard subparsers action
+        subparsers_action = super().add_subparsers(**kwargs)
+
+        # Replace the add_parser method with our custom one
+        original_add_parser = subparsers_action.add_parser
+
+        # Process help text capitalization and call the original add_parser method
+        def custom_add_parser(*args: Any, **kwargs: Any) -> Any:
+            self._process_help_capitalization(kwargs)
+            return original_add_parser(*args, **kwargs)
+
+        # Replace the add_parser method
+        subparsers_action.add_parser = custom_add_parser
+
+        return subparsers_action
+
+    def _process_help_capitalization(self, kwargs: dict[str, Any]) -> None:
+        """Process help text capitalization based on keep_caps parameter."""
         # Extract the keep_caps parameter, defaulting to False
         keep_caps = kwargs.pop("keep_caps", False)
 
@@ -86,9 +115,6 @@ class PolyArgs(argparse.ArgumentParser):
                 kwargs["help"] = help_text  # Keep as-is
             else:
                 kwargs["help"] = help_text[0].lower() + help_text[1:]  # Lowercase first letter
-
-        # Call the ArgumentParser's add_argument method
-        return super().add_argument(*args, **kwargs)
 
     def parse_args(self, *args: Any, **kwargs: Any) -> Any:
         """Override parse_args to add version argument just before parsing."""
