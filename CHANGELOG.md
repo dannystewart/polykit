@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.14.2] (2025-09-17)
+
+### Added
+
+- Adds subparser support to `PolyArgs` to provide help text capitalization consistent with argument handling.
+
 ## [0.14.1] (2025-09-13)
 
 ### Added
@@ -314,7 +320,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.1...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.2...HEAD
+[0.14.2]: https://github.com/dannystewart/polykit/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/dannystewart/polykit/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/dannystewart/polykit/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/dannystewart/polykit/compare/v0.12.0...v0.13.0
