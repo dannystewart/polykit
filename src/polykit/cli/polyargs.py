@@ -98,8 +98,7 @@ class PolyArgs(argparse.ArgumentParser):
             return original_add_parser(*args, **kwargs)
 
         # Replace the add_parser method
-        subparsers_action.add_parser = custom_add_parser
-
+        setattr(subparsers_action, "add_parser", custom_add_parser)
         return subparsers_action
 
     def _process_help_capitalization(self, kwargs: dict[str, Any]) -> None:
