@@ -75,7 +75,9 @@ class Truncate:
 
         # Ensure final length does not exceed 4096 characters
         if limit_length and len(truncated_text) > max_chars:
-            truncated_text = f"{truncated_text[:max_chars]}..."
+            truncated_text = f"{truncated_text[:max_chars]}"
+            if not from_middle:
+                truncated_text += "..."
 
         if strip_line_breaks:  # Remove line breaks if specified
             truncated_text = truncated_text.replace("\n", " ")
