@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.14.3] (2025-09-19)
+
+### Changed
+
+- Improves code consistency in `PolyArgs` by using better Python conventions for dynamic method assignment.
+
+### Fixed
+
+- Fixes ellipsis incorrectly appearing when truncating text from the middle.
+
 ## [0.14.2] (2025-09-17)
 
 ### Added
@@ -320,7 +330,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.2...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.3...HEAD
+[0.14.3]: https://github.com/dannystewart/polykit/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/dannystewart/polykit/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/dannystewart/polykit/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/dannystewart/polykit/compare/v0.13.0...v0.14.0
