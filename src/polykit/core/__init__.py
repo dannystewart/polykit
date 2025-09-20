@@ -36,7 +36,7 @@ from __future__ import annotations
 
 from .decorators import async_retry_on_exception, retry_on_exception, with_retries
 from .detect import platform_check
-from .is_literal import is_literal
 from .setup import polykit_setup
 from .singleton import Singleton
 from .traceback import log_traceback
+from .type_utils import get_args, is_literal
