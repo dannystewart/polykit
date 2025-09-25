@@ -190,7 +190,6 @@ class PolyTruncate:
 
         # Find the truncation point
         current_width = 0.0
-        truncate_pos = 0
 
         for i, char in enumerate(text):
             char_width = cls.calculate_visual_width(char)
@@ -198,7 +197,6 @@ class PolyTruncate:
                 truncate_pos = i
                 break
             current_width += char_width
-            truncate_pos = i + 1
         else:
             # Text fits completely
             return text
