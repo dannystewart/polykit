@@ -1,4 +1,4 @@
-# type: ignore[reportArgumentType, reportIncompatibleMethodOverride, reportOperatorIssue]
+# type: ignore
 
 from __future__ import annotations
 
