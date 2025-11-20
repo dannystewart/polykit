@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.14.6] (2025-11-20)
+
+### Changed
+
+- Updates development dependencies including `certifi` to 2025.11.12 for latest CA bundle security fixes, `cfgv` to 3.5.0, and `ruff` to 0.14.5.
+
 ## [0.14.5] (2025-11-09)
 
 ### Added
@@ -355,7 +361,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.5...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.6...HEAD
+[0.14.6]: https://github.com/dannystewart/polykit/compare/v0.14.5...v0.14.6
 [0.14.5]: https://github.com/dannystewart/polykit/compare/v0.14.4...v0.14.5
 [0.14.4]: https://github.com/dannystewart/polykit/compare/v0.14.3...v0.14.4
 [0.14.3]: https://github.com/dannystewart/polykit/compare/v0.14.2...v0.14.3
