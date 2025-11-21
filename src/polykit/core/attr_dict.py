@@ -1,32 +1,26 @@
-# type: ignore
-
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping
-from typing import Any, TypeVar
-
-# Type variables for keys and values
-KT = TypeVar("KT")
-VT = TypeVar("VT")
+from typing import Any
 
 
-class AttrDict[KT, VT](MutableMapping[KT, VT]):
-    """A dictionary that allows for attribute-style access."""
+class AttrDict(MutableMapping[str, Any]):
+    """A dictionary that allows for attribute-style access with nested merging."""
 
-    def __init__(self, *args: Mapping[KT, VT] | Iterable[tuple[KT, VT]], **kwargs: Any):
-        self._data: dict[KT, VT] = {}
-        self.update(dict(*args, **kwargs))
+    def __init__(self, *args: Mapping[str, Any] | Iterable[tuple[str, Any]], **kwargs: Any):
+        self._data: dict[str, Any] = {}
+        self.update(dict[str, Any](*args, **kwargs))
 
-    def __setitem__(self, key: KT, value: VT) -> None:
+    def __setitem__(self, key: str, value: Any) -> None:
         self._data[key] = self._convert(value)
 
-    def __getitem__(self, key: KT) -> VT:
+    def __getitem__(self, key: str) -> Any:
         return self._data[key]
 
-    def __delitem__(self, key: KT) -> None:
+    def __delitem__(self, key: str) -> None:
         del self._data[key]
 
-    def __iter__(self) -> Iterator[KT]:
+    def __iter__(self) -> Iterator[str]:
         return iter(self._data)
 
     def __len__(self) -> int:
@@ -38,7 +32,9 @@ class AttrDict[KT, VT](MutableMapping[KT, VT]):
     def __eq__(self, other: object) -> bool:
         if isinstance(other, AttrDict):
             return self._data == other._data
-        return self._data == other if isinstance(other, dict) else False
+        if isinstance(other, dict):
+            return self._data == other
+        return False
 
     def __getattr__(self, name: str) -> Any:
         try:
@@ -54,29 +50,26 @@ class AttrDict[KT, VT](MutableMapping[KT, VT]):
             self[name] = value
 
     def __dir__(self) -> list[str]:
-        return list(set(super().__dir__()) | {str(k) for k in self._data})
+        return list[str](set[str](super().__dir__()) | {str(k) for k in self._data})
 
-    def __or__(self, other: Mapping[KT, VT] | Iterable[tuple[KT, VT]] | None) -> AttrDict[KT, VT]:
+    def __or__(self, other: Mapping[str, Any] | Iterable[tuple[str, Any]] | None) -> AttrDict:
         """Implement the | operator for AttrDict with nested merging."""
         if other is None:
             return self.copy()
 
         result = self.copy()
-        other_dict = dict(other)
+        other_dict = dict[str, Any](other)
 
         for key, value in other_dict.items():
-            if (
-                key in result
-                and isinstance(result[key], AttrDict)
-                and isinstance(value, dict | AttrDict)
-            ):
-                result[key] |= AttrDict(value)
+            current = result._data.get(key)
+            if isinstance(current, AttrDict) and isinstance(value, (dict, AttrDict)):
+                result._data[key] = current | AttrDict(value)
             else:
-                result[key] = self._convert(value)
+                result._data[key] = self._convert(value)
 
         return result
 
-    def __ror__(self, other: Mapping[KT, VT] | Iterable[tuple[KT, VT]] | None) -> AttrDict[KT, VT]:
+    def __ror__(self, other: Mapping[str, Any] | Iterable[tuple[str, Any]] | None) -> AttrDict:
         """Implement reverse | operator for AttrDict with nested merging."""
         return self.copy() if other is None else AttrDict(other) | self
 
@@ -84,46 +77,31 @@ class AttrDict[KT, VT](MutableMapping[KT, VT]):
     def _convert(cls, value: Any) -> Any:
         if isinstance(value, Mapping) and not isinstance(value, AttrDict):
             return cls(value)
-        return [cls._convert(v) for v in value] if isinstance(value, list) else value
+        if isinstance(value, list):
+            return [cls._convert(v) for v in value]
+        return value
 
-    def to_dict(self) -> dict[KT, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert AttrDict to a regular dictionary recursively."""
 
         def _to_dict(value: Any) -> Any:
             if isinstance(value, AttrDict):
                 return value.to_dict()
-            return [_to_dict(v) for v in value] if isinstance(value, list) else value
+            if isinstance(value, list):
+                return [_to_dict(v) for v in value]
+            return value
 
         return {k: _to_dict(v) for k, v in self._data.items()}
 
-    def copy(self) -> AttrDict[KT, VT]:
+    def copy(self) -> AttrDict:
         """Return a shallow copy of the AttrDict."""
         return AttrDict(self._data)
 
-    def deep_copy(self) -> AttrDict[KT, VT]:
+    def deep_copy(self) -> AttrDict:
         """Return a deep copy of the AttrDict."""
         from copy import deepcopy
 
         return AttrDict(deepcopy(self._data))
-
-    def update(self, *args: Mapping[KT, VT] | Iterable[tuple[KT, VT]], **kwargs: Any) -> None:
-        """Update the AttrDict with the key/value pairs from other, overwriting existing keys."""
-        for k, v in dict(*args, **kwargs).items():
-            self[k] = v
-
-    def setdefault(self, key: KT, default: VT | None = None) -> VT:
-        """Insert key with a value of default if key is not in the dictionary."""
-        if key not in self:
-            self[key] = default
-        return self[key]
-
-    def get(self, key: KT, default: Any | None = None) -> Any:
-        """Return the value for key if key is in the dictionary, else default."""
-        return self._data.get(key, default)
-
-    def pop(self, key: KT, default: Any | None = None) -> Any:
-        """Remove specified key and return the corresponding value."""
-        return self._data.pop(key, default)
 
     def __contains__(self, key: object) -> bool:
         return key in self._data
