@@ -155,7 +155,7 @@ class PolyFile:
             return True
         except Exception as e:  # Trash failed, log the error
             if logger:
-                logger.error("Failed to send file to trash: %s", str(e))
+                logger.error("Failed to send file to trash: %s", e)
             return False
 
     @classmethod
@@ -205,7 +205,7 @@ class PolyFile:
             return True
         except Exception as e:
             if logger:
-                logger.error("Error copying file: %s", str(e))
+                logger.error("Error copying file: %s", e)
             return False
 
     @classmethod
@@ -235,7 +235,7 @@ class PolyFile:
             return True
         except Exception as e:
             if logger:
-                logger.error("Error moving file: %s", str(e))
+                logger.error("Error moving file: %s", e)
             return False
 
     @classmethod

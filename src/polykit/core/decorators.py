@@ -74,7 +74,7 @@ def retry_on_exception(
                     return func(*args, **kwargs)
                 except exception_to_check as e:
                     if logger:
-                        logger.warning("%s. Retrying in %s seconds...", str(e), delay)
+                        logger.warning("%s. Retrying in %s seconds...", e, delay)
                     else:
                         from polykit.text import print_color
 
@@ -116,7 +116,7 @@ def async_retry_on_exception(
                     return await func(*args, **kwargs)
                 except exception_to_check as e:
                     if logger:
-                        logger.warning("%s. Retrying in %s seconds...", str(e), delay)
+                        logger.warning("%s. Retrying in %s seconds...", e, delay)
                     else:
                         from polykit.text import print_color
 
