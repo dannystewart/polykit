@@ -58,6 +58,7 @@ class PolyLog(metaclass=Singleton):
         log_file: Path | None = None,
         time_aware: bool = False,
         env: PolyEnv | None = None,
+        remote: bool = False,
     ) -> logging.Logger:
         """Get a configured logger instance.
 
@@ -76,6 +77,9 @@ class PolyLog(metaclass=Singleton):
                         objects in log messages. Defaults to False.
             env: An optional PolyEnv instance. Useful for easily parsing log level, but additional
                  environment-specific functionality may be added in future. Defaults to None.
+            remote: If True, streams logs to Supabase. Requires environment variables:
+                    POLYLOG_APP_ID, POLYLOG_SUPABASE_URL, POLYLOG_SUPABASE_KEY.
+                    Defaults to False.
 
         Returns:
             A configured standard Logger or TimeAwareLogger instance.
@@ -96,6 +100,9 @@ class PolyLog(metaclass=Singleton):
 
             if log_file:
                 PolyLog._add_file_handler(logger, log_file)
+
+            if remote:
+                PolyLog._add_remote_handler(logger)
 
             logger.propagate = False
 
@@ -159,6 +166,34 @@ class PolyLog(metaclass=Singleton):
         file_handler.setFormatter(formatter)
         logger.setLevel(logging.DEBUG)
         logger.addHandler(file_handler)
+
+    @staticmethod
+    def _add_remote_handler(logger: logging.Logger) -> None:
+        """Add a remote Supabase handler to the given logger."""
+        try:
+            from polykit.log.supabase_handler import SupabaseLogHandler
+
+            handler = SupabaseLogHandler.from_env()
+            if handler:
+                logger.addHandler(handler)
+            else:
+                # Log warning to stderr to avoid recursion
+                import sys
+
+                print(
+                    "PolyLog: Remote logging requested but environment variables not set. "
+                    "Required: POLYLOG_APP_ID, POLYLOG_SUPABASE_URL, POLYLOG_SUPABASE_KEY",
+                    file=sys.stderr,
+                )
+        except ImportError:
+            # Log warning to stderr
+            import sys
+
+            print(
+                "PolyLog: Remote logging requested but supabase-py is not installed. "
+                "Install with: pip install supabase",
+                file=sys.stderr,
+            )
 
     @classmethod
     def exception(

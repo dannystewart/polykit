@@ -115,4 +115,5 @@ This provides better IDE support for autocompletion and type checking compared t
 from __future__ import annotations
 
 from .polylog import PolyLog
+from .supabase_handler import SupabaseLogHandler
 from .time_aware import TimeAwareLogger
