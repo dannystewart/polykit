@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ### Changed
 
-- Updated `packaging` from 25.0 to 26.0, `platformdirs` from 4.5.1 to 4.9.4, `python-dotenv` from 1.2.1 to 1.2.2, `supabase` from 2.27.2 to 2.28.0, and `ruff` from 0.14.13 to 0.15.5.
+- Updates `packaging` from 25.0 to 26.0, `platformdirs` from 4.5.1 to 4.9.4, `python-dotenv` from 1.2.1 to 1.2.2, `supabase` from 2.27.2 to 2.28.0, and `ruff` from 0.14.13 to 0.15.5.
 
 ## [0.14.6] (2025-11-20)
 
