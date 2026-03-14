@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.15.0] (2026-03-14)
+
+### Changed
+
+- Moves the `supabase` dependency from required to optional dependencies, allowing users to install it only when needed.
+- Updates `ruff` to version 0.15.6 in dev dependencies.
+
 ## [0.14.7] (2026-03-08)
 
 ### Changed
@@ -367,7 +374,8 @@ Polykit has been around long enough (in some shape or form) that I consider it s
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/dannystewart/polykit/compare/v0.14.7...HEAD
+[unreleased]: https://github.com/dannystewart/polykit/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/dannystewart/polykit/compare/v0.14.7...v0.15.0
 [0.14.7]: https://github.com/dannystewart/polykit/compare/v0.14.6...v0.14.7
 [0.14.6]: https://github.com/dannystewart/polykit/compare/v0.14.5...v0.14.6
 [0.14.5]: https://github.com/dannystewart/polykit/compare/v0.14.4...v0.14.5
